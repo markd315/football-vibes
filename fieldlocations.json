@@ -58,13 +58,58 @@
         "Section": "Offensive line of scrimmage",
         "Locations": [
             {
+                "Name": "Left Tackle",
+                "X": -4,
+                "Y": 0
+            },
+            {
+                "Name": "Left Guard",
+                "X": -2,
+                "Y": 0
+            },
+            {
+                "Name": "Center",
+                "X": 0,
+                "Y": 0
+            },
+            {
+                "Name": "Right Guard",
+                "X": 2,
+                "Y": 0
+            },
+            {
+                "Name": "Right Tackle",
+                "X": 4,
+                "Y": 0
+            },
+            {
                 "Name": "Wide left",
                 "X": -20,
                 "Y": 0
             },
             {
+                "Name": "Wide split left",
+                "X": -15,
+                "Y": 0
+            },
+            {
+                "Name": "Trips left",
+                "X": -12,
+                "Y": 0
+            },
+            {
                 "Name": "Wide right",
                 "X": 20,
+                "Y": 0
+            },
+            {
+                "Name": "Wide split right",
+                "X": 15,
+                "Y": 0
+            },
+            {
+                "Name": "Trips right",
+                "X": 12,
                 "Y": 0
             },
             {
