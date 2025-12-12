@@ -1,0 +1,14 @@
+
+{
+    "outcome": "YAC run",
+    "description": "The ball-carrier received the ball in space and gained {yards-after-catch}",
+    "methodology": "Roll 1-100 and assign the yards gained based on the roll percentile",
+    "average-yards-gained": 12,
+    "standard-deviation": 2.5,
+    "skewness": 0.0,
+    "kurtosis": 0.0,
+    "mode": 15,
+    "median": 15,
+    "turnover-probability": 1.0,
+    "turnover-type": "fumble"
+}

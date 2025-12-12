@@ -1,0 +1,14 @@
+
+{
+    "outcome": "Explosive Run",
+    "description": "The running back exploded through the hole and gained 10 yards.",
+    "methodology": "Roll 1-100 and assign the yards gained based on the roll.",
+    "average-yards-gained": 12,
+    "standard-deviation": 2.5,
+    "skewness": 0.0,
+    "kurtosis": 0.0,
+    "mode": 15,
+    "median": 15,
+    "turnover-probability": 1.0,
+    "turnover-type": "fumble"
+}

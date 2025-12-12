@@ -1,0 +1,16 @@
+We are building an RPG game, offensive coordinator vs defensive coordinator.
+
+Rosters (fixed input) have stats, stamina, injuries, and schematic skills (percentile and percentile adjustment based)
+
+Personnel, Formations, motions, and playcall are the variable input. For each play, coordinators configure 11 players in standard football formats.
+
+Using the fixed and variable input, generate a prompt in the format like @prompt-pass-schematic-success. Templatize and inject this example.
+
+Use my API key (in env file) to call LLM, which must return @eval-formats.json
+
+Then, roll through the play-state-machine to determine the total yardage gained, and update @gamestate.json with standard football rules.
+
+On 4th down, ask the OC to punt, kick, or run another play.
+
+Special teams plays are not modeled. Develop simple table-based 1-100 solutions to model outcomes for kickoffs, punts and FGA (miss percentage, blocks, touchbacks)
+

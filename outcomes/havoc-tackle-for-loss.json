@@ -1,0 +1,14 @@
+{
+    "outcome": "Tackle for Loss",
+    "description": "The ball carrier was tackled behind the line of scrimmage for a loss of {yards} yards.",
+    "methodology": "Roll 1-100 and assign the yards lost based on the roll.",
+    "average-yards-gained": -2.2,
+    "standard-deviation": 1.2,
+    "skewness": 0.0,
+    "kurtosis": 0.0,
+    "mode": -2,
+    "median": -2,
+    "turnover-probability": 3.0,
+    "turnover-type": "fumble"
+}
+

@@ -1,0 +1,38 @@
+You are part of a "play success" engine for an NFL game. Reason about schematic advantages at the point of attack and the second level based on the information provided (Considering overloads, player mismatches, stamina, man vs zone, gap schemes vs zone schemes, gap control, RB aimpoint, and the specific key blocks and conflict defenders in the play). All lefts and rights are from the offenses perspective.
+
+Return a quantified evaluation of the offensive vs defensive scheme (play success rate, explosive rate, havoc rate) that will be used to generate a randomized outcome table.
+
+3rd and 4: Q2 6:27. Score differential -4 (for offense)
+Formation: 11 personnel 2x2 (Wide, slot, linemen, tight end, wide) vs Big Nickel 3 down linemen
+
+Point of attack: summary Fire Zone vs Inside Draw
+(from offenses left to right)
+TE: 45th percentile pass catcher: bluff left 6 man slide.
+LT: 80th percentile, protection specialist: bluff left 6 man slide.
+LDE (5 technique): 75th percentile generalist, wraps outside to left C gap.
+LG 45th percentile generalist: bluff left slide.
+NT (0 technique): 38th percentile run-stuffer, releases to left A gap.
+C 90th percentile run mover: bluff left slide 6 man slide.
+RG 30th percentile run mover: bluff left slide 6 man slide.
+RDE 60th percentile (4 technique): Releases to left B gap.
+RT 90th percentile run mover, 70% stamina: bluff left slide 6 man slide.
+
+Backfield: RB inside handoff, aligned right, aimpoint right A gap.
+
+Second level summary: Draw action vs 3-deep 3-under zones.
+(from offenses right to left)
+RWR 45th percentile speedy, 70% stamina, injured hamstring (75%): Outside release go
+RCB: 90th percentile zone specialist no press: Deep left third.
+SWR right: 65th percentile blocking specialist, Outside release go
+SS 47th percentile enforcer rolling wide to the line of scrimmage on snap: right intermediate coverage responsibility zone (hot off SWR right)
+Nickel CB 67th percentile run-fit nickel lined up in slot (4 yards deep): Blitz right C gap.
+Sam LB 47th percentile blitzer: Lined up in C gap (7 yards deep), Blitz right A gap.
+Mike LB 47th percentile enforcer Lined up over LG (7 yards deep): Intermediate middle coverage (hot off RB)
+Will LB 85th percentile coverage specialist: left intermediate coverage zone (hot off TE)
+LCB: 55th percentile zone specialist no press: Deep left third, coaching point "nothing past you"
+LWR: 45th percentile generalist: stutter inside release.
+
+Backfield action.
+QB: Shotgun draw action, Bluff read left receivers, inside handoff
+RB: Bluff protection, late handoff aimed at right A gap.
+

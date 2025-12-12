@@ -1,0 +1,322 @@
+[
+    {
+        "name": "Joey Bosa",
+        "position": "DE",
+        "jersey": 90,
+        "height": "6'6",
+        "weight": "285",
+        "stamina": 85,
+        "percentile": 93,
+        "traits-from-baseline-percentile": {
+            "pass-rusher": 2,
+            "man-coverage": 1,
+            "gap-control": -4,
+            "zone-rushing-defense": -2
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Aaron Donald",
+        "position": "DT",
+        "jersey": 99,
+        "height": "6'1",
+        "weight": "280",
+        "stamina": 88,
+        "percentile": 97,
+        "traits-from-baseline-percentile": {
+            "pass-rusher": 5,
+            "gap-control": 3,
+            "zone-rushing-defense": 2,
+            "man-coverage": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Myles Garrett",
+        "position": "DE",
+        "jersey": 95,
+        "height": "6'4",
+        "weight": "272",
+        "stamina": 82,
+        "percentile": 95,
+        "traits-from-baseline-percentile": {
+            "pass-rusher": 4,
+            "gap-control": -2,
+            "zone-rushing-defense": 1,
+            "man-coverage": -3
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Chris Jones",
+        "position": "DT",
+        "jersey": 95,
+        "height": "6'6",
+        "weight": "310",
+        "stamina": 80,
+        "percentile": 91,
+        "traits-from-baseline-percentile": {
+            "pass-rusher": 3,
+            "gap-control": 2,
+            "zone-rushing-defense": 1,
+            "man-coverage": -4
+        },
+        "health": 100.0
+    },
+    {
+        "name": "T.J. Watt",
+        "position": "OLB",
+        "jersey": 90,
+        "height": "6'4",
+        "weight": "252",
+        "stamina": 87,
+        "percentile": 94,
+        "traits-from-baseline-percentile": {
+            "pass-rusher": 4,
+            "man-coverage": 2,
+            "zone-rushing-defense": 1,
+            "gap-control": -1
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Fred Warner",
+        "position": "ILB",
+        "jersey": 54,
+        "height": "6'3",
+        "weight": "236",
+        "stamina": 90,
+        "percentile": 92,
+        "traits-from-baseline-percentile": {
+            "man-coverage": 3,
+            "zone-rushing-defense": 2,
+            "gap-control": 1,
+            "pass-rusher": -2
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Roquan Smith",
+        "position": "ILB",
+        "jersey": 0,
+        "height": "6'1",
+        "weight": "230",
+        "stamina": 89,
+        "percentile": 90,
+        "traits-from-baseline-percentile": {
+            "zone-rushing-defense": 3,
+            "gap-control": 2,
+            "man-coverage": 1,
+            "pass-rusher": -3
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Micah Parsons",
+        "position": "OLB",
+        "jersey": 11,
+        "height": "6'3",
+        "weight": "245",
+        "stamina": 85,
+        "percentile": 96,
+        "traits-from-baseline-percentile": {
+            "pass-rusher": 5,
+            "zone-rushing-defense": 2,
+            "man-coverage": 1,
+            "gap-control": -1
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Jalen Ramsey",
+        "position": "CB",
+        "jersey": 5,
+        "height": "6'1",
+        "weight": "208",
+        "stamina": 88,
+        "percentile": 93,
+        "traits-from-baseline-percentile": {
+            "man-coverage": 4,
+            "zone-rushing-defense": 1,
+            "pass-rusher": -5,
+            "gap-control": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Denzel Ward",
+        "position": "CB",
+        "jersey": 21,
+        "height": "5'11",
+        "weight": "190",
+        "stamina": 86,
+        "percentile": 89,
+        "traits-from-baseline-percentile": {
+            "man-coverage": 3,
+            "zone-rushing-defense": 1,
+            "pass-rusher": -5,
+            "gap-control": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Minkah Fitzpatrick",
+        "position": "S",
+        "jersey": 39,
+        "height": "6'1",
+        "weight": "207",
+        "stamina": 91,
+        "percentile": 92,
+        "traits-from-baseline-percentile": {
+            "man-coverage": 2,
+            "zone-rushing-defense": 3,
+            "gap-control": 1,
+            "pass-rusher": -4
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Derwin James",
+        "position": "S",
+        "jersey": 33,
+        "height": "6'2",
+        "weight": "215",
+        "stamina": 84,
+        "percentile": 91,
+        "traits-from-baseline-percentile": {
+            "man-coverage": 3,
+            "zone-rushing-defense": 2,
+            "gap-control": 1,
+            "pass-rusher": -3
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Maxx Crosby",
+        "position": "DE",
+        "jersey": 98,
+        "height": "6'5",
+        "weight": "255",
+        "stamina": 83,
+        "percentile": 88,
+        "traits-from-baseline-percentile": {
+            "pass-rusher": 3,
+            "gap-control": -3,
+            "zone-rushing-defense": 0,
+            "man-coverage": -2
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Quinnen Williams",
+        "position": "DT",
+        "jersey": 95,
+        "height": "6'3",
+        "weight": "303",
+        "stamina": 79,
+        "percentile": 87,
+        "traits-from-baseline-percentile": {
+            "gap-control": 3,
+            "pass-rusher": 2,
+            "zone-rushing-defense": 1,
+            "man-coverage": -4
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Bobby Wagner",
+        "position": "ILB",
+        "jersey": 54,
+        "height": "6'0",
+        "weight": "241",
+        "stamina": 81,
+        "percentile": 85,
+        "traits-from-baseline-percentile": {
+            "zone-rushing-defense": 2,
+            "gap-control": 2,
+            "man-coverage": 0,
+            "pass-rusher": -2
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Darius Leonard",
+        "position": "OLB",
+        "jersey": 53,
+        "height": "6'2",
+        "weight": "230",
+        "stamina": 86,
+        "percentile": 86,
+        "traits-from-baseline-percentile": {
+            "zone-rushing-defense": 3,
+            "man-coverage": 1,
+            "gap-control": 1,
+            "pass-rusher": -1
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Marlon Humphrey",
+        "position": "CB",
+        "jersey": 44,
+        "height": "6'0",
+        "weight": "197",
+        "stamina": 87,
+        "percentile": 84,
+        "traits-from-baseline-percentile": {
+            "man-coverage": 2,
+            "zone-rushing-defense": 1,
+            "pass-rusher": -5,
+            "gap-control": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Xavien Howard",
+        "position": "CB",
+        "jersey": 8,
+        "height": "6'1",
+        "weight": "198",
+        "stamina": 85,
+        "percentile": 82,
+        "traits-from-baseline-percentile": {
+            "man-coverage": 2,
+            "zone-rushing-defense": 0,
+            "pass-rusher": -5,
+            "gap-control": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Kevin Byard",
+        "position": "S",
+        "jersey": 31,
+        "height": "5'11",
+        "weight": "212",
+        "stamina": 88,
+        "percentile": 83,
+        "traits-from-baseline-percentile": {
+            "zone-rushing-defense": 2,
+            "man-coverage": 1,
+            "gap-control": 0,
+            "pass-rusher": -4
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Budda Baker",
+        "position": "S",
+        "jersey": 3,
+        "height": "5'10",
+        "weight": "195",
+        "stamina": 90,
+        "percentile": 81,
+        "traits-from-baseline-percentile": {
+            "zone-rushing-defense": 3,
+            "man-coverage": 1,
+            "gap-control": 0,
+            "pass-rusher": -4
+        },
+        "health": 100.0
+    }
+]

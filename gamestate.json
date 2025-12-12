@@ -1,0 +1,12 @@
+{
+    "possession": "home",
+    "quarter": 1,
+    "down": 10,
+    "distance": 10,
+    "opp-yardline": 65,
+    "score": {
+        "home": 0,
+        "away": 0
+    },
+    "time": "15:00"
+}

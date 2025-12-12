@@ -1,0 +1,105 @@
+{
+    "description": "Play outcome state machine for football play evaluation",
+    "baseline-rates": {
+        "success": 45.0,
+        "unsuccessful": 31.0,
+        "havoc": 11.0,
+        "explosive": 13.0
+    },
+    "personnel-adjustment-range": 10.0,
+    "yac-rates": {
+        "explosive-play-tackle-percentage": 40.0,
+        "non-explosive-tackle-percentage": 60.0
+    },
+    "havoc-outcomes": {
+        "sack": 30.0,
+        "turnover": 15.0,
+        "tackle-for-loss": 40.0,
+        "incompletion-bonus": 15.0
+    },
+    "steps": [
+        {
+            "step": 1,
+            "name": "Determine Basic Play Outcome",
+            "description": "Roll 1-100 to determine if play is Success, Unsuccessful, Havoc, or Explosive",
+            "method": "weighted-random",
+            "adjustments": "Apply personnel-based adjustments (+/- 10% from baseline based on player matchups)"
+        },
+        {
+            "step": 2,
+            "name": "Apply Personnel Adjustments",
+            "description": "Adjust outcome probabilities based on player percentile ratings and traits",
+            "method": "percentile-calculation",
+            "formula": "base_rate + (personnel_advantage * 0.1)"
+        },
+        {
+            "step": 3,
+            "name": "Explosive Play YAC Check",
+            "condition": "if outcome == 'explosive'",
+            "description": "Roll for YAC (yards after catch/contact). Base tackle percentage is 40%",
+            "method": "roll-1-100",
+            "tackle-threshold": 40
+        },
+        {
+            "step": 4,
+            "name": "Non-Explosive YAC Check",
+            "condition": "if outcome == 'success' and not explosive",
+            "description": "Roll for YAC. Base tackle percentage is 60%",
+            "method": "roll-1-100",
+            "tackle-threshold": 60
+        },
+        {
+            "step": 5,
+            "name": "Havoc Outcome Roll",
+            "condition": "if outcome == 'havoc'",
+            "description": "Determine specific havoc outcome (sack, turnover, TFL, etc.)",
+            "method": "weighted-random",
+            "outcomes": ["sack", "turnover", "tackle-for-loss", "incompletion-bonus"]
+        },
+        {
+            "step": 6,
+            "name": "Calculate Yards Gained",
+            "description": "Based on outcome type, calculate yards gained using outcome distribution",
+            "method": "outcome-based-calculation",
+            "references": [
+                "outcomes/successful-run.json",
+                "outcomes/explosive-run.json",
+                "outcomes/havoc-run.json",
+                "outcomes/yac-catch.json"
+            ]
+        },
+        {
+            "step": 7,
+            "name": "Update Game State",
+            "description": "Update gamestate.json with new down, distance, yardline, and score",
+            "method": "state-update"
+        },
+        {
+            "step": 8,
+            "name": "Update Fatigue",
+            "description": "Apply logarithmic fatigue to player stamina and adjust percentile ratings",
+            "method": "logarithmic-fatigue",
+            "formula": "effective_percentile = base_percentile * fatigue_multiplier",
+            "fatigue-curve": {
+                "85": 0.99,
+                "80": 0.97,
+                "75": 0.94,
+                "70": 0.90,
+                "65": 0.85,
+                "60": 0.80,
+                "55": 0.73,
+                "50": 0.65,
+                "45": 0.55,
+                "40": 0.45,
+                "35": 0.35,
+                "30": 0.25,
+                "25": 0.15,
+                "20": 0.10,
+                "15": 0.05,
+                "10": 0.02,
+                "5": 0.01,
+                "0": 0.00
+            }
+        }
+    ]
+}

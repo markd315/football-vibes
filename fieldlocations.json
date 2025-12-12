@@ -1,0 +1,442 @@
+[
+    {
+        "Section": "Offensive backfield",
+        "Locations": [
+            {
+                "Name": "QB's left flank",
+                "X": -2,
+                "Y": -3
+            },
+            {
+                "Name": "QB's right flank",
+                "X": 2,
+                "Y": -3
+            },
+            {
+                "Name": "Behind QB (Shotgun)",
+                "X": 0,
+                "Y": -5
+            },
+            {
+                "Name": "Behind QB (Under center)",
+                "X": 0,
+                "Y": -2
+            },
+            {
+                "Name": "Behind QB (I-formation)",
+                "X": 0,
+                "Y": -4
+            },
+            {
+                "Name": "QB (Pistol)",
+                "X": 0,
+                "Y": -3
+            },
+            {
+                "Name": "QB (Shotgun)",
+                "X": 0,
+                "Y": -5
+            },
+            {
+                "Name": "QB (Under center)",
+                "X": 0,
+                "Y": 0
+            },
+            {
+                "Name": "Behind tight end (Left)",
+                "X": -6,
+                "Y": -3
+            },
+            {
+                "Name": "Behind tight end (Right)",
+                "X": 6,
+                "Y": -3
+            }
+        ]
+    },
+    {
+        "Section": "Offensive line of scrimmage",
+        "Locations": [
+            {
+                "Name": "Wide left",
+                "X": -20,
+                "Y": 0
+            },
+            {
+                "Name": "Wide right",
+                "X": 20,
+                "Y": 0
+            },
+            {
+                "Name": "Split-left",
+                "X": -12,
+                "Y": 0
+            },
+            {
+                "Name": "Split-right",
+                "X": 12,
+                "Y": 0
+            },
+            {
+                "Name": "Overlap-left",
+                "X": -8,
+                "Y": 0
+            },
+            {
+                "Name": "Overlap-right",
+                "X": 8,
+                "Y": 0
+            },
+            {
+                "Name": "Slot left",
+                "X": -6,
+                "Y": 0
+            },
+            {
+                "Name": "Slot right",
+                "X": 6,
+                "Y": 0
+            },
+            {
+                "Name": "Tight end inside left",
+                "X": -4,
+                "Y": 0
+            },
+            {
+                "Name": "Tight end inside right",
+                "X": 4,
+                "Y": 0
+            },
+            {
+                "Name": "Tight end outside left",
+                "X": -5.5,
+                "Y": 0
+            },
+            {
+                "Name": "Tight end outside right",
+                "X": 5.5,
+                "Y": 0
+            }
+        ]
+    },
+    {
+        "Section": "Defensive line of scrimmage",
+        "Locations": [
+            {
+                "Name": "0",
+                "X": 0,
+                "Y": 0
+            },
+            {
+                "Name": "1",
+                "X": 1,
+                "Y": 0
+            },
+            {
+                "Name": "2i",
+                "X": 2,
+                "Y": 0
+            },
+            {
+                "Name": "2",
+                "X": 2.5,
+                "Y": 0
+            },
+            {
+                "Name": "3",
+                "X": 3.5,
+                "Y": 0
+            },
+            {
+                "Name": "4i",
+                "X": 4,
+                "Y": 0
+            },
+            {
+                "Name": "4",
+                "X": 5,
+                "Y": 0
+            },
+            {
+                "Name": "5",
+                "X": 6.5,
+                "Y": 0
+            },
+            {
+                "Name": "6i",
+                "X": 7,
+                "Y": 0
+            },
+            {
+                "Name": "6",
+                "X": 8,
+                "Y": 0
+            },
+            {
+                "Name": "7",
+                "X": 9.5,
+                "Y": 0
+            },
+            {
+                "Name": "-1",
+                "X": -1,
+                "Y": 0
+            },
+            {
+                "Name": "-2i",
+                "X": -2,
+                "Y": 0
+            },
+            {
+                "Name": "-2",
+                "X": -2.5,
+                "Y": 0
+            },
+            {
+                "Name": "-3",
+                "X": -3.5,
+                "Y": 0
+            },
+            {
+                "Name": "-4i",
+                "X": -4,
+                "Y": 0
+            },
+            {
+                "Name": "-4",
+                "X": -5,
+                "Y": 0
+            },
+            {
+                "Name": "-5",
+                "X": -6.5,
+                "Y": 0
+            },
+            {
+                "Name": "-6i",
+                "X": -7,
+                "Y": 0
+            },
+            {
+                "Name": "-6",
+                "X": -8,
+                "Y": 0
+            },
+            {
+                "Name": "-7",
+                "X": -9.5,
+                "Y": 0
+            }
+        ]
+    },
+    {
+        "Section": "Defensive backfield",
+        "Locations": [
+            {
+                "Name": "Left C gap",
+                "X": -5,
+                "Y": 2
+            },
+            {
+                "Name": "Right C gap",
+                "X": 5,
+                "Y": 2
+            },
+            {
+                "Name": "Left A gap",
+                "X": -1.5,
+                "Y": 2
+            },
+            {
+                "Name": "Right A gap",
+                "X": 1.5,
+                "Y": 2
+            },
+            {
+                "Name": "Left B gap",
+                "X": -3,
+                "Y": 2
+            },
+            {
+                "Name": "Right B gap",
+                "X": 3,
+                "Y": 2
+            },
+            {
+                "Name": "Over Center",
+                "X": 0,
+                "Y": 2
+            }
+        ]
+    },
+    {
+        "Section": "Press coverage",
+        "Locations": [
+            {
+                "Name": "Wide left",
+                "X": -20,
+                "Y": 0
+            },
+            {
+                "Name": "Wide right",
+                "X": 20,
+                "Y": 0
+            },
+            {
+                "Name": "Split-left",
+                "X": -12,
+                "Y": 0
+            },
+            {
+                "Name": "Split-right",
+                "X": 12,
+                "Y": 0
+            },
+            {
+                "Name": "Overlap-left",
+                "X": -8,
+                "Y": 0
+            },
+            {
+                "Name": "Overlap-right",
+                "X": 8,
+                "Y": 0
+            },
+            {
+                "Name": "Slot left",
+                "X": -6,
+                "Y": 0
+            },
+            {
+                "Name": "Slot right",
+                "X": 6,
+                "Y": 0
+            }
+        ]
+    },
+    {
+        "Section": "Coverage second level",
+        "Locations": [
+            {
+                "Name": "Wide left",
+                "X": -20,
+                "Y": 5
+            },
+            {
+                "Name": "Wide right",
+                "X": 20,
+                "Y": 5
+            },
+            {
+                "Name": "Split-left",
+                "X": -12,
+                "Y": 5
+            },
+            {
+                "Name": "Split-right",
+                "X": 12,
+                "Y": 5
+            },
+            {
+                "Name": "Overlap-left",
+                "X": -8,
+                "Y": 5
+            },
+            {
+                "Name": "Overlap-right",
+                "X": 8,
+                "Y": 5
+            },
+            {
+                "Name": "Slot left",
+                "X": -6,
+                "Y": 5
+            },
+            {
+                "Name": "Slot right",
+                "X": 6,
+                "Y": 5
+            },
+            {
+                "Name": "Tight end inside left",
+                "X": -4,
+                "Y": 5
+            },
+            {
+                "Name": "Tight end inside right",
+                "X": 4,
+                "Y": 5
+            },
+            {
+                "Name": "Tight end outside left",
+                "X": -5.5,
+                "Y": 5
+            },
+            {
+                "Name": "Tight end outside right",
+                "X": 5.5,
+                "Y": 5
+            }
+        ]
+    },
+    {
+        "Section": "Deep level (shaded forward)",
+        "Locations": [
+            {
+                "Name": "Left cornerback",
+                "X": -18,
+                "Y": 12
+            },
+            {
+                "Name": "Right cornerback",
+                "X": 18,
+                "Y": 12
+            },
+            {
+                "Name": "Free safety",
+                "X": 0,
+                "Y": 15
+            },
+            {
+                "Name": "Strong safety left",
+                "X": -8,
+                "Y": 12
+            },
+            {
+                "Name": "Strong safety right",
+                "X": 8,
+                "Y": 12
+            }
+        ]
+    },
+    {
+        "Section": "Deep level (shaded back)",
+        "Locations": [
+            {
+                "Name": "Left cornerback",
+                "X": -18,
+                "Y": 18
+            },
+            {
+                "Name": "Right cornerback",
+                "X": 18,
+                "Y": 18
+            },
+            {
+                "Name": "Free safety",
+                "X": 0,
+                "Y": 20
+            },
+            {
+                "Name": "Strong safety left",
+                "X": -8,
+                "Y": 18
+            },
+            {
+                "Name": "Strong safety right",
+                "X": 8,
+                "Y": 18
+            }
+        ]
+    }
+]

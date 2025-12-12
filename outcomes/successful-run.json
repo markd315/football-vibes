@@ -1,0 +1,14 @@
+
+{
+    "outcome": "Successful Run",
+    "description": "The running back found daylight and gained {yards} yards.",
+    "methodology": "Roll 1-100 and assign the yards gained based on the roll.",
+    "average-yards-gained": 5,
+    "standard-deviation": 2.5,
+    "skewness": 0.0,
+    "kurtosis": 0.0,
+    "mode": 15,
+    "median": 15,
+    "turnover-probability": 1.0,
+    "turnover-type": "fumble"
+}
