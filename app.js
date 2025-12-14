@@ -44,8 +44,9 @@ async function loadGameState() {
         gameState = {
             possession: "home",
             quarter: 1,
-            down: 1,
-            distance: 10,
+        down: 1,
+        distance: 10,
+        consecutiveUnsuccessfulPlays: 0,
             "opp-yardline": 65,
             score: { home: 0, away: 0 },
             time: "15:00"
@@ -72,11 +73,17 @@ async function loadRosters() {
         }
         rosters.defense = await defenseResponse.json();
         console.log(`Loaded ${rosters.defense.length} defensive players`);
+        console.log('Defensive roster sample:', rosters.defense.slice(0, 3));
         
         // Render after a short delay to ensure DOM is ready
         setTimeout(() => {
-            renderPersonnelSelection();
-            updatePersonnelDisplay();
+            if (rosters.defense && rosters.defense.length > 0) {
+                renderPersonnelSelection();
+                updatePersonnelDisplay();
+            } else {
+                console.error('Defensive roster is empty after loading!');
+                alert('Warning: Defensive roster is empty. Please check rosters/defense.json');
+            }
         }, 100);
     } catch (error) {
         console.error('Error loading rosters:', error);
@@ -124,57 +131,94 @@ function renderPersonnelSelection() {
     if (selectedPlayers.length === 0 && lastSelectedPlayers.length > 0) {
         selectedPlayers = [...lastSelectedPlayers];
     } else if (selectedPlayers.length === 0) {
-        // Smart default: First QB, first 5 linemen
-        const qb = rosters.offense.findIndex(p => p.position === 'QB');
-        const linemen = rosters.offense
-            .map((p, i) => ({ player: p, index: i }))
-            .filter(item => ['OT', 'OG', 'C'].includes(item.player.position))
-            .slice(0, 5);
-        
+        // Smart default: 11 Personnel (1 QB, 1 RB, 1 TE, 3 WR, 5 OL)
         selectedPlayers = [];
-        if (qb >= 0) selectedPlayers.push(`offense-${qb}`);
-        linemen.forEach(item => selectedPlayers.push(`offense-${item.index}`));
         
-        // Fill remaining 5 spots with first available players
-        let remaining = 11 - selectedPlayers.length;
-        for (let i = 0; i < rosters.offense.length && remaining > 0; i++) {
-            const playerId = `offense-${i}`;
-            if (!selectedPlayers.includes(playerId)) {
-                selectedPlayers.push(playerId);
-                remaining--;
-            }
-        }
+        // 1 QB
+        const qbIndex = rosters.offense.findIndex(p => p.position === 'QB');
+        if (qbIndex >= 0) selectedPlayers.push(`offense-${qbIndex}`);
+        
+        // 1 RB
+        const rbIndex = rosters.offense.findIndex(p => p.position === 'RB');
+        if (rbIndex >= 0) selectedPlayers.push(`offense-${rbIndex}`);
+        
+        // 1 TE
+        const teIndex = rosters.offense.findIndex(p => p.position === 'TE');
+        if (teIndex >= 0) selectedPlayers.push(`offense-${teIndex}`);
+        
+        // 3 WRs
+        const wrIndices = rosters.offense
+            .map((p, i) => ({ player: p, index: i }))
+            .filter(item => item.player.position === 'WR')
+            .slice(0, 3);
+        wrIndices.forEach(item => selectedPlayers.push(`offense-${item.index}`));
+        
+        // 5 OL - ensure Center is included first, then 2 Guards, 2 Tackles
+        const centerIndex = rosters.offense.findIndex(p => p.position === 'C');
+        if (centerIndex >= 0) selectedPlayers.push(`offense-${centerIndex}`);
+        
+        const guards = rosters.offense
+            .map((p, i) => ({ player: p, index: i }))
+            .filter(item => item.player.position === 'OG')
+            .slice(0, 2);
+        guards.forEach(item => selectedPlayers.push(`offense-${item.index}`));
+        
+        const tackles = rosters.offense
+            .map((p, i) => ({ player: p, index: i }))
+            .filter(item => item.player.position === 'OT')
+            .slice(0, 2);
+        tackles.forEach(item => selectedPlayers.push(`offense-${item.index}`));
     }
     
     // Default to last 11 defensive players, or smart defaults if none
     if (selectedDefense.length === 0 && lastSelectedDefense.length > 0) {
         selectedDefense = [...lastSelectedDefense];
     } else if (selectedDefense.length === 0) {
-        // Smart default: 2 DE, 2 DT, 2 LB, 2 CB, 2 S
+        // Smart default: Nickel (2 DE, 2 DT, 2 LB, 3 CB, 2 S)
         selectedDefense = [];
         
-        const de = rosters.defense.filter((p, i) => p.position === 'DE').slice(0, 2);
-        const dt = rosters.defense.filter((p, i) => p.position === 'DT').slice(0, 2);
-        const lb = rosters.defense.filter((p, i) => ['LB', 'MLB'].includes(p.position)).slice(0, 2);
-        const cb = rosters.defense.filter((p, i) => p.position === 'CB').slice(0, 2);
-        const s = rosters.defense.filter((p, i) => p.position === 'S').slice(0, 2);
-        
+        // Ensure exactly 2 DE, then 2 DT, 2 LB, 3 CB, 2 S
         rosters.defense.forEach((p, i) => {
             const playerId = `defense-${i}`;
-            if (de.includes(p) || dt.includes(p) || lb.includes(p) || cb.includes(p) || s.includes(p)) {
+            const position = p.position;
+            
+            // Count how many of each position we've already selected
+            const selectedCounts = {
+                DE: selectedDefense.filter(id => {
+                    const idx = parseInt(id.split('-')[1]);
+                    return rosters.defense[idx]?.position === 'DE';
+                }).length,
+                DT: selectedDefense.filter(id => {
+                    const idx = parseInt(id.split('-')[1]);
+                    return rosters.defense[idx]?.position === 'DT';
+                }).length,
+                LB: selectedDefense.filter(id => {
+                    const idx = parseInt(id.split('-')[1]);
+                    return ['LB', 'MLB'].includes(rosters.defense[idx]?.position);
+                }).length,
+                CB: selectedDefense.filter(id => {
+                    const idx = parseInt(id.split('-')[1]);
+                    return rosters.defense[idx]?.position === 'CB';
+                }).length,
+                S: selectedDefense.filter(id => {
+                    const idx = parseInt(id.split('-')[1]);
+                    return rosters.defense[idx]?.position === 'S';
+                }).length
+            };
+            
+            // Add player if we need more of their position
+            if (position === 'DE' && selectedCounts.DE < 2) {
+                selectedDefense.push(playerId);
+            } else if (position === 'DT' && selectedCounts.DT < 2) {
+                selectedDefense.push(playerId);
+            } else if (['LB', 'MLB'].includes(position) && selectedCounts.LB < 2) {
+                selectedDefense.push(playerId);
+            } else if (position === 'CB' && selectedCounts.CB < 3) {
+                selectedDefense.push(playerId);
+            } else if (position === 'S' && selectedCounts.S < 2) {
                 selectedDefense.push(playerId);
             }
         });
-        
-        // Fill remaining spots if needed
-        let remaining = 11 - selectedDefense.length;
-        for (let i = 0; i < rosters.defense.length && remaining > 0; i++) {
-            const playerId = `defense-${i}`;
-            if (!selectedDefense.includes(playerId)) {
-                selectedDefense.push(playerId);
-                remaining--;
-            }
-        }
     }
     
     // Render offensive roster
@@ -183,11 +227,16 @@ function renderPersonnelSelection() {
         offenseList.appendChild(card);
     });
     
-    // Render defensive roster (for reference, but we select 11 total from offense)
-    rosters.defense.forEach((player, index) => {
-        const card = createPlayerCard(player, 'defense', index);
-        defenseList.appendChild(card);
-    });
+    // Render defensive roster
+    if (rosters.defense && rosters.defense.length > 0) {
+        rosters.defense.forEach((player, index) => {
+            const card = createPlayerCard(player, 'defense', index);
+            defenseList.appendChild(card);
+        });
+    } else {
+        console.error('Defensive roster is empty when rendering!');
+        defenseList.innerHTML = '<p style="color: red;">Error: Defensive roster not loaded. Please refresh the page.</p>';
+    }
     
     // Update selected state
     updateSelectedPlayersDisplay();
@@ -419,55 +468,53 @@ function renderField() {
     
     // Scale canvas to container
     const dpr = window.devicePixelRatio || 1;
-    canvas.width = container.offsetWidth * dpr;
-    canvas.height = container.offsetHeight * dpr;
-    canvas.style.width = container.offsetWidth + 'px';
-    canvas.style.height = container.offsetHeight + 'px';
+    const canvasWidth = container.offsetWidth;
+    const canvasHeight = container.offsetHeight;
+    canvas.width = canvasWidth * dpr;
+    canvas.height = canvasHeight * dpr;
+    canvas.style.width = canvasWidth + 'px';
+    canvas.style.height = canvasHeight + 'px';
     ctx.scale(dpr, dpr);
     
     // Draw field
     ctx.fillStyle = '#2d5016';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     
-    // Draw yard lines
-    const centerY = canvas.height / 2;
-    for (let i = 0; i <= 10; i++) {
-        const x = (i / 10) * canvas.width;
-        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-    }
+    // NO YARD LINES - removed entirely
     
-    // Draw hash marks
-    const hashY1 = centerY - 20;
-    const hashY2 = centerY + 20;
-    for (let i = 0; i <= 10; i++) {
-        const x = (i / 10) * canvas.width;
+    const centerY = canvasHeight / 2;
+    
+    // Draw hash marks (vertical lines along the length of the field)
+    // Hash marks at standard NFL positions (70 feet 9 inches from each sideline)
+    for (let i = 0; i <= 20; i++) {
+        const y = (i / 20) * canvasHeight;
+        // Left hash marks (at ~15% and ~35% of field width)
         ctx.fillStyle = 'rgba(255,255,255,0.5)';
-        ctx.fillRect(x - 1, hashY1, 2, 10);
-        ctx.fillRect(x - 1, hashY2, 2, 10);
+        ctx.fillRect(canvasWidth * 0.15 - 1, y, 2, 8);
+        ctx.fillRect(canvasWidth * 0.35 - 1, y, 2, 8);
+        // Right hash marks (at ~65% and ~85% of field width)
+        ctx.fillRect(canvasWidth * 0.65 - 1, y, 2, 8);
+        ctx.fillRect(canvasWidth * 0.85 - 1, y, 2, 8);
     }
+    
+    // NO FIELD NUMBERS - removed entirely
     
     // Draw line of scrimmage
     ctx.strokeStyle = '#FFD700';
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(0, centerY);
-    ctx.lineTo(canvas.width, centerY);
+    ctx.lineTo(canvasWidth, centerY);
     ctx.stroke();
     
     // Draw drop zones for field locations
-    const canvasWidth = container.offsetWidth;
-    const canvasHeight = container.offsetHeight;
     
     fieldLocations.forEach(section => {
         section.Locations.forEach(location => {
             if (location.X !== undefined && location.Y !== undefined) {
                 const x = ((location.X + 25) / 50) * canvasWidth; // Normalize -25 to +25 to 0 to width
-                const y = centerY - (location.Y * 10); // Scale Y coordinate
+                // Consistent Y coordinate scaling
+                const y = centerY - (location.Y * 15);
                 
                 if (x >= 0 && x <= canvasWidth && y >= 0 && y <= canvasHeight) {
                     ctx.fillStyle = 'rgba(255,255,255,0.2)';
@@ -493,6 +540,257 @@ function renderField() {
     renderAssignmentArrows();
 }
 
+// Playcall definitions
+const offensivePlaycalls = {
+    'IZR left': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'IZR' },
+        'OT': { category: 'Run Block', action: 'Zone inside left' },
+        'OG': { category: 'Run Block', action: 'Zone inside left' },
+        'C': { category: 'Run Block', action: 'Zone inside left' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' }
+    },
+    'IZR right': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'IZR' },
+        'OT': { category: 'Run Block', action: 'Zone inside right' },
+        'OG': { category: 'Run Block', action: 'Zone inside right' },
+        'C': { category: 'Run Block', action: 'Zone inside right' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' }
+    },
+    'OZR left': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'OZR' },
+        'OT': { category: 'Run Block', action: 'Zone outside left' },
+        'OG': { category: 'Run Block', action: 'Zone outside left' },
+        'C': { category: 'Run Block', action: 'Zone outside left' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' }
+    },
+    'OZR right': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'OZR' },
+        'OT': { category: 'Run Block', action: 'Zone outside right' },
+        'OG': { category: 'Run Block', action: 'Zone outside right' },
+        'C': { category: 'Run Block', action: 'Zone outside right' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' }
+    },
+    'Power left': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'Left B gap' },
+        'OT': { category: 'Run Block', action: 'Pull' },
+        'OG': { category: 'Run Block', action: 'Zone inside left' },
+        'C': { category: 'Run Block', action: 'Zone inside left' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' }
+    },
+    'Power right': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'Right B gap' },
+        'OT': { category: 'Run Block', action: 'Pull' },
+        'OG': { category: 'Run Block', action: 'Zone inside right' },
+        'C': { category: 'Run Block', action: 'Zone inside right' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' }
+    },
+    'Counter left': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'Left C gap' },
+        'OT': { category: 'Run Block', action: 'Zone inside left' },
+        'OG': { category: 'Run Block', action: 'Zone inside left' }, // Only backside guard pulls, frontside stays
+        'C': { category: 'Run Block', action: 'Zone inside left' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' }
+    },
+    'Counter right': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'Right C gap' },
+        'OT': { category: 'Run Block', action: 'Zone inside right' },
+        'OG': { category: 'Run Block', action: 'Zone inside right' }, // Only backside guard pulls, frontside stays
+        'C': { category: 'Run Block', action: 'Zone inside right' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' }
+    },
+    'Duo': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'Left A gap' },
+        'OT': { category: 'Run Block', action: 'Combo' },
+        'OG': { category: 'Run Block', action: 'Combo' },
+        'C': { category: 'Run Block', action: 'Zone inside left' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' }
+    },
+    'Iso': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'Left A gap' },
+        'OT': { category: 'Run Block', action: 'Zone inside left' },
+        'OG': { category: 'Run Block', action: 'Zone inside left' },
+        'C': { category: 'Run Block', action: 'Zone inside left' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' }
+    },
+    'Shallow Cross': {
+        'QB': { category: 'Pass', action: '3 step drop' },
+        'RB': { category: 'Protect', action: 'Block right' },
+        'WR': { category: 'Route', action: 'Slant' },
+        'TE': { category: 'Route', action: 'Dig' },
+        'OT': { category: 'Pass Block', action: 'Outside priority' },
+        'OG': { category: 'Pass Block', action: 'Inside priority' },
+        'C': { category: 'Pass Block', action: 'Inside priority' }
+    },
+    'Dagger': {
+        'QB': { category: 'Pass', action: '5 step drop' },
+        'RB': { category: 'Protect', action: 'Block left' },
+        'WR': { category: 'Route', action: 'Dig' },
+        'TE': { category: 'Route', action: 'Post' },
+        'OT': { category: 'Pass Block', action: 'Outside priority' },
+        'OG': { category: 'Pass Block', action: 'Inside priority' },
+        'C': { category: 'Pass Block', action: 'Inside priority' }
+    },
+    'Flood': {
+        'QB': { category: 'Pass', action: '5 step drop' },
+        'RB': { category: 'Protect', action: 'Block right' },
+        'WR': { category: 'Route', action: 'Corner' },
+        'TE': { category: 'Route', action: 'Flat' },
+        'OT': { category: 'Pass Block', action: 'Outside priority' },
+        'OG': { category: 'Pass Block', action: 'Inside priority' },
+        'C': { category: 'Pass Block', action: 'Inside priority' }
+    },
+    'Levels': {
+        'QB': { category: 'Pass', action: '3 step drop' },
+        'RB': { category: 'Route', action: 'Checkdown' },
+        'WR': { category: 'Route', action: 'Dig' },
+        'TE': { category: 'Route', action: 'Curl' },
+        'OT': { category: 'Pass Block', action: 'Inside priority' },
+        'OG': { category: 'Pass Block', action: 'Inside priority' },
+        'C': { category: 'Pass Block', action: 'Inside priority' }
+    },
+    'Sail': {
+        'QB': { category: 'Pass', action: '5 step drop' },
+        'RB': { category: 'Route', action: 'Flat' },
+        'WR': { category: 'Route', action: 'Corner' },
+        'TE': { category: 'Route', action: 'Out' },
+        'OT': { category: 'Pass Block', action: 'Outside priority' },
+        'OG': { category: 'Pass Block', action: 'Inside priority' },
+        'C': { category: 'Pass Block', action: 'Inside priority' }
+    },
+    'Four Verticals': {
+        'QB': { category: 'Pass', action: '7 step drop' },
+        'RB': { category: 'Protect', action: 'Block left' },
+        'WR': { category: 'Route', action: 'Seam/Go' },
+        'TE': { category: 'Route', action: 'Seam/Go' },
+        'OT': { category: 'Pass Block', action: 'Outside priority' },
+        'OG': { category: 'Pass Block', action: 'Inside priority' },
+        'C': { category: 'Pass Block', action: 'Inside priority' }
+    },
+    'Curl flats': {
+        'QB': { category: 'Pass', action: '3 step drop' },
+        'RB': { category: 'Route', action: 'Flat' },
+        'WR': { category: 'Route', action: 'Curl' },
+        'TE': { category: 'Route', action: 'Curl' },
+        'OT': { category: 'Pass Block', action: 'Inside priority' },
+        'OG': { category: 'Pass Block', action: 'Inside priority' },
+        'C': { category: 'Pass Block', action: 'Inside priority' }
+    },
+    'Mesh': {
+        'QB': { category: 'Pass', action: '3 step drop' },
+        'RB': { category: 'Route', action: 'Checkdown' },
+        'WR': { category: 'Route', action: 'Slant' },
+        'TE': { category: 'Route', action: 'Slant' },
+        'OT': { category: 'Pass Block', action: 'Inside priority' },
+        'OG': { category: 'Pass Block', action: 'Inside priority' },
+        'C': { category: 'Pass Block', action: 'Inside priority' }
+    },
+    'Drive': {
+        'QB': { category: 'Pass', action: '3 step drop' },
+        'RB': { category: 'Route', action: 'Flat' },
+        'WR': { category: 'Route', action: 'Dig' },
+        'TE': { category: 'Route', action: 'Dig' },
+        'OT': { category: 'Pass Block', action: 'Inside priority' },
+        'OG': { category: 'Pass Block', action: 'Inside priority' },
+        'C': { category: 'Pass Block', action: 'Inside priority' }
+    },
+    'Ohio': {
+        'QB': { category: 'Pass', action: '5 step drop' },
+        'RB': { category: 'Route', action: 'Wheel' },
+        'WR': { category: 'Route', action: 'Post' },
+        'TE': { category: 'Route', action: 'Corner' },
+        'OT': { category: 'Pass Block', action: 'Outside priority' },
+        'OG': { category: 'Pass Block', action: 'Inside priority' },
+        'C': { category: 'Pass Block', action: 'Inside priority' }
+    }
+};
+
+const defensivePlaycalls = {
+    'Cover 2': {
+        'CB': { category: 'Zone Deep', action: 'Deep left (2)' },
+        'S': { category: 'Zone Deep', action: 'Deep middle 1/3' },
+        'LB': { category: 'Zone', action: 'Hook' },
+        'MLB': { category: 'Zone', action: 'Hook' },
+        'DE': { category: 'Rush', action: 'Contain' },
+        'DT': { category: 'Rush', action: 'Left B gap' }
+    },
+    'Cover 1 (man)': {
+        'CB': { category: 'Man Coverage', action: 'Outside release man' },
+        'S': { category: 'Zone Deep', action: 'Deep middle 1/3' },
+        'LB': { category: 'Man Coverage', action: 'Inside release man' },
+        'MLB': { category: 'Man Coverage', action: 'Inside release man' },
+        'DE': { category: 'Rush', action: 'Contain' },
+        'DT': { category: 'Rush', action: 'Left B gap' }
+    },
+    'Cover 1 robber': {
+        'CB': { category: 'Man Coverage', action: 'Outside release man' },
+        'S': { category: 'Zone Short', action: 'Robber' },
+        'LB': { category: 'Man Coverage', action: 'Inside release man' },
+        'MLB': { category: 'Man Coverage', action: 'Inside release man' },
+        'DE': { category: 'Rush', action: 'Contain' },
+        'DT': { category: 'Rush', action: 'Left B gap' }
+    },
+    'Cover 3': {
+        'CB': { category: 'Zone Deep', action: 'Deep left (3)' },
+        'S': { category: 'Zone Deep', action: 'Deep middle 1/3' },
+        'LB': { category: 'Zone', action: 'Curtain' },
+        'MLB': { category: 'Zone', action: 'Curtain' },
+        'DE': { category: 'Rush', action: 'Contain' },
+        'DT': { category: 'Rush', action: 'Left B gap' }
+    },
+    'Cover 4 (prevent)': {
+        'CB': { category: 'Zone Deep', action: 'Deep far left (4)' },
+        'S': { category: 'Zone Deep', action: 'Deep middle 1/3' },
+        'LB': { category: 'Zone', action: 'Curtain' },
+        'MLB': { category: 'Zone', action: 'Curtain' },
+        'DE': { category: 'Rush', action: 'Contain' },
+        'DT': { category: 'Rush', action: 'Left B gap' }
+    },
+    'Cover 4 (match)': {
+        'CB': { category: 'Zone Deep', action: 'Deep seam left (4)' },
+        'S': { category: 'Zone Deep', action: 'Deep middle 1/3' },
+        'LB': { category: 'Zone', action: 'Hook' },
+        'MLB': { category: 'Zone', action: 'Hook' },
+        'DE': { category: 'Rush', action: 'Contain' },
+        'DT': { category: 'Rush', action: 'Left B gap' }
+    },
+    'Cover 0 (LB blitz)': {
+        'CB': { category: 'Man Coverage', action: 'Outside release man' },
+        'S': { category: 'Man Coverage', action: 'Inside release man' },
+        'LB': { category: 'Blitz', action: 'Left A gap' },
+        'MLB': { category: 'Blitz', action: 'Right A gap' },
+        'DE': { category: 'Rush', action: 'Contain' },
+        'DT': { category: 'Rush', action: 'Left B gap' }
+    },
+    'Cover 0 (CB blitz)': {
+        'CB': { category: 'Blitz', action: 'Left C gap' },
+        'S': { category: 'Man Coverage', action: 'Inside release man' },
+        'LB': { category: 'Man Coverage', action: 'Inside release man' },
+        'MLB': { category: 'Man Coverage', action: 'Inside release man' },
+        'DE': { category: 'Rush', action: 'Contain' },
+        'DT': { category: 'Rush', action: 'Left B gap' }
+    }
+};
+
 // Assignment categories and actions
 const offensiveAssignments = {
     'QB': {
@@ -510,7 +808,7 @@ const offensiveAssignments = {
     },
     'TE': {
         'Block': ['Block', 'Jet Motion', 'Jet motion option'],
-        'Route': ['Slant', 'Dig', 'Out', 'Curl', 'Comeback', 'Corner', 'Post', 'Fade', 'Seam/Go', 'Chip+Delay']
+        'Route': ['Slant', 'Dig', 'Out', 'Curl', 'Comeback', 'Corner', 'Post', 'Fade', 'Seam/Go', 'Chip+Delay', 'Flat']
     },
     'OT': {
         'Pass Block': ['Inside priority', 'Outside priority'],
@@ -526,58 +824,1000 @@ const offensiveAssignments = {
     }
 };
 
+// All defensive assignment options available to all positions
+const allDefensiveCategories = {
+    'Man Coverage': ['Inside release man', 'Outside release man'],
+    'Zone Deep': ['Deep middle 1/3', 'Deep left (2)', 'Deep right (2)', 'Deep left (3)', 'Deep right (3)', 'Deep far left (4)', 'Deep far right (4)', 'Deep seam left (4)', 'Deep seam right (4)'],
+    'Zone Short': ['Flat', 'Hook', 'Curtain', 'Robber'],
+    'Zone': ['Hook', 'Curtain', 'Robber', 'Spy'],
+    'Blitz': ['Left A gap', 'Right A gap', 'Left B gap', 'Right B gap', 'Left C gap', 'Right C gap', 'Contain'],
+    'Rush': ['Left A gap', 'Right A gap', 'Left B gap', 'Right B gap', 'Left C gap', 'Right C gap', 'Contain'],
+    'Spy': ['Spy']
+};
+
+// All defensive positions get all options
 const defensiveAssignments = {
-    'CB': {
-        'Man Coverage': ['Inside release man', 'Outside release man'],
-        'Zone Deep': ['Deep middle', 'Deep left (2)', 'Deep right (2)', 'Deep left (3)', 'Deep right (3)'],
-        'Zone Short': ['Flat', 'Hook', 'Curtain']
-    },
-    'S': {
-        'Man Coverage': ['Inside release man', 'Outside release man'],
-        'Zone Deep': ['Deep middle', 'Deep left (2)', 'Deep right (2)', 'Deep left (3)', 'Deep right (3)'],
-        'Zone Short': ['Hook', 'Curtain', 'Robber']
-    },
-    'LB': {
-        'Zone': ['Hook', 'Curtain', 'Robber', 'Spy'],
-        'Blitz': ['Left A gap', 'Right A gap', 'Left B gap', 'Right B gap', 'Left C gap', 'Right C gap', 'Contain']
-    },
-    'MLB': {
-        'Zone': ['Hook', 'Curtain', 'Robber', 'Spy'],
-        'Blitz': ['Left A gap', 'Right A gap', 'Left B gap', 'Right B gap']
-    },
-    'DE': {
-        'Rush': ['Left A gap', 'Right A gap', 'Left B gap', 'Right B gap', 'Left C gap', 'Right C gap', 'Contain'],
-        'Spy': ['Spy']
-    },
-    'DT': {
-        'Rush': ['Left A gap', 'Right A gap', 'Left B gap', 'Right B gap'],
-        'Spy': ['Spy']
-    }
+    'CB': allDefensiveCategories,
+    'S': allDefensiveCategories,
+    'LB': allDefensiveCategories,
+    'MLB': allDefensiveCategories,
+    'DE': allDefensiveCategories,
+    'DT': allDefensiveCategories
 };
 
 function renderAssignments() {
-    const offenseAssignments = document.getElementById('offenseAssignments');
-    const defenseAssignments = document.getElementById('defenseAssignments');
+    const offenseSkillAssignments = document.getElementById('offenseSkillAssignments');
+    const offenseLineAssignments = document.getElementById('offenseLineAssignments');
+    const defenseLineAssignments = document.getElementById('defenseLineAssignments');
+    const defenseLBAssignments = document.getElementById('defenseLBAssignments');
+    const defenseSecondaryAssignments = document.getElementById('defenseSecondaryAssignments');
+    const offensivePlaycallSelect = document.getElementById('offensivePlaycall');
+    const defensivePlaycallSelect = document.getElementById('defensivePlaycall');
     
-    offenseAssignments.innerHTML = '';
-    defenseAssignments.innerHTML = '';
+    // Populate playcall dropdowns
+    if (offensivePlaycallSelect) {
+        offensivePlaycallSelect.innerHTML = '<option value="">Select a playcall...</option>';
+        Object.keys(offensivePlaycalls).forEach(playcall => {
+            const option = document.createElement('option');
+            option.value = playcall;
+            option.textContent = playcall;
+            offensivePlaycallSelect.appendChild(option);
+        });
+        
+        offensivePlaycallSelect.onchange = (e) => {
+            if (e.target.value) {
+                applyOffensivePlaycall(e.target.value);
+            }
+        };
+    }
     
-    // Show location from previous screen
+    if (defensivePlaycallSelect) {
+        defensivePlaycallSelect.innerHTML = '<option value="">Select a playcall...</option>';
+        Object.keys(defensivePlaycalls).forEach(playcall => {
+            const option = document.createElement('option');
+            option.value = playcall;
+            option.textContent = playcall;
+            defensivePlaycallSelect.appendChild(option);
+        });
+        
+        defensivePlaycallSelect.onchange = (e) => {
+            if (e.target.value) {
+                applyDefensivePlaycall(e.target.value);
+            }
+        };
+    }
+    
+    // Clear all assignment containers
+    if (offenseSkillAssignments) offenseSkillAssignments.innerHTML = '';
+    if (offenseLineAssignments) offenseLineAssignments.innerHTML = '';
+    if (defenseLineAssignments) defenseLineAssignments.innerHTML = '';
+    if (defenseLBAssignments) defenseLBAssignments.innerHTML = '';
+    if (defenseSecondaryAssignments) defenseSecondaryAssignments.innerHTML = '';
+    
+    // Store assignment items for later updates
+    window.assignmentItems = { offense: {}, defense: {} };
+    
+    // Group and render offensive players
     selectedPlayers.forEach((playerId) => {
         const player = getPlayerById(playerId);
-        if (player) {
-            const location = playerPositions[playerId]?.location || 'Not placed';
-            const item = createAssignmentItem(player, 'offense', location);
-            offenseAssignments.appendChild(item);
+        if (!player) return;
+        
+        const location = playerPositions[playerId]?.location || 'Not placed';
+        const item = createAssignmentItem(player, 'offense', location);
+        
+        // Group by position: QB + eligibles (QB, RB, WR, TE) vs linemen (OT, OG, C)
+        if (['QB', 'RB', 'WR', 'TE'].includes(player.position)) {
+            if (offenseSkillAssignments) {
+                offenseSkillAssignments.appendChild(item);
+            }
+        } else if (['OT', 'OG', 'C'].includes(player.position)) {
+            if (offenseLineAssignments) {
+                offenseLineAssignments.appendChild(item);
+            }
+        }
+        
+        window.assignmentItems.offense[player.name] = { item, playerId, player };
+    });
+    
+    // Group and render defensive players
+    console.log('Rendering defensive assignments, selectedDefense count:', selectedDefense.length);
+    selectedDefense.forEach((playerId) => {
+        const player = getPlayerById(playerId);
+        if (!player) {
+            console.warn('Player not found for ID:', playerId);
+            return;
+        }
+        
+        const location = playerPositions[playerId]?.location || 'Not placed';
+        const item = createAssignmentItem(player, 'defense', location);
+        
+        // Group by position: DL (DE, DT), LBs (LB, MLB), Secondary (CB, S)
+        if (['DE', 'DT'].includes(player.position)) {
+            if (defenseLineAssignments) {
+                defenseLineAssignments.appendChild(item);
+                console.log('Added DL player:', player.name, 'to defenseLineAssignments');
+            } else {
+                console.error('defenseLineAssignments container not found!');
+            }
+        } else if (['LB', 'MLB'].includes(player.position)) {
+            if (defenseLBAssignments) {
+                defenseLBAssignments.appendChild(item);
+                console.log('Added LB player:', player.name, 'to defenseLBAssignments');
+            } else {
+                console.error('defenseLBAssignments container not found!');
+            }
+        } else if (['CB', 'S'].includes(player.position)) {
+            if (defenseSecondaryAssignments) {
+                defenseSecondaryAssignments.appendChild(item);
+                console.log('Added secondary player:', player.name, 'to defenseSecondaryAssignments');
+            } else {
+                console.error('defenseSecondaryAssignments container not found!');
+            }
+        } else {
+            console.warn('Unknown defensive position:', player.position, 'for player:', player.name);
+        }
+        
+        window.assignmentItems.defense[player.name] = { item, playerId, player };
+    });
+    
+    console.log('Defensive assignment items created:', Object.keys(window.assignmentItems.defense).length);
+    
+    // Render playcall diagrams
+    renderPlaycallDiagram();
+    renderDefensePlaycallDiagram();
+}
+
+function renderPlaycallDiagram() {
+    const canvas = document.getElementById('playcallDiagram');
+    if (!canvas) return;
+    
+    const container = canvas.parentElement;
+    if (!container) return;
+    
+    const width = container.offsetWidth || 200;
+    const height = 150;
+    
+    // Set canvas size
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    
+    // Draw field background
+    ctx.fillStyle = '#2d5016';
+    ctx.fillRect(0, 0, width, height);
+    
+    const centerY = height / 2;
+    const scaleX = width / 50; // Scale from -25 to +25
+    const scaleY = height / 30; // Scale for Y coordinates (roughly -15 to +15)
+    
+    // Draw hash marks (scaled)
+    for (let i = 0; i <= 20; i++) {
+        const y = (i / 20) * height;
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.fillRect(width * 0.15 - 0.5, y, 1, 3);
+        ctx.fillRect(width * 0.35 - 0.5, y, 1, 3);
+        ctx.fillRect(width * 0.65 - 0.5, y, 1, 3);
+        ctx.fillRect(width * 0.85 - 0.5, y, 1, 3);
+    }
+    
+    // Draw line of scrimmage
+    ctx.strokeStyle = '#FFD700';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, centerY);
+    ctx.lineTo(width, centerY);
+    ctx.stroke();
+    
+    // Helper to get original location coordinates from fieldLocations
+    function getLocationCoords(locationName) {
+        for (const section of fieldLocations) {
+            for (const loc of section.Locations) {
+                if (loc.Name === locationName) {
+                    return { x: loc.X, y: loc.Y };
+                }
+            }
+        }
+        return null;
+    }
+    
+    // Render offensive players only (hide defense) - bottom half
+    const bottomHalfStart = height / 2;
+    const bottomHalfHeight = height / 2;
+    
+    selectedPlayers.forEach((playerId) => {
+        const player = getPlayerById(playerId);
+        if (!player) return;
+        
+        const pos = playerPositions[playerId];
+        if (!pos) {
+            console.warn(`No position for player ${player.name}`);
+            return;
+        }
+        
+        // Get original location coordinates
+        const locCoords = getLocationCoords(pos.location);
+        if (!locCoords) {
+            console.warn(`Could not find location coordinates for: ${pos.location}`);
+            return;
+        }
+        
+        // Convert X from original coordinates (-25 to +25) to diagram (0 to width)
+        const diagramX = ((locCoords.x + 25) / 50) * width;
+        
+        // Convert Y: Offense goes in bottom half
+        // Offense Y values are negative (-3 to -15), map to bottom half (75-150)
+        const offenseYRange = -15 - (-3); // -12
+        const diagramY = bottomHalfStart + bottomHalfHeight * ((-locCoords.y - 3) / -offenseYRange);
+        
+        // Check if coordinates are valid
+        if (isNaN(diagramX) || isNaN(diagramY) || !isFinite(diagramX) || !isFinite(diagramY)) {
+            console.error(`Invalid coordinates for ${player.name}:`, { diagramX, diagramY, locCoords });
+            return;
+        }
+        
+        // Get assignment
+        const assignment = assignments.offense[player.name];
+        
+        // Determine color based on assignment
+        let color = '#757575'; // Grey default
+        if (assignment && assignment.action) {
+            if (assignment.category === 'Route') {
+                color = '#FFEB3B'; // Yellow for routes
+            } else if (assignment.action.includes('Block') || assignment.action.includes('Protect')) {
+                color = '#888888'; // Grey for blocks
+            } else if (assignment.action.includes('Run') || assignment.action.includes('Boot') || assignment.action.includes('Handoff') || assignment.action.includes('draw')) {
+                color = '#f44336'; // Red for runs/boots
+            }
+        }
+        
+        // Draw player circle
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(diagramX, diagramY, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+        
+        // Draw assignment arrow if exists
+        if (assignment && assignment.action) {
+            // Pass diagram X to determine left/right side of field
+            drawOffensiveAssignmentArrow(ctx, diagramX, diagramY, assignment, color, width, height, diagramX, width);
         }
     });
+}
+
+function drawOffensiveAssignmentArrow(ctx, x, y, assignment, color, width, height, diagramX, diagramWidth) {
+    // Routes are yellow, everything else uses the passed color
+    const isRoute = assignment.category === 'Route';
+    const routeColor = isRoute ? '#FFEB3B' : color;
+    ctx.strokeStyle = routeColor;
+    ctx.fillStyle = routeColor;
+    ctx.lineWidth = 2;
+    
+    // Determine which side of field player is on using diagram coordinates
+    const diagramCenter = diagramWidth / 2;
+    const isOnLeftSide = diagramX < diagramCenter;
+    
+    // Direction multipliers for field mirroring
+    // Left side: "out" = negative X (toward left sideline), "in" = positive X (toward center)
+    // Right side: "out" = positive X (toward right sideline), "in" = negative X (toward center)
+    const outDir = isOnLeftSide ? -1 : 1;
+    const inDir = isOnLeftSide ? 1 : -1;
+    
+    // Base route length
+    const routeLength = 45;
+    
+    if (isRoute) {
+        // Route definitions: { stemLength, turnAngle, continueLength }
+        // Angles: 0° = straight up, 90° = horizontal out, -90° = horizontal in, 135° = back out, -135° = back in
+        // All angles are from the forward (up) direction, positive = toward sideline, negative = toward center
+        let routeDef = null;
+        
+        if (assignment.action.includes('Screen')) {
+            // Screen: stem=0, horizontal toward center
+            routeDef = { stemLength: 0, turnAngle: 0, continueLength: routeLength * 0.15, direction: 'in' };
+        } else if (assignment.action.includes('Flat')) {
+            // Flat: stem forward, then 90° turn out to sideline
+            routeDef = { stemLength: routeLength * 0.25, turnAngle: 90, continueLength: routeLength * 0.6, direction: 'out' };
+        } else if (assignment.action.includes('Slant')) {
+            // Slant: stem forward, then 45° turn IN toward center
+            routeDef = { stemLength: routeLength * 0.25, turnAngle: -45, continueLength: routeLength * 0.5, direction: 'in' };
+        } else if (assignment.action.includes('Comeback')) {
+            // Comeback: stem forward, then 135° turn back out to sideline
+            routeDef = { stemLength: routeLength * 0.5, turnAngle: 135, continueLength: routeLength * 0.4, direction: 'out' };
+        } else if (assignment.action.includes('Curl')) {
+            // Curl: stem forward, then -135° turn back in toward center
+            routeDef = { stemLength: routeLength * 0.5, turnAngle: -135, continueLength: routeLength * 0.4, direction: 'in' };
+        } else if (assignment.action.includes('Out')) {
+            // Out: stem forward, then 90° turn out to sideline
+            routeDef = { stemLength: routeLength * 0.3, turnAngle: 90, continueLength: routeLength * 0.7, direction: 'out' };
+        } else if (assignment.action.includes('Dig')) {
+            // Dig: stem forward, then 90° turn IN toward center
+            routeDef = { stemLength: routeLength * 0.4, turnAngle: -90, continueLength: routeLength * 0.5, direction: 'in' };
+        } else if (assignment.action.includes('Corner')) {
+            // Corner: stem forward, then 45° turn out to sideline
+            routeDef = { stemLength: routeLength * 0.3, turnAngle: 45, continueLength: routeLength * 0.5, direction: 'out' };
+        } else if (assignment.action.includes('Post')) {
+            // Post: stem forward, then 45° turn IN toward center
+            routeDef = { stemLength: routeLength * 0.4, turnAngle: -45, continueLength: routeLength * 0.5, direction: 'in' };
+        } else if (assignment.action.includes('Go') || assignment.action.includes('Seam')) {
+            // Go/Seam: stem forward, no turn (straight up)
+            routeDef = { stemLength: routeLength, turnAngle: 0, continueLength: 0, direction: 'none' };
+        } else if (assignment.action.includes('Fade')) {
+            // Fade: stem forward, then 10° angle out to sideline
+            routeDef = { stemLength: routeLength, turnAngle: 10, continueLength: 0, direction: 'out' };
+        } else if (assignment.action.includes('Chip') || assignment.action.includes('Delay')) {
+            // Chip+Delay: shorter route, stem forward, then turn in
+            routeDef = { stemLength: routeLength * 0.3, turnAngle: -45, continueLength: routeLength * 0.3, direction: 'in' };
+        } else {
+            // Default: straight up
+            routeDef = { stemLength: routeLength, turnAngle: 0, continueLength: 0, direction: 'none' };
+        }
+        
+        // Draw route: start -> stem end -> turn -> final end
+        let stemEndX = x;
+        let stemEndY = y - routeDef.stemLength; // Forward is negative Y
+        
+        // If stem length is 0 (Screen), start at current position
+        if (routeDef.stemLength === 0) {
+            stemEndX = x;
+            stemEndY = y;
+        }
+        
+        let endX = stemEndX;
+        let endY = stemEndY;
+        
+        // Apply turn and continue
+        if (routeDef.turnAngle !== 0 && routeDef.continueLength > 0) {
+            // Convert angle to radians (positive = toward sideline, negative = toward center)
+            const angleRad = (routeDef.turnAngle * Math.PI) / 180;
+            
+            // Calculate direction based on field side and route direction
+            let horizontalDir = 0;
+            if (routeDef.direction === 'out') {
+                horizontalDir = outDir;
+            } else if (routeDef.direction === 'in') {
+                horizontalDir = inDir;
+            }
+            
+            // Calculate the turn direction
+            // For positive angles (out): use outDir
+            // For negative angles (in): use inDir
+            const turnDir = routeDef.turnAngle > 0 ? outDir : inDir;
+            
+            // Calculate end position after turn
+            // X component: horizontal movement based on angle
+            // Y component: vertical movement based on angle
+            const dx = turnDir * routeDef.continueLength * Math.sin(Math.abs(angleRad));
+            const dy = -routeDef.continueLength * Math.cos(Math.abs(angleRad)); // Negative because up is negative Y
+            
+            endX = stemEndX + dx;
+            endY = stemEndY + dy;
+        } else if (routeDef.turnAngle !== 0 && routeDef.continueLength === 0) {
+            // Fade: angle applied during stem
+            const angleRad = (routeDef.turnAngle * Math.PI) / 180;
+            const dx = outDir * routeDef.stemLength * Math.sin(angleRad);
+            const dy = -routeDef.stemLength * Math.cos(angleRad);
+            endX = x + dx;
+            endY = y + dy;
+            stemEndX = x; // No separate stem for fade
+            stemEndY = y;
+        } else if (routeDef.stemLength === 0) {
+            // Screen: horizontal toward center
+            endX = x + (inDir * routeDef.continueLength);
+            endY = y;
+        }
+        
+        // Draw route path
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        
+        if (routeDef.stemLength > 0 && routeDef.turnAngle === 0 && routeDef.continueLength === 0) {
+            // Straight route (Go/Seam)
+            ctx.lineTo(endX, endY);
+        } else if (routeDef.stemLength === 0) {
+            // Screen (no stem)
+            ctx.lineTo(endX, endY);
+        } else {
+            // Route with stem and turn
+            ctx.lineTo(stemEndX, stemEndY);
+            ctx.lineTo(endX, endY);
+        }
+        
+        ctx.stroke();
+        
+        // Draw arrowhead at end
+        const finalAngle = Math.atan2(endY - (routeDef.stemLength > 0 && routeDef.turnAngle !== 0 ? stemEndY : y), 
+                                      endX - (routeDef.stemLength > 0 && routeDef.turnAngle !== 0 ? stemEndX : x));
+        const arrowHeadLength = 6;
+        const arrowHeadAngle = Math.PI / 6;
+        
+        ctx.beginPath();
+        ctx.moveTo(endX, endY);
+        ctx.lineTo(
+            endX - arrowHeadLength * Math.cos(finalAngle - arrowHeadAngle),
+            endY - arrowHeadLength * Math.sin(finalAngle - arrowHeadAngle)
+        );
+        ctx.lineTo(
+            endX - arrowHeadLength * Math.cos(finalAngle + arrowHeadAngle),
+            endY - arrowHeadLength * Math.sin(finalAngle + arrowHeadAngle)
+        );
+        ctx.closePath();
+        ctx.fill();
+    } else {
+        // Non-route assignments (blocks, runs) - simple arrows
+        let arrowLength = 15;
+        let endX = x;
+        let endY = y;
+        
+        if (assignment.action.includes('left') || assignment.action.includes('Left')) {
+            endX = x - arrowLength;
+        } else if (assignment.action.includes('right') || assignment.action.includes('Right')) {
+            endX = x + arrowLength;
+        }
+        
+        if (assignment.action.includes('gap')) {
+            if (assignment.action.includes('A gap')) {
+                endY = y - arrowLength * 0.5;
+            } else if (assignment.action.includes('B gap') || assignment.action.includes('C gap')) {
+                endY = y - arrowLength * 0.3;
+            }
+        } else {
+            // Default: forward
+            endY = y - arrowLength * 0.5;
+        }
+        
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+        
+        if (endX !== x || endY !== y) {
+            const angle = Math.atan2(endY - y, endX - x);
+            const arrowHeadLength = 5;
+            const arrowHeadAngle = Math.PI / 6;
+            
+            ctx.beginPath();
+            ctx.moveTo(endX, endY);
+            ctx.lineTo(
+                endX - arrowHeadLength * Math.cos(angle - arrowHeadAngle),
+                endY - arrowHeadLength * Math.sin(angle - arrowHeadAngle)
+            );
+            ctx.lineTo(
+                endX - arrowHeadLength * Math.cos(angle + arrowHeadAngle),
+                endY - arrowHeadLength * Math.sin(angle + arrowHeadAngle)
+            );
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+}
+
+function drawDefensiveAssignmentArrow(ctx, x, y, assignment, color, isDashed, width, height) {
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = 2;
+    
+    if (isDashed) {
+        ctx.setLineDash([3, 3]);
+    } else {
+        ctx.setLineDash([]);
+    }
+    
+    // Helper to get original location coordinates from fieldLocations
+    function getLocationCoordsForManCoverage(locationName) {
+        for (const section of fieldLocations) {
+            for (const loc of section.Locations) {
+                if (loc.Name === locationName) {
+                    return { x: loc.X, y: loc.Y };
+                }
+            }
+        }
+        return null;
+    }
+    
+    // For man coverage, draw line to target offensive player
+    if (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) {
+        let targetPos = null;
+        const bottomHalfStart = height / 2;
+        const bottomHalfHeight = height / 2;
+        
+        selectedPlayers.forEach((playerId) => {
+            const p = getPlayerById(playerId);
+            if (p && p.name === assignment.manCoverageTarget) {
+                const pos = playerPositions[playerId];
+                if (pos) {
+                    const locCoords = getLocationCoordsForManCoverage(pos.location);
+                    if (locCoords) {
+                        const targetX = ((locCoords.x + 25) / 50) * width;
+                        const offenseYRange = -15 - (-3);
+                        const targetY = bottomHalfStart + bottomHalfHeight * ((-locCoords.y - 3) / -offenseYRange);
+                        targetPos = { x: targetX, y: targetY };
+                    }
+                }
+            }
+        });
+        
+        if (targetPos) {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(targetPos.x, targetPos.y);
+            ctx.stroke();
+        }
+    } else {
+        // Draw arrow based on assignment
+        let arrowLength = 18; // Base length
+        let endX = x, endY = y;
+        
+        if (assignment.action.includes('deep') || assignment.action.includes('Deep')) {
+            // Deep zones go down (toward offense)
+            arrowLength = 22;
+            endY = y + arrowLength;
+            if (assignment.action.includes('left') || assignment.action.includes('Left')) {
+                endX = x - arrowLength * 0.4;
+            } else if (assignment.action.includes('right') || assignment.action.includes('Right')) {
+                endX = x + arrowLength * 0.4;
+            }
+        } else if (assignment.action.includes('flat') || assignment.action.includes('Flat') || assignment.action.includes('Hook') || assignment.action.includes('Curtain')) {
+            // Short zones
+            arrowLength = 15;
+            endY = y - arrowLength * 0.5;
+            if (assignment.action.includes('left') || assignment.action.includes('Left')) {
+                endX = x - arrowLength * 0.7;
+            } else if (assignment.action.includes('right') || assignment.action.includes('Right')) {
+                endX = x + arrowLength * 0.7;
+            }
+        } else if (assignment.action.includes('left') || assignment.action.includes('Left')) {
+            endX = x - arrowLength;
+        } else if (assignment.action.includes('right') || assignment.action.includes('Right')) {
+            endX = x + arrowLength;
+        } else if (assignment.action.includes('gap')) {
+            // Rush/blitz
+            arrowLength = 15;
+            if (assignment.action.includes('A gap')) {
+                endY = y + arrowLength * 0.6;
+            } else if (assignment.action.includes('B gap') || assignment.action.includes('C gap')) {
+                endY = y + arrowLength * 0.4;
+            }
+        }
+        
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+        
+        // Draw arrowhead (always draw if there's any movement)
+        if (endX !== x || endY !== y) {
+            const angle = Math.atan2(endY - y, endX - x);
+            const arrowHeadLength = 5;
+            const arrowHeadAngle = Math.PI / 6;
+            
+            ctx.beginPath();
+            ctx.moveTo(endX, endY);
+            ctx.lineTo(
+                endX - arrowHeadLength * Math.cos(angle - arrowHeadAngle),
+                endY - arrowHeadLength * Math.sin(angle - arrowHeadAngle)
+            );
+            ctx.lineTo(
+                endX - arrowHeadLength * Math.cos(angle + arrowHeadAngle),
+                endY - arrowHeadLength * Math.sin(angle + arrowHeadAngle)
+            );
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+    
+    ctx.setLineDash([]);
+}
+
+function renderDefensePlaycallDiagram() {
+    const canvas = document.getElementById('defensePlaycallDiagram');
+    if (!canvas) return;
+    
+    const container = canvas.parentElement;
+    if (!container) return;
+    
+    const width = container.offsetWidth || 200;
+    const height = 150;
+    
+    // Set canvas size
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    
+    // Draw field background
+    ctx.fillStyle = '#2d5016';
+    ctx.fillRect(0, 0, width, height);
+    
+    const centerY = height / 2;
+    
+    // Draw hash marks (scaled)
+    for (let i = 0; i <= 20; i++) {
+        const y = (i / 20) * height;
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.fillRect(width * 0.15 - 0.5, y, 1, 3);
+        ctx.fillRect(width * 0.35 - 0.5, y, 1, 3);
+        ctx.fillRect(width * 0.65 - 0.5, y, 1, 3);
+        ctx.fillRect(width * 0.85 - 0.5, y, 1, 3);
+    }
+    
+    // Draw line of scrimmage
+    ctx.strokeStyle = '#FFD700';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, centerY);
+    ctx.lineTo(width, centerY);
+    ctx.stroke();
+    
+    // Helper to get original location coordinates from fieldLocations
+    function getLocationCoords(locationName) {
+        for (const section of fieldLocations) {
+            for (const loc of section.Locations) {
+                if (loc.Name === locationName) {
+                    return { x: loc.X, y: loc.Y };
+                }
+            }
+        }
+        return null;
+    }
+    
+    // Render defensive players only (hide offense) - top half
+    const topHalfHeight = height / 2;
     
     selectedDefense.forEach((playerId) => {
         const player = getPlayerById(playerId);
-        if (player) {
-            const location = playerPositions[playerId]?.location || 'Not placed';
-            const item = createAssignmentItem(player, 'defense', location);
-            defenseAssignments.appendChild(item);
+        if (!player) return;
+        
+        const pos = playerPositions[playerId];
+        if (!pos) {
+            console.warn(`No position for player ${player.name}`);
+            return;
+        }
+        
+        // Get original location coordinates
+        const locCoords = getLocationCoords(pos.location);
+        if (!locCoords) {
+            console.warn(`Could not find location coordinates for: ${pos.location}`);
+            return;
+        }
+        
+        // Convert X from original coordinates (-25 to +25) to diagram (0 to width)
+        const diagramX = ((locCoords.x + 25) / 50) * width;
+        
+        // Convert Y: Defense goes in top half
+        // Defense Y values are positive (3 to 20), map to top half (0-75)
+        const defenseYRange = 20 - 3; // 17
+        const diagramY = topHalfHeight * ((20 - locCoords.y) / defenseYRange);
+        
+        // Check if coordinates are valid
+        if (isNaN(diagramX) || isNaN(diagramY) || !isFinite(diagramX) || !isFinite(diagramY)) {
+            console.error(`Invalid coordinates for ${player.name}:`, { diagramX, diagramY, locCoords });
+            return;
+        }
+        
+        // Get assignment - show player even without assignment
+        const assignment = assignments.defense[player.name];
+        
+        // Determine color based on assignment
+        let color = '#757575'; // Grey default
+        let isDashed = false;
+        if (assignment && assignment.action) {
+            if (assignment.category === 'Zone Deep' || (assignment.action.includes('Deep') && !assignment.action.includes('Man'))) {
+                color = '#2196F3'; // Blue for deep zones
+            } else if (assignment.category === 'Zone Short' || assignment.category === 'Zone' || 
+                      (assignment.action.includes('Hook') || assignment.action.includes('Curtain'))) {
+                color = '#FFEB3B'; // Yellow for short zones
+            } else if (assignment.category === 'Man Coverage' || assignment.action.includes('Man')) {
+                color = '#f44336'; // Red for man coverage
+                isDashed = true;
+            } else if (assignment.category === 'Blitz' || assignment.category === 'Rush' || 
+                      assignment.action.includes('Blitz') || assignment.action.includes('Rush') || 
+                      assignment.action.includes('gap')) {
+                color = '#FF9800'; // Orange for blitz/rush
+            } else if (assignment.action.includes('Spy')) {
+                color = '#FF9800'; // Orange for spy
+            }
+        }
+        
+        // Draw player circle (larger for visibility)
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(diagramX, diagramY, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        
+        // Draw assignment arrow/line if exists
+        if (assignment && assignment.action) {
+            drawDefensiveAssignmentArrow(ctx, diagramX, diagramY, assignment, color, isDashed, width, height);
+        }
+    });
+}
+
+function applyOffensivePlaycall(playcallName) {
+    const playcall = offensivePlaycalls[playcallName];
+    if (!playcall) return;
+    
+    // Group players by position for better assignment distribution
+    const playersByPosition = {};
+    selectedPlayers.forEach((playerId) => {
+        const player = getPlayerById(playerId);
+        if (!player) return;
+        if (!playersByPosition[player.position]) {
+            playersByPosition[player.position] = [];
+        }
+        playersByPosition[player.position].push(player);
+    });
+    
+    selectedPlayers.forEach((playerId) => {
+        const player = getPlayerById(playerId);
+        if (!player) return;
+        
+        const assignment = playcall[player.position];
+        if (assignment) {
+            // Update the assignment
+            updateAssignment(player, 'offense', assignment.category, assignment.action);
+            
+            // Update the UI
+            if (window.assignmentItems && window.assignmentItems.offense[player.name]) {
+                const { item } = window.assignmentItems.offense[player.name];
+                const selects = item.querySelectorAll('select');
+                const categorySelect = selects[0];
+                const actionSelect = selects[1];
+                
+                if (categorySelect && actionSelect) {
+                    categorySelect.value = assignment.category;
+                    // Trigger change to populate actions
+                    const changeEvent = new Event('change', { bubbles: true });
+                    categorySelect.dispatchEvent(changeEvent);
+                    
+                    // Set action after category populates
+                    setTimeout(() => {
+                        if (actionSelect.options.length > 0) {
+                            // Find matching action or use first available
+                            let found = false;
+                            for (let i = 0; i < actionSelect.options.length; i++) {
+                                if (actionSelect.options[i].value === assignment.action) {
+                                    actionSelect.value = assignment.action;
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (!found && actionSelect.options.length > 1) {
+                                actionSelect.selectedIndex = 1; // Skip empty option
+                            }
+                            actionSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                            // Update man coverage selector visibility
+                            updateManCoverageSelector(item, player, 'offense', assignment.category, assignment.action);
+                        }
+                    }, 10);
+                }
+            }
+        }
+    });
+    
+    // Update playcall diagram
+    renderPlaycallDiagram();
+}
+
+function applyDefensivePlaycall(playcallName) {
+    // Extract cover number from playcall name (0-4)
+    let coverNumber = null;
+    if (playcallName.includes('Cover 0')) {
+        coverNumber = 0;
+    } else if (playcallName.includes('Cover 1')) {
+        coverNumber = 1;
+    } else if (playcallName.includes('Cover 2')) {
+        coverNumber = 2;
+    } else if (playcallName.includes('Cover 3')) {
+        coverNumber = 3;
+    } else if (playcallName.includes('Cover 4')) {
+        coverNumber = 4;
+    }
+    
+    if (coverNumber === null) {
+        // Fallback to old system for non-cover playcalls
+        const playcall = defensivePlaycalls[playcallName];
+        if (!playcall) return;
+        
+        selectedDefense.forEach((playerId) => {
+            const player = getPlayerById(playerId);
+            if (!player) return;
+            
+            const assignment = playcall[player.position];
+            if (assignment) {
+                updateAssignment(player, 'defense', assignment.category, assignment.action);
+            }
+        });
+        updateDefensivePlaycallUI();
+        renderDefensePlaycallDiagram();
+        return;
+    }
+    
+    // Get all defensive players grouped by position
+    const playersByPosition = {
+        'CB': [],
+        'S': [],
+        'LB': [],
+        'MLB': [],
+        'DE': [],
+        'DT': []
+    };
+    
+    selectedDefense.forEach((playerId) => {
+        const player = getPlayerById(playerId);
+        if (!player) return;
+        if (playersByPosition[player.position]) {
+            playersByPosition[player.position].push(player);
+        }
+    });
+    
+    // Deep zone assignments based on cover number
+    const deepZoneAssignments = {
+        0: [],
+        1: ['Deep middle 1/3'],
+        2: ['Deep left (2)', 'Deep right (2)'],
+        3: ['Deep left (3)', 'Deep right (3)', 'Deep middle 1/3'],
+        4: ['Deep far left (4)', 'Deep far right (4)', 'Deep seam left (4)', 'Deep seam right (4)']
+    };
+    
+    const deepZones = deepZoneAssignments[coverNumber] || [];
+    
+    // Assign deep zones to DBs (CBs and Ss)
+    const allDBs = [...playersByPosition['CB'], ...playersByPosition['S']];
+    deepZones.forEach((zone, index) => {
+        if (index < allDBs.length) {
+            const player = allDBs[index];
+            updateAssignment(player, 'defense', 'Zone Deep', zone);
+        }
+    });
+    
+    // Remaining DBs get man (Cover 0/1) or zone short (Cover 2-4)
+    const remainingDBs = allDBs.slice(deepZones.length);
+    const useMan = coverNumber <= 1;
+    
+    if (useMan) {
+        // Man coverage - assign to nearest eligible offensive players
+        const eligibleOffense = [];
+        selectedPlayers.forEach((playerId) => {
+            const player = getPlayerById(playerId);
+            if (player && ['WR', 'TE', 'RB'].includes(player.position)) {
+                const pos = playerPositions[playerId];
+                if (pos) {
+                    eligibleOffense.push({ player, pos });
+                }
+            }
+        });
+        
+        // Sort by position (left to right)
+        eligibleOffense.sort((a, b) => a.pos.x - b.pos.x);
+        
+        remainingDBs.forEach((db, index) => {
+            if (index < eligibleOffense.length) {
+                const target = eligibleOffense[index % eligibleOffense.length];
+                updateAssignment(db, 'defense', 'Man Coverage', 'Outside release man');
+                // Store man coverage target
+                if (!assignments.defense[db.name]) assignments.defense[db.name] = {};
+                assignments.defense[db.name].manCoverageTarget = target.player.name;
+            }
+        });
+    } else {
+        // Zone short for remaining DBs
+        remainingDBs.forEach((db) => {
+            updateAssignment(db, 'defense', 'Zone Short', 'Hook');
+        });
+    }
+    
+    // LBs get man (Cover 0/1) or zone short (Cover 2-4)
+    const allLBs = [...playersByPosition['LB'], ...playersByPosition['MLB']];
+    if (useMan) {
+        // Assign LBs to remaining eligible offensive players
+        const eligibleOffense = [];
+        selectedPlayers.forEach((playerId) => {
+            const player = getPlayerById(playerId);
+            if (player && ['WR', 'TE', 'RB'].includes(player.position)) {
+                const pos = playerPositions[playerId];
+                if (pos) {
+                    eligibleOffense.push({ player, pos });
+                }
+            }
+        });
+        
+        eligibleOffense.sort((a, b) => a.pos.x - b.pos.x);
+        
+        allLBs.forEach((lb, index) => {
+            if (index < eligibleOffense.length) {
+                const target = eligibleOffense[index % eligibleOffense.length];
+                updateAssignment(lb, 'defense', 'Man Coverage', 'Inside release man');
+                if (!assignments.defense[lb.name]) assignments.defense[lb.name] = {};
+                assignments.defense[lb.name].manCoverageTarget = target.player.name;
+            } else {
+                updateAssignment(lb, 'defense', 'Zone', 'Hook');
+            }
+        });
+    } else {
+        // Zone short for LBs
+        allLBs.forEach((lb) => {
+            updateAssignment(lb, 'defense', 'Zone', 'Hook');
+        });
+    }
+    
+    // DL always rush (unless specified in playcall)
+    const allDL = [...playersByPosition['DE'], ...playersByPosition['DT']];
+    allDL.forEach((dl) => {
+        // Check if playcall specifies a blitz/rush for this position
+        const playcall = defensivePlaycalls[playcallName];
+        if (playcall && playcall[dl.position]) {
+            const assignment = playcall[dl.position];
+            updateAssignment(dl, 'defense', assignment.category, assignment.action);
+        } else {
+            // Default rush
+            const defaultGap = getDefaultGapFromLocation(
+                playerPositions[selectedDefense.find(id => {
+                    const p = getPlayerById(id);
+                    return p && p.name === dl.name;
+                })]?.location || '', dl);
+            if (defaultGap) {
+                updateAssignment(dl, 'defense', 'Rush', defaultGap);
+            } else {
+                updateAssignment(dl, 'defense', 'Rush', 'Left A gap');
+            }
+        }
+    });
+    
+    updateDefensivePlaycallUI();
+    renderDefensePlaycallDiagram();
+}
+
+function updateDefensivePlaycallUI() {
+    selectedDefense.forEach((playerId) => {
+        const player = getPlayerById(playerId);
+        if (!player) return;
+        
+        const assignment = assignments.defense[player.name];
+        if (!assignment) return;
+        
+        if (window.assignmentItems && window.assignmentItems.defense[player.name]) {
+            const { item } = window.assignmentItems.defense[player.name];
+            const selects = item.querySelectorAll('select');
+            const categorySelect = selects[0];
+            const actionSelect = selects[1];
+            
+            if (categorySelect && actionSelect) {
+                categorySelect.value = assignment.category;
+                const changeEvent = new Event('change', { bubbles: true });
+                categorySelect.dispatchEvent(changeEvent);
+                
+                setTimeout(() => {
+                    if (actionSelect.options.length > 0) {
+                        let found = false;
+                        for (let i = 0; i < actionSelect.options.length; i++) {
+                            if (actionSelect.options[i].value === assignment.action) {
+                                actionSelect.value = assignment.action;
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found && actionSelect.options.length > 1) {
+                            actionSelect.selectedIndex = 1;
+                        }
+                        actionSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                        updateManCoverageSelector(item, player, 'defense', assignment.category, assignment.action);
+                    }
+                }, 10);
+            }
         }
     });
 }
@@ -585,26 +1825,26 @@ function renderAssignments() {
 function createAssignmentItem(player, side, location) {
     const item = document.createElement('div');
     item.className = 'assignment-item';
-    item.style.cssText = 'display: flex; flex-direction: column; gap: 10px; padding: 15px; background: #fff; border-radius: 8px; margin-bottom: 15px;';
+    item.style.cssText = 'display: flex; flex-direction: column; gap: 4px; padding: 6px; background: #fff; border-radius: 4px; margin-bottom: 6px;';
     
     const header = document.createElement('div');
-    header.style.cssText = 'display: flex; justify-content: space-between; align-items: center;';
+    header.style.cssText = 'display: flex; flex-direction: column; margin-bottom: 2px;';
     header.innerHTML = `
         <div>
-            <strong>${player.name}</strong> (${player.position})
-            <div style="font-size: 0.85em; color: #666;">Location: ${location}</div>
+            <strong style="font-size: 0.85em;">${player.name}</strong> <span style="font-size: 0.75em;">(${player.position})</span>
+            <div style="font-size: 0.7em; color: #666;">${location}</div>
         </div>
     `;
     item.appendChild(header);
     
     // Two-stage selection: Category then Action
     const categorySelect = document.createElement('select');
-    categorySelect.style.cssText = 'padding: 8px; border-radius: 5px; border: 1px solid #ddd; font-size: 1em; margin-bottom: 8px;';
-    categorySelect.innerHTML = '<option value="">Select category...</option>';
+    categorySelect.style.cssText = 'padding: 4px; border-radius: 3px; border: 1px solid #ddd; font-size: 0.8em; margin-bottom: 3px; width: 100%;';
+    categorySelect.innerHTML = '<option value="">Category...</option>';
     
     const actionSelect = document.createElement('select');
-    actionSelect.style.cssText = 'padding: 8px; border-radius: 5px; border: 1px solid #ddd; font-size: 1em;';
-    actionSelect.innerHTML = '<option value="">Select action...</option>';
+    actionSelect.style.cssText = 'padding: 4px; border-radius: 3px; border: 1px solid #ddd; font-size: 0.8em; width: 100%;';
+    actionSelect.innerHTML = '<option value="">Action...</option>';
     actionSelect.disabled = true;
     
     const assignments = side === 'offense' ? offensiveAssignments : defensiveAssignments;
@@ -625,12 +1865,19 @@ function createAssignmentItem(player, side, location) {
         populateActions(actionSelect, playerAssignments[defaultCategory]);
         actionSelect.disabled = false;
         
-            // Set default action
-            const defaultAction = playerAssignments[defaultCategory][0];
-            if (defaultAction) {
-                actionSelect.value = defaultAction;
-                updateAssignment(player, side, defaultCategory, defaultAction);
+        // For DL players, try to pre-populate gap from technique
+        let defaultAction = playerAssignments[defaultCategory][0];
+        if (['DE', 'DT'].includes(player.position) && (defaultCategory === 'Rush' || defaultCategory === 'Blitz')) {
+            const defaultGap = getDefaultGapFromLocation(location, player);
+            if (defaultGap && playerAssignments[defaultCategory].includes(defaultGap)) {
+                defaultAction = defaultGap;
             }
+        }
+        
+        if (defaultAction) {
+            actionSelect.value = defaultAction;
+            updateAssignment(player, side, defaultCategory, defaultAction);
+        }
     }
     
     categorySelect.addEventListener('change', (e) => {
@@ -644,18 +1891,101 @@ function createAssignmentItem(player, side, location) {
             if (playerAssignments[category].length > 0) {
                 actionSelect.value = playerAssignments[category][0];
                 updateAssignment(player, side, category, playerAssignments[category][0]);
+                // Update man coverage selector visibility
+                updateManCoverageSelector(item, player, side, category, playerAssignments[category][0]);
             }
+        } else {
+            updateManCoverageSelector(item, player, side, '', '');
         }
     });
     
     actionSelect.addEventListener('change', (e) => {
         updateAssignment(player, side, categorySelect.value, e.target.value);
+        // Show/hide man coverage selector
+        updateManCoverageSelector(item, player, side, categorySelect.value, e.target.value);
+    });
+    
+    // Man coverage selector (only for defensive players in man coverage)
+    const manCoverageSelect = document.createElement('select');
+    manCoverageSelect.style.cssText = 'padding: 4px; border-radius: 3px; border: 1px solid #ddd; font-size: 0.8em; margin-top: 3px; display: none; width: 100%;';
+    manCoverageSelect.innerHTML = '<option value="">Covering...</option>';
+    // Use a safe ID that escapes special characters
+    const safeId = `manCoverage-${player.name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    manCoverageSelect.id = safeId;
+    manCoverageSelect.dataset.playerName = player.name;
+    
+    // Populate with eligible offensive players
+    if (side === 'defense') {
+        selectedPlayers.forEach((playerId) => {
+            const offPlayer = getPlayerById(playerId);
+            if (offPlayer && ['WR', 'TE', 'RB'].includes(offPlayer.position)) {
+                const option = document.createElement('option');
+                option.value = offPlayer.name;
+                option.textContent = `${offPlayer.name} (${offPlayer.position})`;
+                manCoverageSelect.appendChild(option);
+            }
+        });
+    }
+    
+    manCoverageSelect.addEventListener('change', (e) => {
+        if (e.target.value) {
+            // Ensure assignments[side] exists
+            if (!assignments[side]) {
+                assignments[side] = {};
+            }
+            const currentAssignment = assignments[side][player.name];
+            if (currentAssignment) {
+                assignments[side][player.name] = {
+                    ...currentAssignment,
+                    manCoverageTarget: e.target.value
+                };
+            } else {
+                // Create assignment if it doesn't exist
+                assignments[side][player.name] = {
+                    category: 'Man Coverage',
+                    action: 'Inside release man',
+                    manCoverageTarget: e.target.value
+                };
+            }
+            updateAssignment(player, side, 'Man Coverage', assignments[side][player.name].action);
+        }
     });
     
     item.appendChild(categorySelect);
     item.appendChild(actionSelect);
+    item.appendChild(manCoverageSelect);
     
     return item;
+}
+
+function updateManCoverageSelector(item, player, side, category, action) {
+    // Find man coverage select by data attribute or ID pattern
+    const safeId = `manCoverage-${player.name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    const manCoverageSelect = item.querySelector(`#${safeId}`) || 
+                              item.querySelector(`select[data-player-name="${player.name}"]`);
+    if (!manCoverageSelect) return;
+    
+    // Show selector only for defensive players in man coverage
+    if (side === 'defense' && category === 'Man Coverage' && 
+        (action === 'Inside release man' || action === 'Outside release man')) {
+        manCoverageSelect.style.display = 'block';
+        
+        // Update options if needed
+        if (manCoverageSelect.options.length <= 1) {
+            selectedPlayers.forEach((playerId) => {
+                const offPlayer = getPlayerById(playerId);
+                if (offPlayer && ['WR', 'TE', 'RB'].includes(offPlayer.position)) {
+                    const option = document.createElement('option');
+                    option.value = offPlayer.name;
+                    option.textContent = `${offPlayer.name} (${offPlayer.position})`;
+                    manCoverageSelect.appendChild(option);
+                }
+            });
+        }
+    } else {
+        manCoverageSelect.style.display = 'none';
+        manCoverageSelect.value = '';
+    }
 }
 
 function populateActions(select, actions) {
@@ -667,16 +1997,89 @@ function populateActions(select, actions) {
     });
 }
 
+// Map DL techniques to gaps
+function getGapFromTechnique(technique, isLeft) {
+    // Technique mapping: 0=A, 1=A, 2i=B, 2=B, 3=B, 4i=C, 4=C, 5=C, 6=C, 7=C, 9=C
+    const tech = technique.toString().toLowerCase();
+    let gap = '';
+    
+    if (tech === '0' || tech === '1') {
+        gap = 'A gap';
+    } else if (tech === '2i' || tech === '2' || tech === '3') {
+        gap = 'B gap';
+    } else if (tech === '4i' || tech === '4' || tech === '5' || tech === '6' || tech === '6i' || tech === '7' || tech === '9') {
+        gap = 'C gap';
+    }
+    
+    if (gap && isLeft !== undefined) {
+        return `${isLeft ? 'Left' : 'Right'} ${gap}`;
+    }
+    return gap;
+}
+
+// Get default gap assignment from player's technique location
+function getDefaultGapFromLocation(location, player) {
+    if (!['DE', 'DT'].includes(player.position)) return null;
+    
+    // Extract technique from location name (e.g., "Left 5 technique", "Right 4i technique", "0 technique")
+    let techMatch = location.match(/(?:left|right)\s+(\d+i?)\s+technique/i);
+    if (!techMatch) {
+        // Try for "0 technique" or just number
+        techMatch = location.match(/(\d+i?)\s+technique/i);
+    }
+    if (!techMatch) {
+        // Fallback to old format
+        techMatch = location.match(/^(\d+i?)$/);
+    }
+    if (!techMatch) return null;
+    
+    const technique = techMatch[1];
+    
+    // Determine left/right from location name or position
+    let isLeft = null;
+    if (location.toLowerCase().includes('left')) {
+        isLeft = true;
+    } else if (location.toLowerCase().includes('right')) {
+        isLeft = false;
+    } else {
+        // Find player position to determine left/right
+        let playerPos = null;
+        for (const id in playerPositions) {
+            const p = getPlayerById(id);
+            if (p && p.name === player.name) {
+                playerPos = playerPositions[id];
+                break;
+            }
+        }
+        if (!playerPos) return null;
+        // Get canvas width from the field container
+        const container = document.getElementById('fieldContainer');
+        const canvasWidth = container ? container.offsetWidth : 1000;
+        isLeft = playerPos.x < (canvasWidth / 2);
+    }
+    
+    return getGapFromTechnique(technique, isLeft);
+}
+
 function updateAssignment(player, side, category, action) {
     if (!assignments[side]) assignments[side] = {};
+    // Preserve man coverage target if it exists
+    const existingAssignment = assignments[side][player.name];
     assignments[side][player.name] = {
         category: category,
-        action: action
+        action: action,
+        manCoverageTarget: existingAssignment?.manCoverageTarget || null
     };
     // Re-render field to show arrows
     renderField();
     renderPlayerMarkers();
     renderAssignmentArrows();
+    // Update playcall diagrams
+    if (side === 'offense') {
+        renderPlaycallDiagram();
+    } else if (side === 'defense') {
+        renderDefensePlaycallDiagram();
+    }
 }
 
 // Step navigation
@@ -781,17 +2184,29 @@ function placePlayerOnField() {
     const centerY = canvasHeight / 2;
     
     const x = ((location.x + 25) / 50) * canvasWidth;
-    const y = centerY - (location.y * 10);
+    const y = centerY - (location.y * 15); // Consistent multiplier
     
-    // Check for offsides
-    const isOffsides = (side === 'offense' && location.y > -1) || 
-                      (side === 'defense' && location.y < 1);
-    const isOffensiveSection = location.section.includes('Offensive') || location.section.includes('offensive');
-    const isDefensiveSection = location.section.includes('Defensive') || location.section.includes('defensive') ||
-                              location.section.includes('Coverage') || location.section.includes('Press') ||
-                              location.section.includes('Deep');
-    const wrongSide = (side === 'offense' && !isOffensiveSection && isDefensiveSection) ||
-                     (side === 'defense' && !isDefensiveSection && isOffensiveSection);
+    // Check for offsides: offense must be Y <= -3, defense must be Y >= +3
+    const isOffsides = (side === 'offense' && location.y > -3) || 
+                      (side === 'defense' && location.y < 3);
+    // Check section names more carefully - only flag as wrong side if clearly defensive/offensive
+    const isOffensiveSection = location.section && (
+        location.section.includes('Offensive') || 
+        location.section.includes('offensive') ||
+        location.section.toLowerCase().includes('offense')
+    );
+    const isDefensiveSection = location.section && (
+        location.section.includes('Defensive') || 
+        location.section.includes('defensive') ||
+        location.section.includes('Coverage') || 
+        location.section.includes('Press') ||
+        location.section.includes('Deep') ||
+        location.section.includes('Box safety') ||
+        location.section.includes('Max depth')
+    );
+    // Only flag wrong side if we're confident about the section classification
+    const wrongSide = (side === 'offense' && isDefensiveSection && !isOffensiveSection) ||
+                     (side === 'defense' && isOffensiveSection && !isDefensiveSection);
     
     playerPositions[playerId] = {
         x: x,
@@ -835,9 +2250,9 @@ function prePopulateOffensiveLine() {
         
         // Position players based on their role
         if (player.position === 'QB') {
-            position = { name: 'QB (Shotgun)', x: 0, y: -5, section: 'Offensive backfield' };
+            position = { name: 'QB (Shotgun)', x: 0, y: -10, section: 'Offensive backfield' };
         } else if (player.position === 'RB') {
-            position = { name: 'Behind QB (Shotgun)', x: 0, y: -5, section: 'Offensive backfield' };
+            position = { name: 'Behind QB (Shotgun)', x: 0, y: -13, section: 'Offensive backfield' };
         } else if (player.position === 'OT') {
             // Find available tackle spot - count how many OTs are already placed
             const placedTackles = selectedPlayers.filter(id => {
@@ -845,9 +2260,9 @@ function prePopulateOffensiveLine() {
                 return p && p.position === 'OT' && playerPositions[id] && id !== playerId;
             });
             if (placedTackles.length === 0) {
-                position = { name: 'Left Tackle', x: -4, y: 0, section: 'Offensive line of scrimmage' };
+                position = { name: 'Left Tackle', x: -6, y: -3, section: 'Offensive line of scrimmage' };
             } else {
-                position = { name: 'Right Tackle', x: 4, y: 0, section: 'Offensive line of scrimmage' };
+                position = { name: 'Right Tackle', x: 6, y: -3, section: 'Offensive line of scrimmage' };
             }
         } else if (player.position === 'OG') {
             const placedGuards = selectedPlayers.filter(id => {
@@ -855,21 +2270,21 @@ function prePopulateOffensiveLine() {
                 return p && p.position === 'OG' && playerPositions[id] && id !== playerId;
             });
             if (placedGuards.length === 0) {
-                position = { name: 'Left Guard', x: -2, y: 0, section: 'Offensive line of scrimmage' };
+                position = { name: 'Left Guard', x: -3, y: -3, section: 'Offensive line of scrimmage' };
             } else {
-                position = { name: 'Right Guard', x: 2, y: 0, section: 'Offensive line of scrimmage' };
+                position = { name: 'Right Guard', x: 3, y: -3, section: 'Offensive line of scrimmage' };
             }
         } else if (player.position === 'C') {
-            position = { name: 'Center', x: 0, y: 0, section: 'Offensive line of scrimmage' };
+            position = { name: 'Center', x: 0, y: -3, section: 'Offensive line of scrimmage' };
         } else if (player.position === 'TE') {
             const placedTEs = selectedPlayers.filter(id => {
                 const p = getPlayerById(id);
                 return p && p.position === 'TE' && playerPositions[id] && id !== playerId;
             });
             if (placedTEs.length === 0) {
-                position = { name: 'Tight end outside left', x: -5.5, y: 0, section: 'Offensive line of scrimmage' };
+                position = { name: 'Tight end outside left', x: -8, y: -3, section: 'Offensive line of scrimmage' };
             } else {
-                position = { name: 'Tight end outside right', x: 5.5, y: 0, section: 'Offensive line of scrimmage' };
+                position = { name: 'Tight end outside right', x: 8, y: -3, section: 'Offensive line of scrimmage' };
             }
         } else if (player.position === 'WR') {
             const placedWRs = selectedPlayers.filter(id => {
@@ -877,19 +2292,19 @@ function prePopulateOffensiveLine() {
                 return p && p.position === 'WR' && playerPositions[id] && id !== playerId;
             });
             if (placedWRs.length === 0) {
-                position = { name: 'Wide left', x: -20, y: 0, section: 'Offensive line of scrimmage' };
+                position = { name: 'Sideline left', x: -19, y: -3, section: 'Offensive line of scrimmage' };
             } else if (placedWRs.length === 1) {
-                position = { name: 'Wide right', x: 20, y: 0, section: 'Offensive line of scrimmage' };
+                position = { name: 'Sideline right', x: 19, y: -3, section: 'Offensive line of scrimmage' };
             } else if (placedWRs.length === 2) {
-                position = { name: 'Slot left', x: -6, y: 0, section: 'Offensive line of scrimmage' };
+                position = { name: 'Slot left', x: -11, y: -3, section: 'Offensive line of scrimmage' };
             } else {
-                position = { name: 'Slot right', x: 6, y: 0, section: 'Offensive line of scrimmage' };
+                position = { name: 'Slot right', x: 11, y: -3, section: 'Offensive line of scrimmage' };
             }
         }
         
         if (position) {
             const x = ((position.x + 25) / 50) * canvasWidth;
-            const y = centerY - (position.y * 10);
+            const y = centerY - (position.y * 15);
             
             playerPositions[playerId] = {
                 x: x,
@@ -916,9 +2331,9 @@ function prePopulateOffensiveLine() {
                 return p && p.position === 'DE' && playerPositions[id] && id !== playerId;
             });
             if (placedDEs.length === 0) {
-                position = { name: '-5', x: -5, y: 0, section: 'Defensive line of scrimmage' };
+                position = { name: 'Left 5 technique', x: -9, y: 2.5, section: 'Defensive line of scrimmage' };
             } else {
-                position = { name: '5', x: 5, y: 0, section: 'Defensive line of scrimmage' };
+                position = { name: 'Right 5 technique', x: 9, y: 2.5, section: 'Defensive line of scrimmage' };
             }
         } else if (player.position === 'DT') {
             const placedDTs = selectedDefense.filter(id => {
@@ -926,9 +2341,9 @@ function prePopulateOffensiveLine() {
                 return p && p.position === 'DT' && playerPositions[id] && id !== playerId;
             });
             if (placedDTs.length === 0) {
-                position = { name: '-3', x: -3.5, y: 0, section: 'Defensive line of scrimmage' };
+                position = { name: 'Left 3 technique', x: -5, y: 2.5, section: 'Defensive line of scrimmage' };
             } else {
-                position = { name: '3', x: 3.5, y: 0, section: 'Defensive line of scrimmage' };
+                position = { name: 'Right 3 technique', x: 5, y: 2.5, section: 'Defensive line of scrimmage' };
             }
         } else if (['LB', 'MLB'].includes(player.position)) {
             const placedLBs = selectedDefense.filter(id => {
@@ -936,11 +2351,11 @@ function prePopulateOffensiveLine() {
                 return p && ['LB', 'MLB'].includes(p.position) && playerPositions[id] && id !== playerId;
             });
             if (placedLBs.length === 0) {
-                position = { name: 'Left B gap', x: -3, y: 2, section: 'Defensive backfield' };
+                position = { name: 'Left B gap (shallow)', x: -3, y: 6, section: 'Defensive backfield' };
             } else if (placedLBs.length === 1) {
-                position = { name: 'Right B gap', x: 3, y: 2, section: 'Defensive backfield' };
+                position = { name: 'Right B gap (shallow)', x: 3, y: 6, section: 'Defensive backfield' };
             } else {
-                position = { name: 'Over Center', x: 0, y: 2, section: 'Defensive backfield' };
+                position = { name: 'Over Center (shallow)', x: 0, y: 6, section: 'Defensive backfield' };
             }
         } else if (player.position === 'CB') {
             const placedCBs = selectedDefense.filter(id => {
@@ -948,9 +2363,9 @@ function prePopulateOffensiveLine() {
                 return p && p.position === 'CB' && playerPositions[id] && id !== playerId;
             });
             if (placedCBs.length === 0) {
-                position = { name: 'Left cornerback', x: -18, y: 12, section: 'Deep level (shaded forward)' };
+                position = { name: 'Left cornerback', x: -19, y: 12, section: 'Max depth' };
             } else {
-                position = { name: 'Right cornerback', x: 18, y: 12, section: 'Deep level (shaded forward)' };
+                position = { name: 'Right cornerback', x: 19, y: 12, section: 'Max depth' };
             }
         } else if (player.position === 'S') {
             const placedSs = selectedDefense.filter(id => {
@@ -958,15 +2373,15 @@ function prePopulateOffensiveLine() {
                 return p && p.position === 'S' && playerPositions[id] && id !== playerId;
             });
             if (placedSs.length === 0) {
-                position = { name: 'Free safety', x: 0, y: 15, section: 'Deep level (shaded forward)' };
+                position = { name: 'Deep middle 1/3', x: 0, y: 15, section: 'Max depth' };
             } else {
-                position = { name: 'Strong safety left', x: -8, y: 12, section: 'Deep level (shaded forward)' };
+                position = { name: 'Deep left', x: -8, y: 12, section: 'Max depth' };
             }
         }
         
         if (position) {
             const x = ((position.x + 25) / 50) * canvasWidth;
-            const y = centerY - (position.y * 10);
+            const y = centerY - (position.y * 15);
             
             playerPositions[playerId] = {
                 x: x,
@@ -1090,13 +2505,28 @@ function handleDrop(e) {
         const [side] = draggedPlayer.playerId.split('-');
         const player = getPlayerById(draggedPlayer.playerId);
         
-        // Check for offsides: offense must be Y <= -1, defense must be Y >= +1
-        const isOffsides = (side === 'offense' && location.originalY > -1) || 
-                          (side === 'defense' && location.originalY < 1);
+        // Check for offsides: offense must be Y <= -3, defense must be Y >= +3
+        const isOffsides = (side === 'offense' && location.originalY > -3) || 
+                          (side === 'defense' && location.originalY < 3);
         
-        // Also check if location matches player side
-        const wrongSide = (side === 'offense' && !location.isOffensive && location.isDefensive) ||
-                         (side === 'defense' && !location.isDefensive && location.isOffensive);
+        // Check section names more carefully - only flag as wrong side if clearly defensive/offensive
+        const isOffensiveSection = location.section && (
+            location.section.includes('Offensive') || 
+            location.section.includes('offensive') ||
+            location.section.toLowerCase().includes('offense')
+        );
+        const isDefensiveSection = location.section && (
+            location.section.includes('Defensive') || 
+            location.section.includes('defensive') ||
+            location.section.includes('Coverage') || 
+            location.section.includes('Press') ||
+            location.section.includes('Deep') ||
+            location.section.includes('Box safety') ||
+            location.section.includes('Max depth')
+        );
+        // Only flag wrong side if we're confident about the section classification
+        const wrongSide = (side === 'offense' && isDefensiveSection && !isOffensiveSection) ||
+                         (side === 'defense' && isOffensiveSection && !isDefensiveSection);
         
         playerPositions[draggedPlayer.playerId] = {
             x: location.x,
@@ -1121,8 +2551,11 @@ function findNearestLocation(x, y, canvasWidth, canvasHeight) {
     fieldLocations.forEach(section => {
         section.Locations.forEach(loc => {
             if (loc.X !== undefined && loc.Y !== undefined) {
-                // Offense: Y must be <= -1 (below line), Defense: Y must be >= +1 (above line)
-                const locY = centerY - (loc.Y * 10);
+                // MASSIVE vertical separation: Use multiplier of 15
+                // Offense: negative Y values render BELOW centerY (centerY - (negative) = centerY + positive)
+                // Defense: positive Y values render ABOVE centerY (centerY - (positive) = centerY - positive)
+                const yMultiplier = 15;
+                const locY = centerY - (loc.Y * yMultiplier);
                 const locX = ((loc.X + 25) / 50) * canvasWidth;
                 
                 // Check if location is on correct side based on section
@@ -1165,44 +2598,38 @@ function renderPlayerMarkers() {
     const overlays = document.getElementById('playerOverlays');
     if (!overlays) return;
     
+    // Scale canvas to container (same as renderField)
+    const dpr = window.devicePixelRatio || 1;
     const canvasWidth = container.offsetWidth;
     const canvasHeight = container.offsetHeight;
+    canvas.width = canvasWidth * dpr;
+    canvas.height = canvasHeight * dpr;
+    canvas.style.width = canvasWidth + 'px';
+    canvas.style.height = canvasHeight + 'px';
+    ctx.scale(dpr, dpr);
     
     // Redraw field first
     ctx.fillStyle = '#2d5016';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     
-    // Draw yard lines
+    // NO YARD LINES - removed entirely
+    
     const centerY = canvasHeight / 2;
-    for (let i = 0; i <= 10; i++) {
-        const x = (i / 10) * canvasWidth;
-        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvasHeight);
-        ctx.stroke();
+    
+    // Draw hash marks (VERTICAL - along the length of the field)
+    // Hash marks at standard NFL positions every yard along the length
+    for (let i = 0; i <= 20; i++) {
+        const y = (i / 20) * canvasHeight;
+        // Left hash marks (at ~15% and ~35% of field width)
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.fillRect(canvasWidth * 0.15 - 1, y, 2, 8);
+        ctx.fillRect(canvasWidth * 0.35 - 1, y, 2, 8);
+        // Right hash marks (at ~65% and ~85% of field width)
+        ctx.fillRect(canvasWidth * 0.65 - 1, y, 2, 8);
+        ctx.fillRect(canvasWidth * 0.85 - 1, y, 2, 8);
     }
     
-    // Draw hash marks with numbers
-    const hashY1 = centerY - 20;
-    const hashY2 = centerY + 20;
-    for (let i = 0; i <= 10; i++) {
-        const x = (i / 10) * canvasWidth;
-        ctx.fillStyle = 'rgba(255,255,255,0.5)';
-        ctx.fillRect(x - 1, hashY1, 2, 10);
-        ctx.fillRect(x - 1, hashY2, 2, 10);
-        
-        // Draw yard numbers (0-50, center is 50)
-        if (i % 2 === 0) {
-            const yardNumber = Math.abs(50 - (i * 10));
-            ctx.fillStyle = 'rgba(255,255,255,0.8)';
-            ctx.font = 'bold 12px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText(yardNumber.toString(), x, hashY1 - 5);
-            ctx.fillText(yardNumber.toString(), x, hashY2 + 20);
-        }
-    }
+    // NO FIELD NUMBERS - removed entirely
     
     // Draw line of scrimmage with buffer zones
     ctx.strokeStyle = '#FFD700';
@@ -1212,15 +2639,18 @@ function renderPlayerMarkers() {
     ctx.lineTo(canvasWidth, centerY);
     ctx.stroke();
     
-    // Draw neutral zone (offense Y <= -1, defense Y >= +1)
+    // Draw neutral zone with DRASTICALLY increased offset
+    // Offense: Y <= -10 (much further below line)
+    // Defense: Y >= +10 (much further above line)
+    const neutralZoneOffset = 100; // Increased from 10 to 100 pixels (10 yards)
     ctx.strokeStyle = 'rgba(255,255,0,0.3)';
     ctx.lineWidth = 1;
     ctx.setLineDash([5, 5]);
     ctx.beginPath();
-    ctx.moveTo(0, centerY - 10); // -1 yard line
-    ctx.lineTo(canvasWidth, centerY - 10);
-    ctx.moveTo(0, centerY + 10); // +1 yard line
-    ctx.lineTo(canvasWidth, centerY + 10);
+    ctx.moveTo(0, centerY - neutralZoneOffset); // -10 yard line (offense max)
+    ctx.lineTo(canvasWidth, centerY - neutralZoneOffset);
+    ctx.moveTo(0, centerY + neutralZoneOffset); // +10 yard line (defense min)
+    ctx.lineTo(canvasWidth, centerY + neutralZoneOffset);
     ctx.stroke();
     ctx.setLineDash([]);
     
@@ -1229,7 +2659,8 @@ function renderPlayerMarkers() {
         section.Locations.forEach(location => {
             if (location.X !== undefined && location.Y !== undefined) {
                 const x = ((location.X + 25) / 50) * canvasWidth;
-                const y = centerY - (location.Y * 10);
+                // Use same multiplier for drop zones
+                const y = centerY - (location.Y * 15);
                 
                 if (x >= 0 && x <= canvasWidth && y >= 0 && y <= canvasHeight) {
                     ctx.fillStyle = 'rgba(255,255,255,0.1)';
@@ -1263,9 +2694,9 @@ function renderPlayerMarkers() {
             // Reduced size: 60% smaller vertically (100px -> 40px), 30% smaller horizontally (80px -> 56px)
             marker.style.cssText = `
                 position: absolute;
-                left: ${pos.x - 28}px;
+                left: ${pos.x - 18}px;
                 top: ${pos.y - 20}px;
-                width: 56px;
+                width: 36px;
                 height: 40px;
                 pointer-events: auto;
                 cursor: move;
@@ -1280,9 +2711,9 @@ function renderPlayerMarkers() {
                 box-shadow: 0 1px 4px rgba(0,0,0,0.3);
             `;
             
-            // Player name (truncated) - smaller font
+            // Player name - allow wrapping to show full name
             const nameDiv = document.createElement('div');
-            nameDiv.style.cssText = 'font-size: 6px; font-weight: bold; text-align: center; margin-bottom: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; line-height: 1.1;';
+            nameDiv.style.cssText = 'font-size: 6px; font-weight: bold; text-align: center; margin-bottom: 1px; width: 100%; line-height: 1.1; word-wrap: break-word; overflow-wrap: break-word;';
             nameDiv.textContent = player.name.split(' ').pop(); // Last name only
             marker.appendChild(nameDiv);
             
@@ -1314,7 +2745,7 @@ function renderPlayerMarkers() {
             
             // Stamina bar - 80% smaller (6px -> 1.2px, but min 2px for visibility)
             const staminaContainer = document.createElement('div');
-            staminaContainer.style.cssText = 'width: 50px; height: 2px; background: #ddd; border-radius: 1px; overflow: hidden;';
+            staminaContainer.style.cssText = 'width: 24px; height: 2px; background: #ddd; border-radius: 1px; overflow: hidden;';
             const staminaFill = document.createElement('div');
             const staminaPercent = player.stamina || 100;
             const staminaColor = staminaPercent > 70 ? '#4CAF50' : staminaPercent > 40 ? '#FFA500' : '#f44336';
@@ -1347,11 +2778,11 @@ function renderPlayerMarkers() {
                 tooltip.textContent = pos.location || 'No location';
                 marker.appendChild(tooltip);
                 
-                // Position tooltip above marker
+                // Position tooltip below marker
                 tooltip.style.left = '50%';
                 tooltip.style.transform = 'translateX(-50%)';
-                tooltip.style.bottom = '100%';
-                tooltip.style.marginBottom = '4px';
+                tooltip.style.top = '100%';
+                tooltip.style.marginTop = '4px';
             });
             
             marker.addEventListener('mouseleave', () => {
@@ -1379,10 +2810,26 @@ function renderPlayerMarkers() {
                     
                     if (location) {
                         const [side] = playerId.split('-');
-                        const isOffsides = (side === 'offense' && location.originalY > -1) || 
-                                          (side === 'defense' && location.originalY < 1);
-                        const wrongSide = (side === 'offense' && !location.isOffensive && location.isDefensive) ||
-                                         (side === 'defense' && !location.isDefensive && location.isOffensive);
+                        const isOffsides = (side === 'offense' && location.originalY > -3) || 
+                                          (side === 'defense' && location.originalY < 3);
+                        // Check section names more carefully - only flag as wrong side if clearly defensive/offensive
+                        const isOffensiveSection = location.section && (
+                            location.section.includes('Offensive') || 
+                            location.section.includes('offensive') ||
+                            location.section.toLowerCase().includes('offense')
+                        );
+                        const isDefensiveSection = location.section && (
+                            location.section.includes('Defensive') || 
+                            location.section.includes('defensive') ||
+                            location.section.includes('Coverage') || 
+                            location.section.includes('Press') ||
+                            location.section.includes('Deep') ||
+                            location.section.includes('Box safety') ||
+                            location.section.includes('Max depth')
+                        );
+                        // Only flag wrong side if we're confident about the section classification
+                        const wrongSide = (side === 'offense' && isDefensiveSection && !isOffensiveSection) ||
+                                         (side === 'defense' && isOffensiveSection && !isDefensiveSection);
                         
                         playerPositions[playerId] = {
                             x: location.x,
@@ -1538,24 +2985,63 @@ function drawAssignmentArrow(ctx, x, y, action, position, isOffense, canvasWidth
 
 // Coaching points
 function renderCoachingPoints() {
-    const select = document.getElementById('coachingPlayer');
-    select.innerHTML = '<option value="">Select a player...</option>';
+    const selectOffense = document.getElementById('coachingPlayerOffense');
+    const selectDefense = document.getElementById('coachingPlayerDefense');
     
-    [...selectedPlayers, ...selectedDefense].forEach(playerId => {
+    selectOffense.innerHTML = '<option value="">Select an offensive player...</option>';
+    selectDefense.innerHTML = '<option value="">Select a defensive player...</option>';
+    
+    selectedPlayers.forEach(playerId => {
         const player = getPlayerById(playerId);
         if (player) {
             const option = document.createElement('option');
             option.value = playerId;
             option.textContent = `${player.name} (${player.position})`;
-            select.appendChild(option);
+            selectOffense.appendChild(option);
         }
+    });
+    
+    selectedDefense.forEach(playerId => {
+        const player = getPlayerById(playerId);
+        if (player) {
+            const option = document.createElement('option');
+            option.value = playerId;
+            option.textContent = `${player.name} (${player.position})`;
+            selectDefense.appendChild(option);
+        }
+    });
+    
+    // Add character counters
+    const textareaOffense = document.getElementById('coachingPointOffense');
+    const textareaDefense = document.getElementById('coachingPointDefense');
+    const countOffense = document.getElementById('coachingPointOffenseCount');
+    const countDefense = document.getElementById('coachingPointDefenseCount');
+    
+    textareaOffense.addEventListener('input', () => {
+        countOffense.textContent = textareaOffense.value.length;
+    });
+    
+    textareaDefense.addEventListener('input', () => {
+        countDefense.textContent = textareaDefense.value.length;
     });
 }
 
 // Execute play
 async function executePlay() {
-    const coachingPlayerId = document.getElementById('coachingPlayer').value;
-    const coachingPoint = document.getElementById('coachingPoint').value;
+    const coachingPlayerIdOffense = document.getElementById('coachingPlayerOffense').value;
+    const coachingPointOffense = document.getElementById('coachingPointOffense').value;
+    const coachingPlayerIdDefense = document.getElementById('coachingPlayerDefense').value;
+    const coachingPointDefense = document.getElementById('coachingPointDefense').value;
+    
+    // Validate character limits
+    if (coachingPointOffense && coachingPointOffense.length > 50) {
+        alert('Offensive coaching point must be 50 characters or less.');
+        return;
+    }
+    if (coachingPointDefense && coachingPointDefense.length > 50) {
+        alert('Defensive coaching point must be 50 characters or less.');
+        return;
+    }
     
     // Build play data
     const playData = {
@@ -1575,9 +3061,13 @@ async function executePlay() {
                 assignment: assignments.defense[player.name] || 'None'
             };
         }),
-        coachingPoint: coachingPlayerId ? {
-            player: getPlayerById(coachingPlayerId),
-            point: coachingPoint
+        coachingPointOffense: coachingPlayerIdOffense && coachingPointOffense ? {
+            player: getPlayerById(coachingPlayerIdOffense),
+            point: coachingPointOffense
+        } : null,
+        coachingPointDefense: coachingPlayerIdDefense && coachingPointDefense ? {
+            player: getPlayerById(coachingPlayerIdDefense),
+            point: coachingPointDefense
         } : null
     };
     
@@ -1662,7 +3152,7 @@ Point of attack analysis:
 ${generatePointOfAttackAnalysis(playData)}
 
 Backfield:
-${qb ? `${qb.position}: ${calculateEffectivePercentile(qb).toFixed(0)}th percentile${qb.stamina ? `, ${qb.stamina}% stamina` : ''}: ${playData.coachingPoint && playData.coachingPoint.player.name === qb.name ? `Coaching point: "${playData.coachingPoint.point}"` : 'Standard dropback'}` : 'No QB'}
+${qb ? `${qb.position}: ${calculateEffectivePercentile(qb).toFixed(0)}th percentile${qb.stamina ? `, ${qb.stamina}% stamina` : ''}: ${playData.coachingPointOffense && playData.coachingPointOffense.player.name === qb.name ? `Coaching point: "${playData.coachingPointOffense.point}"` : 'Standard dropback'}` : 'No QB'}
 ${rb ? `${rb.position}: ${calculateEffectivePercentile(rb).toFixed(0)}th percentile${rb.stamina ? `, ${rb.stamina}% stamina` : ''}: ${assignments.offense[rb.name] || 'Standard assignment'}` : ''}
 
 Second level summary:
@@ -1674,7 +3164,8 @@ ${generateSchematicAnalysis(playData, advantage, passRushAdvantage)}
 Key Matchups:
 ${generateKeyMatchups(playData)}
 
-${playData.coachingPoint ? `Coaching Point Applied: ${playData.coachingPoint.player.name} (${playData.coachingPoint.player.position}) - "${playData.coachingPoint.point}"` : ''}
+${playData.coachingPointOffense ? `Offensive Coaching Point: ${playData.coachingPointOffense.player.name} (${playData.coachingPointOffense.player.position}) - "${playData.coachingPointOffense.point}"` : ''}
+${playData.coachingPointDefense ? `Defensive Coaching Point: ${playData.coachingPointDefense.player.name} (${playData.coachingPointDefense.player.position}) - "${playData.coachingPointDefense.point}"` : ''}
 
 ${JSON.stringify({
     "success-rate": parseFloat(successRate.toFixed(1)),
@@ -1717,6 +3208,8 @@ function generatePointOfAttackAnalysis(playData) {
     const dline = playData.defense.filter(p => ['DE', 'DT'].includes(p.position));
     
     let analysis = '(from offenses left to right)\n';
+    let stunts = [];
+    
     oline.forEach((ol, i) => {
         const dl = dline[i] || dline[0];
         const olPercentile = calculateEffectivePercentile(ol);
@@ -1725,9 +3218,44 @@ function generatePointOfAttackAnalysis(playData) {
         const assignment = assignments.offense[ol.name] || 'Standard block';
         analysis += `${ol.position}: ${olPercentile.toFixed(0)}th percentile${stamina}: ${assignment}\n`;
         if (dl) {
-            analysis += `${dl.position} (${dl.position}): ${dlPercentile.toFixed(0)}th percentile: ${assignments.defense[dl.name] || 'Standard rush'}\n`;
+            const dlAssignment = assignments.defense[dl.name];
+            const assignmentText = dlAssignment ? (dlAssignment.action || dlAssignment) : 'Standard rush';
+            
+            // Find player position to get technique
+            let playerPos = null;
+            let playerId = null;
+            for (const id in playerPositions) {
+                const p = getPlayerById(id);
+                if (p && p.name === dl.name) {
+                    playerPos = playerPositions[id];
+                    playerId = id;
+                    break;
+                }
+            }
+            
+            const technique = playerPos ? playerPos.location : 'Unknown';
+            
+            // Check for stunt (gap differs from technique default)
+            if (dlAssignment && dlAssignment.action && playerPos) {
+                const defaultGap = getDefaultGapFromLocation(technique, dl);
+                const assignedGap = dlAssignment.action;
+                
+                if (defaultGap && assignedGap && defaultGap !== assignedGap && assignedGap.includes('gap')) {
+                    stunts.push(`${dl.name} (${dl.position}) stunting from ${defaultGap} to ${assignedGap}`);
+                }
+            }
+            
+            analysis += `${dl.position} (${technique}): ${dlPercentile.toFixed(0)}th percentile: ${assignmentText}\n`;
         }
     });
+    
+    if (stunts.length > 0) {
+        analysis += '\nStunts:\n';
+        stunts.forEach(stunt => {
+            analysis += `${stunt}\n`;
+        });
+    }
+    
     return analysis;
 }
 
@@ -1822,10 +3350,43 @@ function parseLLMOutput(output) {
 }
 
 async function runStateMachine(evalData, playData) {
-    // Step 1: Roll 1-100 to determine basic play outcome (using LLM rates)
-    const successRate = evalData['success-rate'] || 45.0;
-    const havocRate = evalData['havoc-rate'] || 11.0;
-    const explosiveRate = evalData['explosive-rate'] || 13.0;
+    // Determine play type (pass vs run) from assignments
+    const qb = playData.offense.find(p => p.position === 'QB');
+    const qbAssignment = qb ? (assignments.offense[qb.name] || '') : '';
+    const isPass = qbAssignment && (
+        qbAssignment.includes('Boot') || 
+        qbAssignment.includes('drop') || 
+        qbAssignment.includes('Play action') ||
+        qbAssignment.includes('Pass')
+    );
+    const playType = isPass ? 'pass' : 'run';
+    
+    // Apply consecutive unsuccessful play boost
+    let adjustedEvalData = { ...evalData };
+    let penaltyYards = 0;
+    if (gameState.consecutiveUnsuccessfulPlays >= 2 && gameState.down >= 3) {
+        if (playType === 'pass') {
+            // For passes: chance of defensive penalty or completion boost
+            const penaltyRoll = Math.floor(Math.random() * 100) + 1;
+            if (penaltyRoll <= 10) {
+                penaltyYards = 5; // Defensive penalty
+            } else if (penaltyRoll <= 18) {
+                penaltyYards = 3; // Smaller penalty
+            } else {
+                // Boost completion chance
+                adjustedEvalData['success-rate'] = Math.min(100, (evalData['success-rate'] || 45.0) + 30.0);
+            }
+        } else {
+            // For runs: boost success rate slightly
+            const conversionBoost = evalData['conversion-rate-1st-2nd-down-only'] || 31.0;
+            adjustedEvalData['success-rate'] = Math.min(100, (evalData['success-rate'] || 45.0) + conversionBoost * 0.2);
+        }
+    }
+    
+    // Step 1: Roll 1-100 to determine basic play outcome (using adjusted LLM rates)
+    const successRate = adjustedEvalData['success-rate'] || 45.0;
+    const havocRate = adjustedEvalData['havoc-rate'] || 11.0;
+    const explosiveRate = adjustedEvalData['explosive-rate'] || 13.0;
     const unsuccessfulRate = 100 - successRate - havocRate - explosiveRate;
     
     // Build cumulative probability ranges
@@ -1868,18 +3429,44 @@ async function runStateMachine(evalData, playData) {
         }
     } else if (outcomeRoll <= ranges.success) {
         outcomeType = 'success';
-        // Roll 1-100 for YAC check (60% tackle chance)
+        // Roll 1-100 for YAC check (75% tackle chance for runs, 75% for passes)
         const yacRoll = Math.floor(Math.random() * 100) + 1;
-        if (yacRoll <= 60) {
-            // Tackled, use success outcome
-            outcomeFile = await loadOutcomeFile('outcomes/successful-run.json');
+        if (playType === 'pass') {
+            if (yacRoll <= 75) {
+                outcomeFile = await loadOutcomeFile('outcomes/successful-pass.json');
+            } else {
+                // YAC - use modified version with lower average for non-explosive
+                const yacFile = await loadOutcomeFile('outcomes/yac-catch.json');
+                if (yacFile) {
+                    outcomeFile = { ...yacFile };
+                    outcomeFile['average-yards-gained'] = 4.0;
+                    outcomeFile['standard-deviation'] = 1.5;
+                } else {
+                    outcomeFile = await loadOutcomeFile('outcomes/successful-pass.json');
+                }
+            }
         } else {
-            // YAC - roll again for YAC yards
-            outcomeFile = await loadOutcomeFile('outcomes/yac-catch.json');
+            if (yacRoll <= 70) {
+                outcomeFile = await loadOutcomeFile('outcomes/successful-run.json');
+            } else {
+                // YAC - use modified version with lower average for non-explosive
+                const yacFile = await loadOutcomeFile('outcomes/yac-catch.json');
+                if (yacFile) {
+                    outcomeFile = { ...yacFile };
+                    outcomeFile['average-yards-gained'] = 5.0;
+                    outcomeFile['standard-deviation'] = 1.6;
+                } else {
+                    outcomeFile = await loadOutcomeFile('outcomes/successful-run.json');
+                }
+            }
         }
     } else {
         outcomeType = 'unsuccessful';
-        outcomeFile = await loadOutcomeFile('outcomes/unsuccessful-run.json');
+        if (playType === 'pass') {
+            outcomeFile = await loadOutcomeFile('outcomes/unsuccessful-pass.json');
+        } else {
+            outcomeFile = await loadOutcomeFile('outcomes/unsuccessful-run.json');
+        }
     }
     
     if (!outcomeFile) {
@@ -1887,13 +3474,41 @@ async function runStateMachine(evalData, playData) {
         return { outcome: 'error', yards: 0, evalData };
     }
     
-    // Step 2: Roll 1-100 and calculate yards using statistical methods from outcome file
-    const yardsRoll = Math.floor(Math.random() * 100) + 1;
-    const yards = calculateYardsFromRoll(yardsRoll, outcomeFile);
+    // Step 2: For passes, check completion percentage first
+    let yards = 0;
+    let isComplete = true;
+    
+    if (playType === 'pass' && outcomeFile['completion-percentage'] !== undefined) {
+        // Roll for completion
+        const completionRoll = Math.floor(Math.random() * 100) + 1;
+        isComplete = completionRoll <= outcomeFile['completion-percentage'];
+        
+        if (isComplete) {
+            // Calculate yards from distribution
+            const yardsRoll = Math.floor(Math.random() * 100) + 1;
+            yards = calculateYardsFromRoll(yardsRoll, outcomeFile);
+        } else {
+            // Incomplete pass - 0 yards
+            yards = 0;
+        }
+    } else {
+        // For runs or non-pass outcomes, calculate yards normally
+        const yardsRoll = Math.floor(Math.random() * 100) + 1;
+        yards = calculateYardsFromRoll(yardsRoll, outcomeFile);
+    }
+    
+    // Add penalty yards if applicable
+    yards += penaltyYards;
     
     // Step 3: Check for turnover
     const turnoverRoll = Math.floor(Math.random() * 100) + 1;
     const turnover = turnoverRoll <= (outcomeFile['turnover-probability'] || 0);
+    
+    // Update description for incomplete passes
+    let description = outcomeFile.description.replace('{yards}', yards).replace('{yards-after-catch}', yards);
+    if (playType === 'pass' && !isComplete) {
+        description = 'The pass was incomplete. Yards: 0';
+    }
     
     return { 
         outcome: outcomeFile.outcome, 
@@ -1901,7 +3516,8 @@ async function runStateMachine(evalData, playData) {
         yards, 
         turnover,
         turnoverType: outcomeFile['turnover-type'],
-        description: outcomeFile.description.replace('{yards}', yards).replace('{yards-after-catch}', yards),
+        description: description,
+        isComplete: isComplete,
         evalData 
     };
 }
@@ -1979,9 +3595,17 @@ function updateGameState(result) {
         // Touchdown logic would go here
     }
     
+    // Track consecutive unsuccessful plays
+    if (result.outcomeType === 'unsuccessful' || (result.yards < 3 && result.outcomeType !== 'explosive')) {
+        gameState.consecutiveUnsuccessfulPlays = (gameState.consecutiveUnsuccessfulPlays || 0) + 1;
+    } else {
+        gameState.consecutiveUnsuccessfulPlays = 0;
+    }
+    
     if (result.yards >= gameState.distance) {
         gameState.down = 1;
         gameState.distance = 10;
+        gameState.consecutiveUnsuccessfulPlays = 0; // Reset on first down
     } else {
         gameState.distance -= result.yards;
     }
@@ -1989,6 +3613,7 @@ function updateGameState(result) {
     if (gameState.down > 4) {
         gameState.down = 1;
         gameState.distance = 10;
+        gameState.consecutiveUnsuccessfulPlays = 0; // Reset on turnover on downs
         // Turnover logic
     }
     
