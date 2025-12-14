@@ -8,5 +8,10 @@
         "home": 0,
         "away": 0
     },
-    "time": "15:00"
+    "time": "15:00",
+    "timeouts": {
+        "home": 3,
+        "away": 3
+    },
+    "timeoutCalled": false
 }

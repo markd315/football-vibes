@@ -320,6 +320,22 @@
         "health": 100.0
     },
     {
+        "name": "Travis Hunter",
+        "position": "WR",
+        "jersey": 11,
+        "height": "6'1",
+        "weight": "209",
+        "stamina": 100,
+        "percentile": 74,
+        "traits-from-baseline-percentile": {
+            "route-running": 4,
+            "pass-catching": 3,
+            "elusiveness": 2,
+            "run-blocking": 0
+        },
+        "health": 0.0
+    },
+    {
         "name": "Tim Patrick",
         "position": "WR",
         "jersey": 81,

@@ -64,17 +64,26 @@ async function loadGameState() {
     try {
         const response = await fetch('gamestate.json');
         gameState = await response.json();
+        // Initialize timeouts if missing
+        if (!gameState.timeouts) {
+            gameState.timeouts = { home: 3, away: 3 };
+        }
+        if (gameState.timeoutCalled === undefined) {
+            gameState.timeoutCalled = false;
+        }
     } catch (error) {
         console.error('Error loading game state:', error);
         gameState = {
             possession: "home",
             quarter: 1,
-        down: 1,
-        distance: 10,
-        consecutiveUnsuccessfulPlays: 0,
+            down: 1,
+            distance: 10,
+            consecutiveUnsuccessfulPlays: 0,
             "opp-yardline": 65,
             score: { home: 0, away: 0 },
-            time: "15:00"
+            time: "15:00",
+            timeouts: { home: 3, away: 3 },
+            timeoutCalled: false
         };
     }
 }
@@ -1080,10 +1089,11 @@ function renderPlaycallDiagram() {
     ctx.stroke();
     
     // Helper to get original location coordinates from fieldLocations
+    // Filter by Y sign: negative for offense (bottom half)
     function getLocationCoords(locationName) {
         for (const section of fieldLocations) {
             for (const loc of section.Locations) {
-                if (loc.Name === locationName) {
+                if (loc.Name === locationName && loc.Y < 0) {
                     return { x: loc.X, y: loc.Y };
                 }
             }
@@ -1537,10 +1547,11 @@ function renderDefensePlaycallDiagram() {
     ctx.stroke();
     
     // Helper to get original location coordinates from fieldLocations
+    // Filter by Y sign: positive for defense (top half)
     function getLocationCoords(locationName) {
         for (const section of fieldLocations) {
             for (const loc of section.Locations) {
-                if (loc.Name === locationName) {
+                if (loc.Name === locationName && loc.Y > 0) {
                     return { x: loc.X, y: loc.Y };
                 }
             }
@@ -1549,6 +1560,53 @@ function renderDefensePlaycallDiagram() {
     }
     
     // Render defensive players only (hide offense) - top half
+    // Also show offensive players as static grey dots in bottom half
+    const bottomHalfStart = height / 2;
+    const bottomHalfHeight = height / 2;
+    
+    // Helper to get offensive location coordinates (Y < 0)
+    function getOffensiveLocationCoords(locationName) {
+        for (const section of fieldLocations) {
+            for (const loc of section.Locations) {
+                if (loc.Name === locationName && loc.Y < 0) {
+                    return { x: loc.X, y: loc.Y };
+                }
+            }
+        }
+        return null;
+    }
+    
+    // Draw offensive players as static grey dots in bottom half
+    selectedPlayers.forEach((playerId) => {
+        const player = getPlayerById(playerId);
+        if (!player) return;
+        
+        const pos = playerPositions[playerId];
+        if (!pos) return;
+        
+        const locCoords = getOffensiveLocationCoords(pos.location);
+        if (!locCoords) return;
+        
+        // Convert X from original coordinates (-25 to +25) to diagram (0 to width)
+        const diagramX = ((locCoords.x + 25) / 50) * width;
+        
+        // Convert Y: Offense goes in bottom half
+        const offenseMinY = -15; // Deepest
+        const offenseMaxY = -3;  // LOS
+        const offenseYRange = offenseMaxY - offenseMinY; // 12
+        const normalizedY = (locCoords.y - offenseMinY) / offenseYRange;
+        const diagramY = bottomHalfStart + (bottomHalfHeight * (1 - normalizedY));
+        
+        if (isNaN(diagramX) || isNaN(diagramY) || !isFinite(diagramX) || !isFinite(diagramY)) {
+            return;
+        }
+        
+        // Draw static grey dot
+        ctx.fillStyle = '#888888';
+        ctx.beginPath();
+        ctx.arc(diagramX, diagramY, 3, 0, Math.PI * 2);
+        ctx.fill();
+    });
     const topHalfHeight = height / 2;
     
     selectedDefense.forEach((playerId) => {
@@ -1772,29 +1830,69 @@ function applyDefensivePlaycall(playcallName) {
     const remainingDBs = allDBs.filter(db => !deepZoneAssigned.includes(db));
     const useMan = coverNumber <= 1;
     
+    // Helper function to calculate distance between two field coordinates
+    function calculateDistance(coord1, coord2) {
+        const dx = coord1.x - coord2.x;
+        const dy = coord1.y - coord2.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+    
     if (useMan) {
-        // Man coverage - assign to nearest eligible offensive players
+        // Man coverage - assign to nearest eligible offensive players using coordinate distance
         const eligibleOffense = [];
         selectedPlayers.forEach((playerId) => {
             const player = getPlayerById(playerId);
             if (player && ['WR', 'TE', 'RB'].includes(player.position)) {
                 const pos = playerPositions[playerId];
-                if (pos) {
-                    eligibleOffense.push({ player, pos });
+                if (pos && pos.location) {
+                    const locCoords = getLocationCoords(pos.location);
+                    if (locCoords) {
+                        eligibleOffense.push({ 
+                            player, 
+                            playerId,
+                            coords: locCoords,
+                            covered: false // Track if already assigned
+                        });
+                    }
                 }
             }
         });
         
-        // Sort by position (left to right)
-        eligibleOffense.sort((a, b) => a.pos.x - b.pos.x);
-        
-        remainingDBs.forEach((db, index) => {
-            if (index < eligibleOffense.length) {
-                const target = eligibleOffense[index % eligibleOffense.length];
-                updateAssignment(db, 'defense', 'Man Coverage', 'Outside release man');
-                // Store man coverage target
+        // Assign each DB to nearest uncovered eligible offensive player
+        remainingDBs.forEach((db) => {
+            const dbPlayerId = selectedDefense.find(id => {
+                const p = getPlayerById(id);
+                return p && p.name === db.name;
+            });
+            if (!dbPlayerId) return;
+            
+            const dbPos = playerPositions[dbPlayerId];
+            if (!dbPos || !dbPos.location) return;
+            
+            const dbCoords = getLocationCoords(dbPos.location);
+            if (!dbCoords) return;
+            
+            // Find nearest uncovered eligible offensive player
+            let nearestTarget = null;
+            let nearestDistance = Infinity;
+            
+            eligibleOffense.forEach((offense) => {
+                if (!offense.covered) {
+                    const distance = calculateDistance(dbCoords, offense.coords);
+                    if (distance < nearestDistance) {
+                        nearestDistance = distance;
+                        nearestTarget = offense;
+                    }
+                }
+            });
+            
+            if (nearestTarget) {
+                // Store man coverage target before calling updateAssignment
                 if (!assignments.defense[db.name]) assignments.defense[db.name] = {};
-                assignments.defense[db.name].manCoverageTarget = target.player.name;
+                assignments.defense[db.name].manCoverageTarget = nearestTarget.player.name;
+                // Now update assignment (which will preserve the manCoverageTarget)
+                updateAssignment(db, 'defense', 'Man Coverage', 'Outside release man');
+                nearestTarget.covered = true; // Mark as covered
             }
         });
     } else {
@@ -1807,27 +1905,72 @@ function applyDefensivePlaycall(playcallName) {
     // LBs get man (Cover 0/1) or zone short (Cover 2-4)
     const allLBs = [...playersByPosition['LB'], ...playersByPosition['MLB']];
     if (useMan) {
-        // Assign LBs to remaining eligible offensive players
+        // Get eligible offensive players (including ones not yet covered by DBs)
         const eligibleOffense = [];
         selectedPlayers.forEach((playerId) => {
             const player = getPlayerById(playerId);
             if (player && ['WR', 'TE', 'RB'].includes(player.position)) {
                 const pos = playerPositions[playerId];
-                if (pos) {
-                    eligibleOffense.push({ player, pos });
+                if (pos && pos.location) {
+                    const locCoords = getLocationCoords(pos.location);
+                    if (locCoords) {
+                        // Check if already covered by a DB
+                        let covered = false;
+                        remainingDBs.forEach((db) => {
+                            const assignment = assignments.defense[db.name];
+                            if (assignment && assignment.manCoverageTarget === player.name) {
+                                covered = true;
+                            }
+                        });
+                        
+                        eligibleOffense.push({ 
+                            player, 
+                            playerId,
+                            coords: locCoords,
+                            covered: covered
+                        });
+                    }
                 }
             }
         });
         
-        eligibleOffense.sort((a, b) => a.pos.x - b.pos.x);
-        
-        allLBs.forEach((lb, index) => {
-            if (index < eligibleOffense.length) {
-                const target = eligibleOffense[index % eligibleOffense.length];
-                updateAssignment(lb, 'defense', 'Man Coverage', 'Inside release man');
+        // Assign each LB to nearest uncovered eligible offensive player
+        allLBs.forEach((lb) => {
+            const lbPlayerId = selectedDefense.find(id => {
+                const p = getPlayerById(id);
+                return p && p.name === lb.name;
+            });
+            if (!lbPlayerId) return;
+            
+            const lbPos = playerPositions[lbPlayerId];
+            if (!lbPos || !lbPos.location) return;
+            
+            const lbCoords = getLocationCoords(lbPos.location);
+            if (!lbCoords) return;
+            
+            // Find nearest uncovered eligible offensive player
+            let nearestTarget = null;
+            let nearestDistance = Infinity;
+            
+            eligibleOffense.forEach((offense) => {
+                if (!offense.covered) {
+                    const distance = calculateDistance(lbCoords, offense.coords);
+                    if (distance < nearestDistance) {
+                        nearestDistance = distance;
+                        nearestTarget = offense;
+                    }
+                }
+            });
+            
+            if (nearestTarget) {
+                // Store man coverage target before calling updateAssignment
                 if (!assignments.defense[lb.name]) assignments.defense[lb.name] = {};
-                assignments.defense[lb.name].manCoverageTarget = target.player.name;
+                assignments.defense[lb.name].manCoverageTarget = nearestTarget.player.name;
+                // Now update assignment (which will preserve the manCoverageTarget)
+                updateAssignment(lb, 'defense', 'Man Coverage', 'Inside release man');
+                nearestTarget.covered = true; // Mark as covered
             } else {
+                // No uncovered eligible players, assign zone
                 updateAssignment(lb, 'defense', 'Zone Short', 'Hook');
             }
         });
@@ -1899,6 +2042,14 @@ function updateDefensivePlaycallUI() {
                         }
                         actionSelect.dispatchEvent(new Event('change', { bubbles: true }));
                         updateManCoverageSelector(item, player, 'defense', assignment.category, assignment.action);
+                        
+                        // Also directly set the man coverage selector value if it exists
+                        const safeId = `manCoverage-${player.name.replace(/[^a-zA-Z0-9]/g, '_')}`;
+                        const manCoverageSelect = item.querySelector(`#${safeId}`) || 
+                                                  item.querySelector(`select[data-player-name="${player.name}"]`);
+                        if (manCoverageSelect && assignment.manCoverageTarget) {
+                            manCoverageSelect.value = assignment.manCoverageTarget;
+                        }
                     }
                 }, 10);
             }
@@ -2054,7 +2205,7 @@ function updateManCoverageSelector(item, player, side, category, action) {
         (action === 'Inside release man' || action === 'Outside release man')) {
         manCoverageSelect.style.display = 'block';
         
-        // Update options if needed
+        // Update options if needed (do this first so we can set the value)
         if (manCoverageSelect.options.length <= 1) {
             selectedPlayers.forEach((playerId) => {
                 const offPlayer = getPlayerById(playerId);
@@ -2065,6 +2216,18 @@ function updateManCoverageSelector(item, player, side, category, action) {
                     manCoverageSelect.appendChild(option);
                 }
             });
+        }
+        
+        // Set the selected value if manCoverageTarget exists (after options are populated)
+        const assignment = assignments[side][player.name];
+        if (assignment && assignment.manCoverageTarget) {
+            // Check if the option exists before setting
+            const optionExists = Array.from(manCoverageSelect.options).some(
+                opt => opt.value === assignment.manCoverageTarget
+            );
+            if (optionExists) {
+                manCoverageSelect.value = assignment.manCoverageTarget;
+            }
         }
     } else {
         manCoverageSelect.style.display = 'none';
@@ -4254,6 +4417,9 @@ async function executePlay() {
     // Run state machine
     const result = await runStateMachine(evalData, playData);
     
+    // Store play type for clock runoff
+    result.playType = playData.playType || 'run';
+    
     // Update game state
     updateGameState(result);
     
@@ -4298,7 +4464,13 @@ async function executePlay() {
         'success': 'Successful Play',
         'unsuccessful': 'Unsuccessful Play'
     };
-    const outcomeTypeName = outcomeTypeNames[result.outcomeType] || result.outcomeType;
+    let outcomeTypeName = outcomeTypeNames[result.outcomeType] || result.outcomeType;
+    
+    // For incomplete passes, append "(Incomplete)" to the outcome type
+    if (result.playType === 'pass' && result.isComplete === false) {
+        outcomeTypeName += ' (Incomplete)';
+    }
+    
     const outcomeTypeEl = document.getElementById('outcomeType');
     if (outcomeTypeEl) {
         outcomeTypeEl.textContent = `Outcome Type: ${outcomeTypeName}`;
@@ -4880,7 +5052,8 @@ async function runStateMachine(evalData, playData) {
         turnoverType: outcomeFile['turnover-type'],
         description: description,
         isComplete: isComplete,
-        evalData 
+        evalData,
+        playType: playType
     };
 }
 
@@ -4948,7 +5121,70 @@ function inverseNormalCDF(p) {
            (sqrt - (a * sqrt + 1) / (a * sqrt + 2));
 }
 
+function calculateClockRunoff(result) {
+    // If timeout was called, runoff is fixed at 6 seconds
+    if (gameState.timeoutCalled) {
+        gameState.timeoutCalled = false; // Reset flag
+        return 6;
+    }
+    
+    // Determine if winning or losing team has the ball
+    const possession = gameState.possession || 'home';
+    const homeScore = gameState.score.home || 0;
+    const awayScore = gameState.score.away || 0;
+    const isWinningTeam = (possession === 'home' && homeScore > awayScore) || 
+                          (possession === 'away' && awayScore > homeScore);
+    const isTied = homeScore === awayScore;
+    
+    // Use winning team numbers if tied
+    const useWinningNumbers = isWinningTeam || isTied;
+    
+    // Get play type
+    const playType = result.playType || 'run';
+    
+    // Calculate runoff
+    if (playType === 'run') {
+        return useWinningNumbers ? 44 : 36;
+    } else {
+        return useWinningNumbers ? 28 : 19;
+    }
+}
+
+function applyClockRunoff(seconds) {
+    // Parse current time (MM:SS format)
+    const [minutes, secs] = gameState.time.split(':').map(Number);
+    let totalSeconds = minutes * 60 + secs;
+    
+    // Subtract runoff
+    totalSeconds -= seconds;
+    
+    // Handle quarter expiration
+    if (totalSeconds <= 0) {
+        // Advance to next quarter
+        gameState.quarter += 1;
+        
+        // Reset clock to 15:00 for new quarter
+        if (gameState.quarter <= 4) {
+            gameState.time = "15:00";
+        } else {
+            // End of game (or overtime - handle later)
+            gameState.time = "0:00";
+        }
+    } else {
+        // Update time
+        const newMinutes = Math.floor(totalSeconds / 60);
+        const newSeconds = totalSeconds % 60;
+        gameState.time = `${newMinutes.toString().padStart(2, '0')}:${newSeconds.toString().padStart(2, '0')}`;
+    }
+}
+
 function updateGameState(result) {
+    // Calculate and apply clock runoff
+    if (!result.specialTeams) {
+        const runoff = calculateClockRunoff(result);
+        applyClockRunoff(runoff);
+    }
+    
     // Handle special teams results (punt, field goal)
     if (result.specialTeams) {
         if (result.specialTeams === 'punt') {
@@ -5233,6 +5469,7 @@ function resetPlay() {
         renderPersonnelSelection();
     }
     document.getElementById('results').classList.add('hidden');
+    // Note: timeoutCalled flag is NOT reset here - it's reset in calculateClockRunoff
 }
 
 async function saveGameState() {

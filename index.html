@@ -342,9 +342,19 @@
         <h1>🏈 Football Vibes - Play Designer</h1>
         
         <div id="personnelDisplay" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; color: #fff; font-size: 1.1em;">
-            <div style="display: flex; gap: 30px; align-items: center;">
-                <div><strong>Offensive Personnel:</strong> Select 11 players</div>
-                <div><strong>Defensive Personnel:</strong> Select 11 players</div>
+            <div style="display: flex; gap: 30px; align-items: center; justify-content: space-between;">
+                <div style="display: flex; gap: 30px;">
+                    <div><strong>Offensive Personnel:</strong> Select 11 players</div>
+                    <div><strong>Defensive Personnel:</strong> Select 11 players</div>
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <button onclick="callTimeout('home')" class="btn-secondary" id="homeTimeoutBtn" style="padding: 8px 15px; font-size: 0.9em;">
+                        Home Timeout (<span id="homeTimeouts">3</span>)
+                    </button>
+                    <button onclick="callTimeout('away')" class="btn-secondary" id="awayTimeoutBtn" style="padding: 8px 15px; font-size: 0.9em;">
+                        Away Timeout (<span id="awayTimeouts">3</span>)
+                    </button>
+                </div>
             </div>
         </div>
         
