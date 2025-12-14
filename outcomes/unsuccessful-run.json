@@ -2,12 +2,10 @@
     "outcome": "Unsuccessful Run",
     "description": "The running back was stopped for a gain of {yards} yards.",
     "methodology": "Roll 1-100 and assign the yards gained based on the roll.",
-    "average-yards-gained": 0.5,
-    "standard-deviation": 0.7,
+    "average-yards-gained": 0.4,
+    "standard-deviation": 0.8,
     "skewness": 0.0,
     "kurtosis": 0.0,
-    "mode": 1,
-    "median": 1,
     "turnover-probability": 0.5,
     "turnover-type": "fumble"
 }

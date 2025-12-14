@@ -2,13 +2,11 @@
     "outcome": "Successful Pass",
     "description": "The quarterback completed the pass for {yards} yards.",
     "methodology": "Roll 1-100 to determine completion. If complete, roll again for yards gained.",
-    "completion-percentage": 75.0,
-    "average-yards-gained": 3.35,
-    "standard-deviation": 2.0,
+    "completion-percentage": 88.0,
+    "average-yards-gained": 11.1,
+    "standard-deviation": 7.0,
     "skewness": 0.0,
     "kurtosis": 0.0,
-    "mode": 15,
-    "median": 15,
     "turnover-probability": 1.0,
     "turnover-type": "fumble"
 }

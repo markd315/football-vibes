@@ -3,11 +3,9 @@
     "description": "The quarterback was sacked for a loss of {yards} yards.",
     "methodology": "Roll 1-100 and assign the yards lost based on the roll.",
     "average-yards-gained": -6.5,
-    "standard-deviation": 1.5,
+    "standard-deviation": 2.5,
     "skewness": 0.0,
     "kurtosis": 0.0,
-    "mode": -6,
-    "median": -6,
     "turnover-probability": 5.0,
     "turnover-type": "fumble"
 }

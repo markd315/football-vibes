@@ -3,12 +3,10 @@
     "outcome": "Successful Run",
     "description": "The ball carrier gained {yards} yards.",
     "methodology": "Roll 1-100 and assign the yards gained based on the roll.",
-    "average-yards-gained": 3.05,
-    "standard-deviation": 1.6,
+    "average-yards-gained": 6.8,
+    "standard-deviation": 4,
     "skewness": 0.0,
     "kurtosis": 0.0,
-    "mode": 15,
-    "median": 15,
     "turnover-probability": 1.0,
     "turnover-type": "fumble"
 }

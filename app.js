@@ -4661,11 +4661,11 @@ OFFENSE-ADVANTAGE (-10 to 10): Represents the schematic advantage for the offens
 RISK-LEVERAGE (0 to 10): Specifies the amount of havoc+explosives vs standard results. 0 = mostly standard plays, 10 = extreme outcomes (mostly havoc or explosive plays).`;
 
     // Variable data (user message content)
-    let userMessageContent = `Game Situation: ${gameState.down}${getDownSuffix(gameState.down)} and ${gameState.distance} at the ${gameState["opp-yardline"]} yard line. Q${gameState.quarter} ${gameState.time}. Score: ${gameState.score.home} - ${gameState.score.away}
-
-OFFENSIVE PERSONNEL AND ALIGNMENTS:
-${playData.offense.map(p => {
-        // Find player position from playerPositions
+    // Combine all players and sort by X coordinate (left to right)
+    const allPlayers = [];
+    
+    // Add offensive players
+    playData.offense.forEach(p => {
         let playerId = null;
         for (const id of selectedPlayers) {
             const player = getPlayerById(id);
@@ -4675,18 +4675,29 @@ ${playData.offense.map(p => {
             }
         }
         const pos = playerId ? (playerPositions[playerId] || {}) : {};
+        const locCoords = pos.location ? getLocationCoords(pos.location) : null;
+        const x = locCoords ? locCoords.x : 0;
         const effectivePercentile = calculateEffectivePercentile(p);
         const assignment = assignments.offense[p.name] || {};
         const assignmentText = assignment.action || assignment.category || 'None';
         const manTarget = (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) ? ` (Man coverage on: ${assignment.manCoverageTarget})` : '';
-        const locCoords = pos.location ? getLocationCoords(pos.location) : null;
         const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
-        return `${p.name} - Position: ${p.position}, Alignment: ${pos.location || 'Not placed'}${coords}, Effective Rating: ${effectivePercentile.toFixed(0)}th percentile, Assignment: ${assignmentText}${manTarget}`;
-    }).join('\n')}
-
-DEFENSIVE PERSONNEL AND ALIGNMENTS:
-${playData.defense.map(p => {
-        // Find player position from playerPositions
+        allPlayers.push({
+            side: 'OFFENSE',
+            x: x,
+            name: p.name,
+            position: p.position,
+            location: pos.location || 'Not placed',
+            coords: coords,
+            effectivePercentile: effectivePercentile,
+            assignmentText: assignmentText,
+            manTarget: manTarget,
+            warning: ''
+        });
+    });
+    
+    // Add defensive players
+    playData.defense.forEach(p => {
         let playerId = null;
         for (const id of selectedDefense) {
             const player = getPlayerById(id);
@@ -4696,16 +4707,38 @@ ${playData.defense.map(p => {
             }
         }
         const pos = playerId ? (playerPositions[playerId] || {}) : {};
+        const locCoords = pos.location ? getLocationCoords(pos.location) : null;
+        const x = locCoords ? locCoords.x : 0;
         const effectivePercentile = calculateEffectivePercentile(p);
         const assignment = assignments.defense[p.name] || {};
         const assignmentText = assignment.action || assignment.category || 'None';
         const manTarget = (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) ? ` (Man coverage on: ${assignment.manCoverageTarget})` : '';
-        const locCoords = pos.location ? getLocationCoords(pos.location) : null;
         const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
         // Check if defensive lineman is in an offensive skill position (actual offsides/misalignment)
         const isDLInOffensivePosition = (p.position === 'DE' || p.position === 'DT') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Trips') || pos.location.includes('Max split'));
         const warning = isDLInOffensivePosition ? ' ⚠️ DEFENSIVE LINEMAN IN OFFENSIVE SKILL POSITION!' : '';
-        return `${p.name} - Position: ${p.position}, Alignment: ${pos.location || 'Not placed'}${coords}${warning}, Effective Rating: ${effectivePercentile.toFixed(0)}th percentile, Assignment: ${assignmentText}${manTarget}`;
+        allPlayers.push({
+            side: 'DEFENSE',
+            x: x,
+            name: p.name,
+            position: p.position,
+            location: pos.location || 'Not placed',
+            coords: coords,
+            effectivePercentile: effectivePercentile,
+            assignmentText: assignmentText,
+            manTarget: manTarget,
+            warning: warning
+        });
+    });
+    
+    // Sort by X coordinate (left to right: negative to positive)
+    allPlayers.sort((a, b) => a.x - b.x);
+    
+    let userMessageContent = `Game Situation: ${gameState.down}${getDownSuffix(gameState.down)} and ${gameState.distance} at the ${gameState["opp-yardline"]} yard line. Q${gameState.quarter} ${gameState.time}. Score: ${gameState.score.home} - ${gameState.score.away}
+
+PLAYERS (LEFT TO RIGHT BY X COORDINATE):
+${allPlayers.map(p => {
+        return `${p.position} ${p.name}-, Aligned: ${p.coords} (${p.location}) ${p.warning}, Effective Rating: ${p.effectivePercentile.toFixed(0)}th percentile, Assignment: ${p.assignmentText}${p.manTarget}`;
     }).join('\n')}
 
 ${playData.coachingPointOffense ? `OFFENSIVE COACHING POINT: ${playData.coachingPointOffense.player.name} (${playData.coachingPointOffense.player.position}) - "${playData.coachingPointOffense.point}"` : ''}
@@ -4945,113 +4978,56 @@ async function runStateMachine(evalData, playData) {
     
     if (outcomeRoll <= ranges.havoc) {
         outcomeType = 'havoc';
-        // Roll 1-100 for specific havoc outcome based on play type
-        const havocOutcomeRoll = Math.floor(Math.random() * 100) + 1;
-        
-        if (playType === 'pass') {
-            // Pass havoc outcomes: 50% sack, 10% fumble, 20% interception, 20% other
-            if (havocOutcomeRoll <= 50) {
-                outcomeFile = await loadOutcomeFile('outcomes/havoc-sack.json');
-            } else if (havocOutcomeRoll <= 60) {
-                outcomeFile = await loadOutcomeFile('outcomes/havoc-fumble.json');
-            } else if (havocOutcomeRoll <= 80) {
-                outcomeFile = await loadOutcomeFile('outcomes/havoc-interception.json');
-            } else {
-                // 20% - incomplete pass (use unsuccessful-pass but with havoc context)
-                const incompleteFile = await loadOutcomeFile('outcomes/unsuccessful-pass.json');
-                if (incompleteFile) {
-                    outcomeFile = { ...incompleteFile };
-                    outcomeFile.description = 'The pass was incomplete under pressure. Yards: {yards}';
-                } else {
-                    outcomeFile = await loadOutcomeFile('outcomes/havoc-sack.json');
+        // Load havoc mapping from havoc.json
+        const havocConfig = await loadOutcomeFile('outcomes/havoc.json');
+        if (!havocConfig || !havocConfig[playType]) {
+            console.error('Failed to load havoc config or play type not found');
+            // Fallback to default
+            outcomeFile = await loadOutcomeFile(playType === 'pass' ? 'outcomes/havoc-sack.json' : 'outcomes/havoc-tackle-for-loss.json');
+        } else {
+            // Roll 1-100 for specific havoc outcome based on play type
+            const havocOutcomeRoll = Math.floor(Math.random() * 100) + 1;
+            const outcomes = havocConfig[playType].outcomes;
+            
+            // Find which outcome to use based on cumulative probability
+            let cumulativeProb = 0;
+            let selectedOutcome = null;
+            
+            for (const outcome of outcomes) {
+                cumulativeProb += outcome.probability;
+                if (havocOutcomeRoll <= cumulativeProb) {
+                    selectedOutcome = outcome;
+                    break;
                 }
             }
-        } else {
-            // Run havoc outcomes: 50% TFL, 15% fumble, 35% other
-            if (havocOutcomeRoll <= 50) {
-                outcomeFile = await loadOutcomeFile('outcomes/havoc-tackle-for-loss.json');
-            } else if (havocOutcomeRoll <= 65) {
-                outcomeFile = await loadOutcomeFile('outcomes/havoc-fumble.json');
-            } else {
-                // 35% - minimal gain (use unsuccessful-run but with havoc context)
-                const minimalFile = await loadOutcomeFile('outcomes/unsuccessful-run.json');
-                if (minimalFile) {
-                    outcomeFile = { ...minimalFile };
-                    outcomeFile.description = 'The ball carrier was stopped at the line of scrimmage for a gain of {yards} yards.';
-                } else {
-                    outcomeFile = await loadOutcomeFile('outcomes/havoc-tackle-for-loss.json');
-                }
+            
+            // Fallback to first outcome if none selected (shouldn't happen)
+            if (!selectedOutcome) {
+                selectedOutcome = outcomes[0];
+            }
+            
+            // Load the outcome file
+            outcomeFile = await loadOutcomeFile(selectedOutcome.file);
+            
+            // Apply description modification if specified
+            if (selectedOutcome["modify-description"] && outcomeFile) {
+                outcomeFile = { ...outcomeFile };
+                outcomeFile.description = selectedOutcome["modify-description"];
             }
         }
     } else if (outcomeRoll <= ranges.explosive) {
         outcomeType = 'explosive';
-        // Roll 1-100 for YAC check (40% tackle chance)
-        const yacRoll = Math.floor(Math.random() * 100) + 1;
-        if (yacRoll <= 40) {
-            // Tackled, use explosive outcome
-            if (playType === 'pass') {
-                // Explosive pass - use successful-pass with higher average
-                const passFile = await loadOutcomeFile('outcomes/successful-pass.json');
-                if (passFile) {
-                    outcomeFile = { ...passFile };
-                    outcomeFile['average-yards-gained'] = 12.0;
-                    outcomeFile['standard-deviation'] = 2.5;
-                    outcomeFile.description = 'The quarterback completed a deep pass for {yards} yards.';
-                } else {
-                    outcomeFile = await loadOutcomeFile('outcomes/successful-pass.json');
-                }
-            } else {
-                outcomeFile = await loadOutcomeFile('outcomes/explosive-run.json');
-            }
+        if (playType === 'pass') {
+            outcomeFile = await loadOutcomeFile('outcomes/explosive-pass.json');
         } else {
-            // YAC - roll again for YAC yards
-            if (playType === 'pass') {
-                outcomeFile = await loadOutcomeFile('outcomes/yac-catch.json');
-            } else {
-                // Run YAC - use explosive-run with modified description
-                const runFile = await loadOutcomeFile('outcomes/explosive-run.json');
-                if (runFile) {
-                    outcomeFile = { ...runFile };
-                    outcomeFile.description = 'The ball carrier broke free for a long gain of {yards} yards.';
-                } else {
-                    outcomeFile = await loadOutcomeFile('outcomes/explosive-run.json');
-                }
-            }
+            outcomeFile = await loadOutcomeFile('outcomes/explosive-run.json');
         }
     } else if (outcomeRoll <= ranges.success) {
         outcomeType = 'success';
-        // Roll 1-100 for YAC check (75% tackle chance for runs, 75% for passes)
-        const yacRoll = Math.floor(Math.random() * 100) + 1;
         if (playType === 'pass') {
-            if (yacRoll <= 75) {
-                outcomeFile = await loadOutcomeFile('outcomes/successful-pass.json');
-            } else {
-                // YAC - use modified version with lower average for non-explosive
-                const yacFile = await loadOutcomeFile('outcomes/yac-catch.json');
-                if (yacFile) {
-                    outcomeFile = { ...yacFile };
-                    outcomeFile['average-yards-gained'] = 4.0;
-                    outcomeFile['standard-deviation'] = 1.5;
-                } else {
-                    outcomeFile = await loadOutcomeFile('outcomes/successful-pass.json');
-                }
-            }
+            outcomeFile = await loadOutcomeFile('outcomes/successful-pass.json');
         } else {
-            // Run play
-            if (yacRoll <= 70) {
-                outcomeFile = await loadOutcomeFile('outcomes/successful-run.json');
-            } else {
-                // YAC for run - use successful-run with modified description
-                const runFile = await loadOutcomeFile('outcomes/successful-run.json');
-                if (runFile) {
-                    outcomeFile = { ...runFile };
-                    outcomeFile['average-yards-gained'] = 5.0;
-                    outcomeFile['standard-deviation'] = 1.6;
-                    outcomeFile.description = 'The ball carrier broke a tackle and gained {yards} yards.';
-                } else {
-                    outcomeFile = await loadOutcomeFile('outcomes/successful-run.json');
-                }
-            }
+            outcomeFile = await loadOutcomeFile('outcomes/successful-run.json');
         }
     } else {
         outcomeType = 'unsuccessful';
@@ -5093,6 +5069,9 @@ async function runStateMachine(evalData, playData) {
     // Add penalty yards if applicable
     yards += penaltyYards;
     
+    // Round yards to 1 decimal place for display
+    yards = Math.round(yards * 10) / 10;
+    
     // Step 3: Check for turnover
     const turnoverRoll = Math.floor(Math.random() * 100) + 1;
     const turnover = turnoverRoll <= (outcomeFile['turnover-probability'] || 0);
@@ -5115,6 +5094,7 @@ async function runStateMachine(evalData, playData) {
         playType: playType
     };
 }
+
 
 async function loadOutcomeFile(path) {
     if (outcomeFiles[path]) {
@@ -5512,6 +5492,8 @@ function calculateEffectivePercentile(player) {
 function updateGameStateDisplay() {
     const downNames = ['', '1st', '2nd', '3rd', '4th'];
     document.getElementById('down').textContent = downNames[gameState.down] || '1st';
+    // Display distance and yardline - show decimals when present, but never round the stored values
+    // The yardline and distance are updated with exact decimal values (e.g., 3.7 yards updates by exactly 3.7)
     document.getElementById('distance').textContent = gameState.distance;
     document.getElementById('yardline').textContent = gameState["opp-yardline"];
     

@@ -7,8 +7,6 @@
     "standard-deviation": 0.5,
     "skewness": 0.0,
     "kurtosis": 0.0,
-    "mode": 15,
-    "median": 15,
     "turnover-probability": 18.0,
     "turnover-type": "fumble"
 }

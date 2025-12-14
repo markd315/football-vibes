@@ -1,6 +1,50 @@
 {
     "outcome": "Havoc",
     "description": "Base havoc outcome - specific outcome determined by play type",
-    "methodology": "Roll based on play type to determine specific havoc outcome"
+    "methodology": "Roll based on play type to determine specific havoc outcome",
+    "pass": {
+        "outcomes": [
+            {
+                "file": "outcomes/havoc-sack.json",
+                "probability": 50,
+                "description": "Quarterback sacked"
+            },
+            {
+                "file": "outcomes/havoc-fumble.json",
+                "probability": 10,
+                "description": "Fumble"
+            },
+            {
+                "file": "outcomes/havoc-interception.json",
+                "probability": 20,
+                "description": "Interception"
+            },
+            {
+                "file": "outcomes/unsuccessful-pass.json",
+                "probability": 20,
+                "description": "Incomplete pass under pressure",
+                "modify-description": "The pass was incomplete under pressure. Yards: {yards}"
+            }
+        ]
+    },
+    "run": {
+        "outcomes": [
+            {
+                "file": "outcomes/havoc-tackle-for-loss.json",
+                "probability": 50,
+                "description": "Tackle for loss"
+            },
+            {
+                "file": "outcomes/havoc-fumble.json",
+                "probability": 15,
+                "description": "Fumble"
+            },
+            {
+                "file": "outcomes/havoc-run.json",
+                "probability": 35,
+                "description": "Minimal gain - stopped at line of scrimmage",
+                "modify-description": "The ball carrier was stopped at the line of scrimmage for a gain of {yards} yards."
+            }
+        ]
+    }
 }
-

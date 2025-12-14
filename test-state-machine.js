@@ -100,41 +100,16 @@ function simulatePlay(evalData, playType, forceOutcome = null) {
             outcomeFile = loadOutcomeFile('outcomes/havoc-run.json');
         }
     } else if (outcomeType === 'explosive') {
-        const yacRoll = Math.floor(Math.random() * 100) + 1;
-        if (yacRoll <= 40) {
-            outcomeFile = loadOutcomeFile('outcomes/explosive-run.json');
+        if (playType === 'pass') {
+            outcomeFile = loadOutcomeFile('outcomes/explosive-pass.json');
         } else {
-            outcomeFile = loadOutcomeFile('outcomes/yac-catch.json');
+            outcomeFile = loadOutcomeFile('outcomes/explosive-run.json');
         }
     } else if (outcomeType === 'success') {
-        const yacRoll = Math.floor(Math.random() * 100) + 1;
         if (playType === 'pass') {
-            if (yacRoll <= 75) {
-                // 75% chance of immediate tackle, 25% chance of YAC
-                outcomeFile = loadOutcomeFile('outcomes/successful-pass.json');
-            } else {
-                // YAC - use a modified version with lower average
-                outcomeFile = loadOutcomeFile('outcomes/yac-catch.json');
-                // For non-explosive YAC, reduce the average significantly
-                if (outcomeFile) {
-                    outcomeFile = { ...outcomeFile };
-                    outcomeFile['average-yards-gained'] = 4.0;
-                    outcomeFile['standard-deviation'] = 1.5;
-                }
-            }
+            outcomeFile = loadOutcomeFile('outcomes/successful-pass.json');
         } else {
-            if (yacRoll <= 70) {
-                // 70% chance of immediate tackle, 30% chance of YAC
-                outcomeFile = loadOutcomeFile('outcomes/successful-run.json');
-            } else {
-                // YAC - use a modified version with lower average
-                outcomeFile = loadOutcomeFile('outcomes/yac-catch.json');
-                if (outcomeFile) {
-                    outcomeFile = { ...outcomeFile };
-                    outcomeFile['average-yards-gained'] = 5.0;
-                    outcomeFile['standard-deviation'] = 1.6;
-                }
-            }
+            outcomeFile = loadOutcomeFile('outcomes/successful-run.json');
         }
     } else {
         if (playType === 'pass') {
@@ -315,6 +290,89 @@ const test4 = runTest(
     80, 85
 );
 
+// Test 5: Global pass average at baseline rates -> 6.3-6.8 yards
+function runGlobalAverageTest(testName, evalData, playType, targetMin, targetMax, iterations = 10000) {
+    console.log(`\n${testName}`);
+    console.log(`Running ${iterations} iterations...`);
+    
+    let totalYards = 0;
+    let totalPlays = 0;
+    
+    for (let i = 0; i < iterations; i++) {
+        const result = simulatePlay(evalData, playType, null);
+        totalYards += result.yards;
+        totalPlays++;
+    }
+    
+    const avgYards = totalYards / totalPlays;
+    const inRange = avgYards >= targetMin && avgYards <= targetMax;
+    const status = inRange ? '✓ PASS' : '✗ FAIL';
+    
+    console.log(`Average yards: ${avgYards.toFixed(2)}`);
+    console.log(`Target range: ${targetMin} - ${targetMax} yards`);
+    console.log(`Status: ${status}`);
+    
+    return { avgYards, inRange, totalYards, totalPlays };
+}
+
+// Load baseline rates from eval-format.json
+const baselineRates = JSON.parse(fs.readFileSync('context/eval-format.json', 'utf8'));
+
+// Test 5: Global pass average
+const test5 = runGlobalAverageTest(
+    'Test 5: Global pass average at baseline rates',
+    baselineRates,
+    'pass',
+    6.3, 6.8
+);
+
+// Test 6: Global run average
+const test6 = runGlobalAverageTest(
+    'Test 6: Global run average at baseline rates',
+    baselineRates,
+    'run',
+    4.1, 4.5
+);
+
+// Test 7: Global pass average by outcome type
+function runOutcomeAverageTest(testName, evalData, playType, outcomeType, iterations = 10000) {
+    console.log(`\n${testName}`);
+    console.log(`Running ${iterations} iterations...`);
+    
+    let totalYards = 0;
+    let totalPlays = 0;
+    
+    for (let i = 0; i < iterations; i++) {
+        const result = simulatePlay(evalData, playType, outcomeType);
+        totalYards += result.yards;
+        totalPlays++;
+    }
+    
+    const avgYards = totalYards / totalPlays;
+    
+    console.log(`Average yards for ${outcomeType} ${playType}: ${avgYards.toFixed(2)}`);
+    
+    return { avgYards, totalYards, totalPlays };
+}
+
+// Test individual outcome averages for passes
+console.log('\n' + '='.repeat(60));
+console.log('Pass Outcome Averages (10k iterations each)');
+console.log('='.repeat(60));
+const passSuccess = runOutcomeAverageTest('Pass Success Average', baselineRates, 'pass', 'success');
+const passUnsuccess = runOutcomeAverageTest('Pass Unsuccessful Average', baselineRates, 'pass', 'unsuccessful');
+const passHavoc = runOutcomeAverageTest('Pass Havoc Average', baselineRates, 'pass', 'havoc');
+const passExplosive = runOutcomeAverageTest('Pass Explosive Average', baselineRates, 'pass', 'explosive');
+
+// Test individual outcome averages for runs
+console.log('\n' + '='.repeat(60));
+console.log('Run Outcome Averages (10k iterations each)');
+console.log('='.repeat(60));
+const runSuccess = runOutcomeAverageTest('Run Success Average', baselineRates, 'run', 'success');
+const runUnsuccess = runOutcomeAverageTest('Run Unsuccessful Average', baselineRates, 'run', 'unsuccessful');
+const runHavoc = runOutcomeAverageTest('Run Havoc Average', baselineRates, 'run', 'havoc');
+const runExplosive = runOutcomeAverageTest('Run Explosive Average', baselineRates, 'run', 'explosive');
+
 console.log('\n' + '='.repeat(60));
 console.log('Test Summary');
 console.log('='.repeat(60));
@@ -322,7 +380,9 @@ console.log(`Test 1: ${test1.inRange ? 'PASS' : 'FAIL'} (${test1.rate.toFixed(2)
 console.log(`Test 2: ${test2.inRange ? 'PASS' : 'FAIL'} (${test2.rate.toFixed(2)}%)`);
 console.log(`Test 3: ${test3.inRange ? 'PASS' : 'FAIL'} (${test3.rate.toFixed(2)}%)`);
 console.log(`Test 4: ${test4.inRange ? 'PASS' : 'FAIL'} (${test4.rate.toFixed(2)}%)`);
+console.log(`Test 5: ${test5.inRange ? 'PASS' : 'FAIL'} (${test5.avgYards.toFixed(2)} yards)`);
+console.log(`Test 6: ${test6.inRange ? 'PASS' : 'FAIL'} (${test6.avgYards.toFixed(2)} yards)`);
 
-const allPassed = test1.inRange && test2.inRange && test3.inRange && test4.inRange;
+const allPassed = test1.inRange && test2.inRange && test3.inRange && test4.inRange && test5.inRange && test6.inRange;
 console.log(`\nOverall: ${allPassed ? 'ALL TESTS PASSED' : 'SOME TESTS FAILED'}`);
 

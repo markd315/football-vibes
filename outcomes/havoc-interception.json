@@ -2,12 +2,10 @@
     "outcome": "Interception",
     "description": "The pass was intercepted. Yards: {yards}",
     "methodology": "Roll 1-100 to determine return yards if applicable.",
-    "average-yards-gained": -2.5,
-    "standard-deviation": 3.0,
+    "average-yards-gained": 17.0,
+    "standard-deviation": 9.0,
     "skewness": 0.0,
     "kurtosis": 0.0,
-    "mode": 0,
-    "median": -2,
     "turnover-probability": 100.0,
     "turnover-type": "interception"
 }
