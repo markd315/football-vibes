@@ -6,6 +6,7 @@ let rosters = {
     'away-offense': [], 
     'away-defense': [] 
 };
+let teams = {}; // Team information from teams.json
 let fieldLocations = [];
 let selectedPlayers = []; // 11 offensive players selected
 let selectedDefense = []; // 11 defensive players selected
@@ -17,16 +18,19 @@ let currentStep = 0; // Start at step 0 (special teams)
 let stateMachine = {};
 let outcomeFiles = {}; // Cache for loaded outcome files
 let baselineRates = null; // Baseline rates from eval-format.json
+let timingConfig = null; // Timing configuration from timing.json
 
 // Initialize
 async function init() {
     try {
         console.log('Initializing application...');
         await loadGameState();
+        await loadTeams();
         await loadRosters();
         await loadFieldLocations();
         await loadStateMachine();
         await loadBaselineRates();
+        await loadTiming();
         
         console.log('Rosters loaded:', {
             'home-offense': rosters['home-offense'].length,
@@ -59,6 +63,28 @@ async function loadBaselineRates() {
     }
 }
 
+// Load timing configuration
+async function loadTiming() {
+    try {
+        const response = await fetch('outcomes/timing.json');
+        timingConfig = await response.json();
+    } catch (error) {
+        console.error('Error loading timing config:', error);
+        // Default timing values
+        timingConfig = {
+            "timeout-runoff": 6,
+            "winning-team": {
+                "run": 44,
+                "pass": 28
+            },
+            "losing-team": {
+                "run": 36,
+                "pass": 19
+            }
+        };
+    }
+}
+
 // Load data files
 async function loadGameState() {
     try {
@@ -84,6 +110,21 @@ async function loadGameState() {
             time: "15:00",
             timeouts: { home: 3, away: 3 },
             timeoutCalled: false
+        };
+    }
+}
+
+async function loadTeams() {
+    try {
+        const response = await fetch('rosters/teams.json');
+        teams = await response.json();
+        console.log('Teams loaded:', teams);
+    } catch (error) {
+        console.error('Error loading teams:', error);
+        // Default teams if file not found
+        teams = {
+            home: { name: 'Home', city: '', record: '' },
+            away: { name: 'Away', city: '', record: '' }
         };
     }
 }
@@ -433,13 +474,31 @@ function updatePersonnelDisplay() {
     const offensePersonnel = detectOffensivePersonnel();
     const defensePersonnel = detectDefensivePersonnel();
     
+    // Update timeout counts
+    const homeTimeouts = gameState.timeouts?.home || 3;
+    const awayTimeouts = gameState.timeouts?.away || 3;
+    
+    // Get team names from teams.json
+    const homeTeamName = teams.home ? `${teams.home.city} ${teams.home.name}`.trim() : 'Home';
+    const awayTeamName = teams.away ? `${teams.away.city} ${teams.away.name}`.trim() : 'Away';
+    
     personnelDisplay.innerHTML = `
-        <div style="display: flex; gap: 30px; align-items: center;">
-            <div>
-                <strong>Offensive Personnel:</strong> ${offensePersonnel}
+        <div style="display: flex; gap: 30px; align-items: center; justify-content: space-between;">
+            <div style="display: flex; gap: 30px;">
+                <div>
+                    <strong>Offensive Personnel:</strong> ${offensePersonnel}
+                </div>
+                <div>
+                    <strong>Defensive Personnel:</strong> ${defensePersonnel}
+                </div>
             </div>
-            <div>
-                <strong>Defensive Personnel:</strong> ${defensePersonnel}
+            <div style="display: flex; gap: 15px;">
+                <button onclick="callTimeout('home')" class="btn-secondary" id="homeTimeoutBtn" style="padding: 8px 15px; font-size: 0.9em;" ${homeTimeouts === 0 ? 'disabled' : ''}>
+                    ${homeTeamName} Timeout (<span id="homeTimeouts">${homeTimeouts}</span>)
+                </button>
+                <button onclick="callTimeout('away')" class="btn-secondary" id="awayTimeoutBtn" style="padding: 8px 15px; font-size: 0.9em;" ${awayTimeouts === 0 ? 'disabled' : ''}>
+                    ${awayTeamName} Timeout (<span id="awayTimeouts">${awayTimeouts}</span>)
+                </button>
             </div>
         </div>
     `;
@@ -5122,10 +5181,15 @@ function inverseNormalCDF(p) {
 }
 
 function calculateClockRunoff(result) {
-    // If timeout was called, runoff is fixed at 6 seconds
+    // If timeout was called, runoff is fixed at timeout-runoff seconds
     if (gameState.timeoutCalled) {
         gameState.timeoutCalled = false; // Reset flag
-        return 6;
+        return timingConfig?.["timeout-incomplete-runoff"] || 6;
+    }
+    
+    // Incomplete passes always get 6 second runoff
+    if (result.playType === 'pass' && result.isComplete === false) {
+        return timingConfig?.["timeout-incomplete-runoff"] || 6;
     }
     
     // Determine if winning or losing team has the ball
@@ -5142,11 +5206,17 @@ function calculateClockRunoff(result) {
     // Get play type
     const playType = result.playType || 'run';
     
-    // Calculate runoff
-    if (playType === 'run') {
-        return useWinningNumbers ? 44 : 36;
+    // Get timing config (with defaults if not loaded)
+    const config = timingConfig || {
+        "winning-team": { "run": 44, "pass": 28 },
+        "losing-team": { "run": 36, "pass": 19 }
+    };
+    
+    // Calculate runoff from timing.json
+    if (useWinningNumbers) {
+        return config["winning-team"][playType] || (playType === 'run' ? 44 : 28);
     } else {
-        return useWinningNumbers ? 28 : 19;
+        return config["losing-team"][playType] || (playType === 'run' ? 36 : 19);
     }
 }
 
@@ -5444,13 +5514,57 @@ function updateGameStateDisplay() {
     document.getElementById('down').textContent = downNames[gameState.down] || '1st';
     document.getElementById('distance').textContent = gameState.distance;
     document.getElementById('yardline').textContent = gameState["opp-yardline"];
-    document.getElementById('score').textContent = `${gameState.score.home} - ${gameState.score.away}`;
+    
+    // Use team names from teams.json if available
+    const homeTeam = teams.home ? `${teams.home.city} ${teams.home.name}`.trim() : 'Home';
+    const awayTeam = teams.away ? `${teams.away.city} ${teams.away.name}`.trim() : 'Away';
+    const possession = gameState.possession || 'home';
+    const possessionTeam = possession === 'home' ? homeTeam : awayTeam;
+    
+    // Update score with team names
+    const scoreEl = document.getElementById('score');
+    if (scoreEl) {
+        scoreEl.innerHTML = `<span style="font-weight: ${possession === 'home' ? 'bold' : 'normal'}">${homeTeam} ${gameState.score.home}</span> - <span style="font-weight: ${possession === 'away' ? 'bold' : 'normal'}">${gameState.score.away} ${awayTeam}</span>`;
+    }
+    
+    // Add possession indicator if element exists
+    const possessionEl = document.getElementById('possession');
+    if (possessionEl) {
+        possessionEl.textContent = `Possession: ${possessionTeam}`;
+    }
+    
     document.getElementById('time').textContent = gameState.time;
 }
 
 function getPlayerById(playerId) {
     const [side, index] = playerId.split('-');
     return rosters[side][parseInt(index)];
+}
+
+function callTimeout(team) {
+    // Check if team has timeouts remaining
+    if (!gameState.timeouts || gameState.timeouts[team] <= 0) {
+        alert(`${team === 'home' ? (teams.home?.name || 'Home') : (teams.away?.name || 'Away')} has no timeouts remaining!`);
+        return;
+    }
+    
+    // Decrement timeout count
+    gameState.timeouts[team] -= 1;
+    
+    // Set timeout flag
+    gameState.timeoutCalled = true;
+    
+    // Return to personnel screen (step 1)
+    renderStep(1);
+    renderPersonnelSelection();
+    updatePersonnelDisplay();
+    updateGameStateDisplay();
+    
+    // Show confirmation
+    const teamName = team === 'home' 
+        ? `${teams.home?.city || ''} ${teams.home?.name || 'Home'}`.trim()
+        : `${teams.away?.city || ''} ${teams.away?.name || 'Away'}`.trim();
+    alert(`${teamName} called a timeout! (${gameState.timeouts[team]} remaining)`);
 }
 
 function resetPlay() {

@@ -1,0 +1,12 @@
+{
+    "timeout-incomplete-runoff": 6,
+    "winning-team": {
+        "run": 37,
+        "pass": 38
+    },
+    "losing-team": {
+        "run": 26,
+        "pass": 21
+    }
+}
+

@@ -1,0 +1,16 @@
+{
+    "home": {
+        "name": "Rams",
+        "record": "10-3",
+        "city": "Los Angeles",
+        "roster": "home-offense.json",
+        "defense": "home-defense.json"
+    },
+    "away": {
+        "name": "Jaguars",
+        "record": "9-4",
+        "city": "Jacksonville",
+        "roster": "away-offense.json",
+        "defense": "away-defense.json"
+    }
+}
