@@ -123,6 +123,19 @@ async function loadFieldLocations() {
     }
 }
 
+// Global helper to get location coordinates
+function getLocationCoords(locationName) {
+    if (!fieldLocations || !locationName) return null;
+    for (const section of fieldLocations) {
+        for (const loc of section.Locations) {
+            if (loc.Name === locationName) {
+                return { x: loc.X, y: loc.Y };
+            }
+        }
+    }
+    return null;
+}
+
 async function loadStateMachine() {
     try {
         const response = await fetch('play-state-machine.json');
@@ -4294,7 +4307,9 @@ ${playData.offense.map(p => {
         const assignment = assignments.offense[p.name] || {};
         const assignmentText = assignment.action || assignment.category || 'None';
         const manTarget = (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) ? ` (Man coverage on: ${assignment.manCoverageTarget})` : '';
-        return `${p.name} (${p.position}) - ${pos.location || 'Not placed'}, Effective Rating: ${effectivePercentile.toFixed(0)}th percentile, Assignment: ${assignmentText}${manTarget}`;
+        const locCoords = pos.location ? getLocationCoords(pos.location) : null;
+        const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
+        return `${p.name} - Position: ${p.position}, Alignment: ${pos.location || 'Not placed'}${coords}, Effective Rating: ${effectivePercentile.toFixed(0)}th percentile, Assignment: ${assignmentText}${manTarget}`;
     }).join('\n')}
 
 DEFENSIVE PERSONNEL AND ALIGNMENTS:
@@ -4313,14 +4328,27 @@ ${playData.defense.map(p => {
         const assignment = assignments.defense[p.name] || {};
         const assignmentText = assignment.action || assignment.category || 'None';
         const manTarget = (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) ? ` (Man coverage on: ${assignment.manCoverageTarget})` : '';
-        return `${p.name} (${p.position}) - ${pos.location || 'Not placed'}, Effective Rating: ${effectivePercentile.toFixed(0)}th percentile, Assignment: ${assignmentText}${manTarget}`;
+        const locCoords = pos.location ? getLocationCoords(pos.location) : null;
+        const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
+        // Check if defensive lineman is in an offensive skill position (actual offsides/misalignment)
+        const isDLInOffensivePosition = (p.position === 'DE' || p.position === 'DT') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Trips') || pos.location.includes('Max split'));
+        const warning = isDLInOffensivePosition ? ' ⚠️ DEFENSIVE LINEMAN IN OFFENSIVE SKILL POSITION!' : '';
+        return `${p.name} - Position: ${p.position}, Alignment: ${pos.location || 'Not placed'}${coords}${warning}, Effective Rating: ${effectivePercentile.toFixed(0)}th percentile, Assignment: ${assignmentText}${manTarget}`;
     }).join('\n')}
 
 ${playData.coachingPointOffense ? `OFFENSIVE COACHING POINT: ${playData.coachingPointOffense.player.name} (${playData.coachingPointOffense.player.position}) - "${playData.coachingPointOffense.point}"` : ''}
 ${playData.coachingPointDefense ? `DEFENSIVE COACHING POINT: ${playData.coachingPointDefense.player.name} (${playData.coachingPointDefense.player.position}) - "${playData.coachingPointDefense.point}"` : ''}
 
 SCHEME ANALYSIS (70% WEIGHT):
-VISUALIZE THE PLAY SPATIALLY. Where are players aligned? Where are they going? Who is blocking whom? Where are defenders relative to the point of attack?
+VISUALIZE THE PLAY SPATIALLY using the X/Y coordinates. X: negative = left side, positive = right side. Y: negative = offensive side (behind LOS), positive = defensive side (past LOS).
+
+CRITICAL SPATIAL CHECKS:
+- If defensive LINEMEN (DE, DT) have alignments like "Wide left", "Slot", "Seam" - these are skill positions, not DL positions = offsides/misalignment.
+- If ALL defenders (including DL, LB, secondary) are bunched on one side (check X coordinates) and the offense attacks the other side = MASSIVE OFFENSIVE ADVANTAGE.
+- If offensive players are aligned properly but defenders are on the wrong side of the field relative to where the play is going = defense out of position.
+- Count blockers vs defenders at the point of attack using coordinates (compare X values).
+- Check if QB bootleg direction has blockers (look at X coordinates of OL/TE vs bootleg direction).
+- Secondary players (CB, S) can align wide/slot/seam - that's normal. The issue is if they're ALL on one side or out of position.
 
 Ask yourself:
 - Does the blocking scheme match the play design? (e.g., zone blocking for outside zone, gap blocking for power)
@@ -4357,7 +4385,9 @@ POSITIONAL MATCHUPS (20% WEIGHT): Individual matchups matter (CB has to tackle R
 
 RETURN ONLY NUMERIC VALUES. If the OFFENSIVE scheme is dominant (defense out of position, numerical advantages, proper blocking), return: success-rate 70-90%, explosive-rate 10-20%, havoc-rate 3-10%. If the DEFENSIVE scheme is dominant (unblocked defenders, coverage matches routes, obvious pressure), return: havoc-rate 30-70%, success-rate 3-15%, explosive-rate 2-5%.
 
-Your JSON response (NUMBERS ONLY):
+FIRST: Provide a detailed analysis explaining your reasoning - identify spatial mismatches, blocking schemes, coverage vs routes, numerical advantages, and any defensive players in offensive positions. This helps with debugging.
+
+THEN: Your JSON response (NUMBERS ONLY) as the last line:
 {"success-rate": [NUMBER], "havoc-rate": [NUMBER], "explosive-rate": [NUMBER]}`;
     
     const llmOutput = llmPrompt;
@@ -4411,7 +4441,7 @@ async function callOpenAI(prompt, apiKey) {
                 'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: 'gpt-4',
+                model: 'gpt-5',
                 messages: [
                     {
                         role: 'system',
@@ -4422,8 +4452,8 @@ async function callOpenAI(prompt, apiKey) {
                         content: prompt
                     }
                 ],
-                temperature: 0.2,
-                max_tokens: 2000
+                temperature: 1,
+                max_tokens: 4000
             })
         });
         
@@ -4451,7 +4481,7 @@ async function callClaude(prompt, apiKey) {
             },
             body: JSON.stringify({
                 model: 'claude-3-5-sonnet-20241022',
-                max_tokens: 2000,
+                max_tokens: 4000,
                 temperature: 0.2,
                 system: 'You are a SHARP and OPINIONATED football play analysis engine that KNOWS BALL. Analyze the SCHEME of the play - spatial relationships, blocking assignments, coverage vs routes. Return ONLY NUMERIC VALUES (0-100) in JSON. NO TEXT VALUES. Scheme analysis is 70% of your evaluation. If the scheme is broken (e.g., unblocked defenders, impossible alignments), return extreme numbers. The last line must be JSON: {"success-rate": [NUMBER], "havoc-rate": [NUMBER], "explosive-rate": [NUMBER]}',
                 messages: [
