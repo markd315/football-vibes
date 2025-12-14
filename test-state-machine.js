@@ -157,57 +157,21 @@ function simulateThreeConsecutivePlays(evalData, playType, forceOutcomes) {
     let down = 1;
     let distance = 10;
     let firstDownAchieved = false;
-    let totalYards = 0;
-    let consecutiveUnsuccessful = 0;
     
     for (let i = 0; i < 3; i++) {
-        // Apply consecutive unsuccessful play boost
-        let adjustedEvalData = { ...evalData };
-        let penaltyYards = 0;
-        
-        // After 2 consecutive unsuccessful plays, apply boost
-        if (consecutiveUnsuccessful >= 2 && down >= 3) {
-            if (playType === 'pass') {
-                // For passes: 15-20% chance of defensive penalty (5 yards) or completion boost
-                const penaltyRoll = Math.floor(Math.random() * 100) + 1;
-                if (penaltyRoll <= 10) {
-                    // Defensive penalty (pass interference, holding, etc.) - 5 yards
-                    penaltyYards = 5;
-                } else if (penaltyRoll <= 18) {
-                    // Smaller penalty or automatic first down scenario
-                    penaltyYards = 3;
-                } else {
-                    // Boost completion chance significantly
-                    adjustedEvalData['success-rate'] = Math.min(100, (evalData['success-rate'] || 45.0) + 30.0);
-                }
-            } else {
-                // For runs: boost success rate slightly
-                const conversionBoost = evalData['conversion-rate-1st-2nd-down-only'] || 31.0;
-                adjustedEvalData['success-rate'] = Math.min(100, (evalData['success-rate'] || 45.0) + conversionBoost * 0.2);
-            }
-        }
-        
-        const result = simulatePlay(adjustedEvalData, playType, forceOutcomes[i]);
+        const result = simulatePlay(evalData, playType, forceOutcomes[i]);
         
         if (result.turnover) {
             // Turnover ends the drive
             break;
         }
         
-        totalYards += result.yards + penaltyYards;
-        distance -= (result.yards + penaltyYards);
+        distance -= result.yards;
         down += 1;
         
-        if (result.yards + penaltyYards >= distance) {
+        if (result.yards >= distance) {
             firstDownAchieved = true;
             break;
-        }
-        
-        // Track consecutive unsuccessful plays
-        if (result.outcomeType === 'unsuccessful' || (result.yards < 3 && result.outcomeType !== 'explosive' && penaltyYards === 0)) {
-            consecutiveUnsuccessful++;
-        } else {
-            consecutiveUnsuccessful = 0;
         }
         
         if (down > 4) {
@@ -219,7 +183,7 @@ function simulateThreeConsecutivePlays(evalData, playType, forceOutcomes) {
     return firstDownAchieved;
 }
 
-function runTest(testName, evalData, playType, forceOutcomes, targetMin, targetMax, iterations = 10000) {
+function runTest(testName, evalData, playType, forceOutcomes, targetMin, targetMax, iterations = 300000) {
     console.log(`\n${testName}`);
     console.log(`Running ${iterations} iterations...`);
     
@@ -278,7 +242,7 @@ const test3 = runTest(
     defaultEvalData,
     'pass',
     ['success', 'success', 'success'],
-    75, 80
+    80, 85
 );
 
 // Test 4: 3 consecutive successful rushing plays -> 80-85% first down rate
@@ -287,11 +251,11 @@ const test4 = runTest(
     defaultEvalData,
     'run',
     ['success', 'success', 'success'],
-    80, 85
+    85, 90
 );
 
 // Test 5: Global pass average at baseline rates -> 6.3-6.8 yards
-function runGlobalAverageTest(testName, evalData, playType, targetMin, targetMax, iterations = 10000) {
+function runGlobalAverageTest(testName, evalData, playType, targetMin, targetMax, iterations = 300000) {
     console.log(`\n${testName}`);
     console.log(`Running ${iterations} iterations...`);
     
@@ -335,7 +299,7 @@ const test6 = runGlobalAverageTest(
 );
 
 // Test 7: Global pass average by outcome type
-function runOutcomeAverageTest(testName, evalData, playType, outcomeType, iterations = 10000) {
+function runOutcomeAverageTest(testName, evalData, playType, outcomeType, iterations = 300000) {
     console.log(`\n${testName}`);
     console.log(`Running ${iterations} iterations...`);
     
@@ -357,7 +321,7 @@ function runOutcomeAverageTest(testName, evalData, playType, outcomeType, iterat
 
 // Test individual outcome averages for passes
 console.log('\n' + '='.repeat(60));
-console.log('Pass Outcome Averages (10k iterations each)');
+console.log('Pass Outcome Averages (300k iterations each)');
 console.log('='.repeat(60));
 const passSuccess = runOutcomeAverageTest('Pass Success Average', baselineRates, 'pass', 'success');
 const passUnsuccess = runOutcomeAverageTest('Pass Unsuccessful Average', baselineRates, 'pass', 'unsuccessful');
@@ -366,7 +330,7 @@ const passExplosive = runOutcomeAverageTest('Pass Explosive Average', baselineRa
 
 // Test individual outcome averages for runs
 console.log('\n' + '='.repeat(60));
-console.log('Run Outcome Averages (10k iterations each)');
+console.log('Run Outcome Averages (300k iterations each)');
 console.log('='.repeat(60));
 const runSuccess = runOutcomeAverageTest('Run Success Average', baselineRates, 'run', 'success');
 const runUnsuccess = runOutcomeAverageTest('Run Unsuccessful Average', baselineRates, 'run', 'unsuccessful');

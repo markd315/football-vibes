@@ -3,7 +3,7 @@
     "description": "The pass was incomplete. Yards: {yards}",
     "methodology": "Roll 1-100 to determine completion. If complete, roll again for yards gained. Modal outcome is incomplete (0 yards).",
     "completion-percentage": 40.0,
-    "average-yards-gained": 0.8,
+    "average-yards-gained": 0.25,
     "standard-deviation": 1.5,
     "skewness": 0.0,
     "kurtosis": 0.0,
