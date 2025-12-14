@@ -1,0 +1,386 @@
+[
+    {
+        "name": "Trevor Lawrence",
+        "position": "QB",
+        "jersey": 16,
+        "height": "6'6",
+        "weight": "220",
+        "stamina": 80,
+        "percentile": 75,
+        "traits-from-baseline-percentile": {
+            "passing-accuracy": 3,
+            "pocket-presence": 2,
+            "mobility": 1,
+            "run-blocking": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Nick Mullens",
+        "position": "QB",
+        "jersey": 12,
+        "height": "6'1",
+        "weight": "210",
+        "stamina": 68,
+        "percentile": 38,
+        "traits-from-baseline-percentile": {
+            "passing-accuracy": 1,
+            "pocket-presence": 0,
+            "mobility": -1,
+            "run-blocking": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Travis Etienne Jr.",
+        "position": "RB",
+        "jersey": 1,
+        "height": "5'10",
+        "weight": "215",
+        "stamina": 82,
+        "percentile": 72,
+        "traits-from-baseline-percentile": {
+            "elusiveness": 3,
+            "pass-catching": 2,
+            "power-running": 1,
+            "pass-blocking": 0
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Bhayshul Tuten",
+        "position": "RB",
+        "jersey": 28,
+        "height": "5'11",
+        "weight": "205",
+        "stamina": 70,
+        "percentile": 35,
+        "traits-from-baseline-percentile": {
+            "elusiveness": 1,
+            "power-running": 0,
+            "pass-catching": -1,
+            "pass-blocking": -2
+        },
+        "health": 100.0
+    },
+    {
+        "name": "LeQuint Allen Jr.",
+        "position": "RB",
+        "jersey": 27,
+        "height": "5'11",
+        "weight": "210",
+        "stamina": 68,
+        "percentile": 32,
+        "traits-from-baseline-percentile": {
+            "elusiveness": 1,
+            "power-running": 0,
+            "pass-catching": 0,
+            "pass-blocking": -2
+        },
+        "health": 100.0
+    },
+    {
+        "name": "D'Ernest Johnson",
+        "position": "RB",
+        "jersey": 30,
+        "height": "5'10",
+        "weight": "208",
+        "stamina": 65,
+        "percentile": 28,
+        "traits-from-baseline-percentile": {
+            "elusiveness": 0,
+            "pass-catching": 0,
+            "power-running": -1,
+            "pass-blocking": -2
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Anton Harrison",
+        "position": "OT",
+        "jersey": 76,
+        "height": "6'5",
+        "weight": "315",
+        "stamina": 78,
+        "percentile": 62,
+        "traits-from-baseline-percentile": {
+            "pass-blocking": 2,
+            "run-blocking": 1,
+            "mobility": -2,
+            "pass-catching": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Walker Little",
+        "position": "OT",
+        "jersey": 72,
+        "height": "6'7",
+        "weight": "320",
+        "stamina": 75,
+        "percentile": 58,
+        "traits-from-baseline-percentile": {
+            "pass-blocking": 1,
+            "run-blocking": 1,
+            "mobility": -2,
+            "pass-catching": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Cole Van Lanen",
+        "position": "OT",
+        "jersey": 77,
+        "height": "6'5",
+        "weight": "305",
+        "stamina": 72,
+        "percentile": 45,
+        "traits-from-baseline-percentile": {
+            "pass-blocking": 1,
+            "run-blocking": 0,
+            "mobility": -2,
+            "pass-catching": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Wyatt Milum",
+        "position": "OT",
+        "jersey": 64,
+        "height": "6'6",
+        "weight": "310",
+        "stamina": 70,
+        "percentile": 38,
+        "traits-from-baseline-percentile": {
+            "pass-blocking": 0,
+            "run-blocking": 0,
+            "mobility": -2,
+            "pass-catching": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Ezra Cleveland",
+        "position": "OG",
+        "jersey": 70,
+        "height": "6'4",
+        "weight": "310",
+        "stamina": 74,
+        "percentile": 55,
+        "traits-from-baseline-percentile": {
+            "run-blocking": 1,
+            "pass-blocking": 1,
+            "mobility": -2,
+            "pass-catching": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Cooper Hodges",
+        "position": "OG",
+        "jersey": 68,
+        "height": "6'4",
+        "weight": "312",
+        "stamina": 68,
+        "percentile": 32,
+        "traits-from-baseline-percentile": {
+            "run-blocking": -1,
+            "pass-blocking": -1,
+            "mobility": -2,
+            "pass-catching": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Chuma Edoga",
+        "position": "OG",
+        "jersey": 73,
+        "height": "6'4",
+        "weight": "308",
+        "stamina": 71,
+        "percentile": 42,
+        "traits-from-baseline-percentile": {
+            "run-blocking": 0,
+            "pass-blocking": 0,
+            "mobility": -2,
+            "pass-catching": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Robert Hainsey",
+        "position": "C",
+        "jersey": 67,
+        "height": "6'4",
+        "weight": "303",
+        "stamina": 76,
+        "percentile": 58,
+        "traits-from-baseline-percentile": {
+            "pass-blocking": 1,
+            "run-blocking": 1,
+            "mobility": -1,
+            "pass-catching": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Jonah Monheim",
+        "position": "C",
+        "jersey": 60,
+        "height": "6'4",
+        "weight": "300",
+        "stamina": 73,
+        "percentile": 48,
+        "traits-from-baseline-percentile": {
+            "pass-blocking": 1,
+            "run-blocking": 0,
+            "mobility": -1,
+            "pass-catching": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Patrick Mekari",
+        "position": "C",
+        "jersey": 65,
+        "height": "6'4",
+        "weight": "305",
+        "stamina": 75,
+        "percentile": 55,
+        "traits-from-baseline-percentile": {
+            "pass-blocking": 1,
+            "run-blocking": 1,
+            "mobility": -2,
+            "pass-catching": -5
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Brenton Strange",
+        "position": "TE",
+        "jersey": 85,
+        "height": "6'4",
+        "weight": "248",
+        "stamina": 70,
+        "percentile": 85,
+        "traits-from-baseline-percentile": {
+            "run-blocking": 7,
+            "pass-catching": -4,
+            "route-running": -1,
+            "pass-blocking": -1
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Quintin Morris",
+        "position": "TE",
+        "jersey": 88,
+        "height": "6'2",
+        "weight": "250",
+        "stamina": 72,
+        "percentile": 48,
+        "traits-from-baseline-percentile": {
+            "pass-catching": 1,
+            "run-blocking": 1,
+            "route-running": 0,
+            "pass-blocking": 0
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Johnny Mundt",
+        "position": "TE",
+        "jersey": 81,
+        "height": "6'4",
+        "weight": "250",
+        "stamina": 76,
+        "percentile": 55,
+        "traits-from-baseline-percentile": {
+            "run-blocking": 2,
+            "pass-catching": 1,
+            "route-running": 0,
+            "pass-blocking": 0
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Brian Thomas Jr.",
+        "position": "WR",
+        "jersey": 11,
+        "height": "6'3",
+        "weight": "209",
+        "stamina": 83,
+        "percentile": 78,
+        "traits-from-baseline-percentile": {
+            "route-running": 4,
+            "pass-catching": 3,
+            "elusiveness": 2,
+            "run-blocking": 0
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Tim Patrick",
+        "position": "WR",
+        "jersey": 81,
+        "height": "6'4",
+        "weight": "212",
+        "stamina": 75,
+        "percentile": 58,
+        "traits-from-baseline-percentile": {
+            "route-running": 2,
+            "pass-catching": 2,
+            "elusiveness": 1,
+            "run-blocking": 0
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Jakobi Meyers",
+        "position": "WR",
+        "jersey": 8,
+        "height": "6'2",
+        "weight": "200",
+        "stamina": 77,
+        "percentile": 62,
+        "traits-from-baseline-percentile": {
+            "route-running": 2,
+            "pass-catching": 2,
+            "elusiveness": 1,
+            "run-blocking": 0
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Dyami Brown",
+        "position": "WR",
+        "jersey": 2,
+        "height": "6'0",
+        "weight": "195",
+        "stamina": 73,
+        "percentile": 45,
+        "traits-from-baseline-percentile": {
+            "route-running": 1,
+            "pass-catching": 1,
+            "elusiveness": 1,
+            "run-blocking": -1
+        },
+        "health": 100.0
+    },
+    {
+        "name": "Parker Washington",
+        "position": "WR",
+        "jersey": 13,
+        "height": "5'10",
+        "weight": "207",
+        "stamina": 79,
+        "percentile": 68,
+        "traits-from-baseline-percentile": {
+            "route-running": 3,
+            "pass-catching": 2,
+            "elusiveness": 2,
+            "run-blocking": -1
+        },
+        "health": 100.0
+    }
+]

@@ -1,0 +1,7 @@
+{
+    "description": "Field goal is GOOD! 3 points awarded.",
+    "points": 3,
+    "turnover": true,
+    "possession-change": true
+}
+

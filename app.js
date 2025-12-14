@@ -1,6 +1,11 @@
 // Global state
 let gameState = {};
-let rosters = { offense: [], defense: [] };
+let rosters = { 
+    'home-offense': [], 
+    'home-defense': [], 
+    'away-offense': [], 
+    'away-defense': [] 
+};
 let fieldLocations = [];
 let selectedPlayers = []; // 11 offensive players selected
 let selectedDefense = []; // 11 defensive players selected
@@ -8,7 +13,7 @@ let lastSelectedPlayers = []; // Last 11 offensive players chosen (for default)
 let lastSelectedDefense = []; // Last 11 defensive players chosen (for default)
 let playerPositions = {}; // { playerId: { x, y, location } }
 let assignments = { offense: {}, defense: {} };
-let currentStep = 1;
+let currentStep = 0; // Start at step 0 (special teams)
 let stateMachine = {};
 let outcomeFiles = {}; // Cache for loaded outcome files
 let baselineRates = null; // Baseline rates from eval-format.json
@@ -24,11 +29,13 @@ async function init() {
         await loadBaselineRates();
         
         console.log('Rosters loaded:', {
-            offense: rosters.offense.length,
-            defense: rosters.defense.length
+            'home-offense': rosters['home-offense'].length,
+            'home-defense': rosters['home-defense'].length,
+            'away-offense': rosters['away-offense'].length,
+            'away-defense': rosters['away-defense'].length
         });
         
-        renderStep(1);
+        renderStep(0);
         updateGameStateDisplay();
         console.log('Initialization complete');
     } catch (error) {
@@ -78,38 +85,61 @@ async function loadRosters() {
         console.log('Current URL:', window.location.href);
         console.log('Protocol:', window.location.protocol);
         
-        const offenseResponse = await fetch('rosters/offense.json');
-        if (!offenseResponse.ok) {
-            throw new Error(`Failed to load offense roster: ${offenseResponse.status} ${offenseResponse.statusText}`);
+        // Load all four rosters
+        const homeOffenseResponse = await fetch('rosters/home-offense.json');
+        if (!homeOffenseResponse.ok) {
+            throw new Error(`Failed to load home offense roster: ${homeOffenseResponse.status}`);
         }
-        rosters.offense = await offenseResponse.json();
-        console.log(`Loaded ${rosters.offense.length} offensive players`);
+        rosters['home-offense'] = await homeOffenseResponse.json();
+        console.log(`Loaded ${rosters['home-offense'].length} home offensive players`);
         
-        const defenseResponse = await fetch('rosters/defense.json');
-        if (!defenseResponse.ok) {
-            throw new Error(`Failed to load defense roster: ${defenseResponse.status} ${defenseResponse.statusText}`);
+        const homeDefenseResponse = await fetch('rosters/home-defense.json');
+        if (!homeDefenseResponse.ok) {
+            throw new Error(`Failed to load home defense roster: ${homeDefenseResponse.status}`);
         }
-        rosters.defense = await defenseResponse.json();
-        console.log(`Loaded ${rosters.defense.length} defensive players`);
-        console.log('Defensive roster sample:', rosters.defense.slice(0, 3));
+        rosters['home-defense'] = await homeDefenseResponse.json();
+        console.log(`Loaded ${rosters['home-defense'].length} home defensive players`);
+        
+        const awayOffenseResponse = await fetch('rosters/away-offense.json');
+        if (!awayOffenseResponse.ok) {
+            throw new Error(`Failed to load away offense roster: ${awayOffenseResponse.status}`);
+        }
+        rosters['away-offense'] = await awayOffenseResponse.json();
+        console.log(`Loaded ${rosters['away-offense'].length} away offensive players`);
+        
+        const awayDefenseResponse = await fetch('rosters/away-defense.json');
+        if (!awayDefenseResponse.ok) {
+            throw new Error(`Failed to load away defense roster: ${awayDefenseResponse.status}`);
+        }
+        rosters['away-defense'] = await awayDefenseResponse.json();
+        console.log(`Loaded ${rosters['away-defense'].length} away defensive players`);
         
         // Render after a short delay to ensure DOM is ready
         setTimeout(() => {
-            if (rosters.defense && rosters.defense.length > 0) {
-                renderPersonnelSelection();
-                updatePersonnelDisplay();
-            } else {
-                console.error('Defensive roster is empty after loading!');
-                alert('Warning: Defensive roster is empty. Please check rosters/defense.json');
-            }
+            updateRostersForPossession();
+            renderPersonnelSelection();
+            updatePersonnelDisplay();
         }, 100);
     } catch (error) {
         console.error('Error loading rosters:', error);
         const isFileProtocol = window.location.protocol === 'file:';
         const errorMsg = isFileProtocol 
             ? `CORS Error: Cannot load files with file:// protocol.\n\nPlease use a web server:\n- Python: python -m http.server 8000\n- Node: npx serve\n- VS Code: Use Live Server extension\n\nThen open http://localhost:8000`
-            : `Failed to load rosters: ${error.message}\n\nPlease check:\n1. rosters/offense.json exists\n2. rosters/defense.json exists\n3. You're using a web server (not file://)`;
+            : `Failed to load rosters: ${error.message}\n\nPlease check:\n1. All roster files exist (home-offense.json, home-defense.json, away-offense.json, away-defense.json)\n2. You're using a web server (not file://)`;
         alert(errorMsg);
+    }
+}
+
+// Update which rosters are active based on possession
+function updateRostersForPossession() {
+    const possession = gameState.possession || 'home';
+    // The team with the ball uses their offense, the other team uses their defense
+    if (possession === 'home') {
+        rosters.offense = rosters['home-offense'];
+        rosters.defense = rosters['away-defense'];
+    } else {
+        rosters.offense = rosters['away-offense'];
+        rosters.defense = rosters['home-defense'];
     }
 }
 
@@ -2139,18 +2169,42 @@ function updateAssignment(player, side, category, action) {
 // Step navigation
 function renderStep(step) {
     // Hide all steps
-    for (let i = 1; i <= 5; i++) {
-        document.getElementById(`step${i}`).classList.add('hidden');
-        document.querySelector(`.step[data-step="${i}"]`).classList.remove('active', 'completed');
+    for (let i = 0; i <= 5; i++) {
+        const stepEl = document.getElementById(`step${i}`);
+        if (stepEl) {
+            stepEl.classList.add('hidden');
+        }
+        const indicatorEl = document.querySelector(`.step[data-step="${i}"]`);
+        if (indicatorEl) {
+            indicatorEl.classList.remove('active', 'completed');
+        }
+    }
+    
+    // Check if we should show special teams on 4th down
+    if (step === 0 && gameState.down === 4) {
+        // Show step 0 for special teams
+    } else if (step === 0 && gameState.down !== 4) {
+        // Skip to step 1 if not 4th down
+        renderStep(1);
+        return;
     }
     
     // Show current step
-    document.getElementById(`step${step}`).classList.remove('hidden');
-    document.querySelector(`.step[data-step="${step}"]`).classList.add('active');
+    const currentStepEl = document.getElementById(`step${step}`);
+    if (currentStepEl) {
+        currentStepEl.classList.remove('hidden');
+    }
+    const currentIndicatorEl = document.querySelector(`.step[data-step="${step}"]`);
+    if (currentIndicatorEl) {
+        currentIndicatorEl.classList.add('active');
+    }
     
     // Mark previous steps as completed
-    for (let i = 1; i < step; i++) {
-        document.querySelector(`.step[data-step="${i}"]`).classList.add('completed');
+    for (let i = 0; i < step; i++) {
+        const prevIndicatorEl = document.querySelector(`.step[data-step="${i}"]`);
+        if (prevIndicatorEl) {
+            prevIndicatorEl.classList.add('completed');
+        }
     }
     
     currentStep = step;
@@ -3494,6 +3548,11 @@ function applyDefensiveFormation(formationName) {
 function nextStep() {
     if (currentStep < 5) {
         // Validate current step
+        if (currentStep === 0) {
+            // Special teams - can proceed to personnel
+            renderStep(1);
+            return;
+        }
         if (currentStep === 1) {
             if (selectedPlayers.length !== 11) {
                 alert('Please select exactly 11 offensive players.');
@@ -3512,7 +3571,7 @@ function nextStep() {
 }
 
 function previousStep() {
-    if (currentStep > 1) {
+    if (currentStep > 0) {
         renderStep(currentStep - 1);
     }
 }
@@ -4364,7 +4423,11 @@ FIRST: Provide a brief rationale (2-3 sentences) describing:
 - Conflict defender: Which defender is in conflict (must choose between run/pass responsibility)?
 
 THEN: Your JSON response (NUMBERS ONLY) as the last line:
-{"success-rate": [NUMBER], "havoc-rate": [NUMBER], "explosive-rate": [NUMBER]}`;
+{"success-rate": [NUMBER], "havoc-rate": [NUMBER], "explosive-rate": [NUMBER], "offense-advantage": [NUMBER -10 to 10], "risk-leverage": [NUMBER 0 to 10]}
+
+OFFENSE-ADVANTAGE (-10 to 10): Represents the schematic advantage for the offense. -10 means defense has massive advantage (5% success+explosive), +10 means offense has massive advantage (95% success+explosive). This corresponds to about a 5-95 percent difference in the sum of success+explosive play rate.
+
+RISK-LEVERAGE (0 to 10): Specifies the amount of havoc+explosives vs standard results. 0 = mostly standard plays, 10 = extreme outcomes (mostly havoc or explosive plays).`;
 
     // Variable data (user message content)
     let userMessageContent = `Game Situation: ${gameState.down}${getDownSuffix(gameState.down)} and ${gameState.distance} at the ${gameState["opp-yardline"]} yard line. Q${gameState.quarter} ${gameState.time}. Score: ${gameState.score.home} - ${gameState.score.away}
@@ -4444,7 +4507,7 @@ ${playData.coachingPointDefense ? `DEFENSIVE COACHING POINT: ${playData.coaching
     // Fallback: return mock output with rationale and JSON
     return `Point of attack: Right side B gap. Key matchups: Left guard vs defensive tackle, slot receiver vs nickel corner. Conflict defender: Weakside linebacker must choose between run fit and pass coverage.
 
-{"success-rate": 45.0, "havoc-rate": 12.0, "explosive-rate": 10.0}`;
+{"success-rate": 45.0, "havoc-rate": 12.0, "explosive-rate": 10.0, "offense-advantage": 0.0, "risk-leverage": 5.0}`;
 }
 
 async function callOpenAI(systemPrompt, userPrompt, apiKey) {
@@ -4563,13 +4626,17 @@ function parseLLMOutput(output) {
         const validated = {
             "success-rate": typeof parsed["success-rate"] === 'number' ? parsed["success-rate"] : parseFloat(parsed["success-rate"]) || 45.0,
             "havoc-rate": typeof parsed["havoc-rate"] === 'number' ? parsed["havoc-rate"] : parseFloat(parsed["havoc-rate"]) || 11.0,
-            "explosive-rate": typeof parsed["explosive-rate"] === 'number' ? parsed["explosive-rate"] : parseFloat(parsed["explosive-rate"]) || 10.0
+            "explosive-rate": typeof parsed["explosive-rate"] === 'number' ? parsed["explosive-rate"] : parseFloat(parsed["explosive-rate"]) || 10.0,
+            "offense-advantage": typeof parsed["offense-advantage"] === 'number' ? parsed["offense-advantage"] : parseFloat(parsed["offense-advantage"]) || 0.0,
+            "risk-leverage": typeof parsed["risk-leverage"] === 'number' ? parsed["risk-leverage"] : parseFloat(parsed["risk-leverage"]) || 5.0
         };
         
-        // Clamp values to 0-100
+        // Clamp values
         validated["success-rate"] = Math.max(0, Math.min(100, validated["success-rate"]));
         validated["havoc-rate"] = Math.max(0, Math.min(100, validated["havoc-rate"]));
         validated["explosive-rate"] = Math.max(0, Math.min(100, validated["explosive-rate"]));
+        validated["offense-advantage"] = Math.max(-10, Math.min(10, validated["offense-advantage"]));
+        validated["risk-leverage"] = Math.max(0, Math.min(10, validated["risk-leverage"]));
         
         // Warn if we had to convert non-numeric values
         if (typeof parsed["success-rate"] !== 'number' || typeof parsed["havoc-rate"] !== 'number' || typeof parsed["explosive-rate"] !== 'number') {
@@ -4585,7 +4652,9 @@ function parseLLMOutput(output) {
         return {
             "success-rate": 45.0,
             "havoc-rate": 11.0,
-            "explosive-rate": 10.0
+            "explosive-rate": 10.0,
+            "offense-advantage": 0.0,
+            "risk-leverage": 5.0
         };
     }
 }
@@ -4880,16 +4949,69 @@ function inverseNormalCDF(p) {
 }
 
 function updateGameState(result) {
-    // Update yardline first
-    gameState["opp-yardline"] -= result.yards;
+    // Handle special teams results (punt, field goal)
+    if (result.specialTeams) {
+        if (result.specialTeams === 'punt') {
+            // Punt: change possession, set opponent yardline
+            changePossession();
+            gameState["opp-yardline"] = result.newYardline;
+            gameState.down = 1;
+            gameState.distance = 10;
+            gameState.consecutiveUnsuccessfulPlays = 0;
+            updateRostersForPossession();
+        } else if (result.specialTeams === 'field-goal-success') {
+            // Field goal made: add 3 points, change possession
+            const possession = gameState.possession || 'home';
+            gameState.score[possession] += 3;
+            changePossession();
+            gameState["opp-yardline"] = 65; // Opponent gets ball at 65 after score
+            gameState.down = 1;
+            gameState.distance = 10;
+            gameState.consecutiveUnsuccessfulPlays = 0;
+            updateRostersForPossession();
+        } else if (result.specialTeams === 'field-goal-miss') {
+            // Field goal missed: change possession
+            changePossession();
+            gameState["opp-yardline"] = result.newYardline;
+            gameState.down = 1;
+            gameState.distance = 10;
+            gameState.consecutiveUnsuccessfulPlays = 0;
+            updateRostersForPossession();
+        }
+        updateGameStateDisplay();
+        saveGameState();
+        return;
+    }
     
-    // Handle touchdown
-    if (gameState["opp-yardline"] <= 0) {
-        gameState["opp-yardline"] = 0;
+    // Handle touchdowns
+    if (result.touchdown) {
+        const possession = gameState.possession || 'home';
+        gameState.score[possession] += 6;
+        changePossession();
+        gameState["opp-yardline"] = 65; // Opponent gets ball at 65 after score
         gameState.down = 1;
         gameState.distance = 10;
         gameState.consecutiveUnsuccessfulPlays = 0;
-        // TODO: Add touchdown scoring logic
+        updateRostersForPossession();
+        updateGameStateDisplay();
+        saveGameState();
+        return;
+    }
+    
+    // Update yardline first
+    gameState["opp-yardline"] -= result.yards;
+    
+    // Handle touchdown by reaching endzone
+    if (gameState["opp-yardline"] <= 0) {
+        gameState["opp-yardline"] = 0;
+        const possession = gameState.possession || 'home';
+        gameState.score[possession] += 6;
+        changePossession();
+        gameState["opp-yardline"] = 65; // Opponent gets ball at 65 after score
+        gameState.down = 1;
+        gameState.distance = 10;
+        gameState.consecutiveUnsuccessfulPlays = 0;
+        updateRostersForPossession();
         updateGameStateDisplay();
         saveGameState();
         return;
@@ -4908,11 +5030,25 @@ function updateGameState(result) {
         
         // Handle turnover on downs
         if (gameState.down > 4) {
+            changePossession();
             gameState.down = 1;
             gameState.distance = 10;
             gameState.consecutiveUnsuccessfulPlays = 0;
-            // TODO: Add turnover on downs logic (change possession)
+            // Opponent gets ball at current yardline (100 - current yardline)
+            gameState["opp-yardline"] = 100 - gameState["opp-yardline"];
+            updateRostersForPossession();
         }
+    }
+    
+    // Handle turnovers (interceptions, fumbles)
+    if (result.turnover) {
+        changePossession();
+        gameState.down = 1;
+        gameState.distance = 10;
+        gameState.consecutiveUnsuccessfulPlays = 0;
+        // Opponent gets ball at current yardline
+        gameState["opp-yardline"] = 100 - gameState["opp-yardline"];
+        updateRostersForPossession();
     }
     
     // Track consecutive unsuccessful plays
@@ -4926,6 +5062,79 @@ function updateGameState(result) {
     saveGameState();
 }
 
+function changePossession() {
+    gameState.possession = gameState.possession === 'home' ? 'away' : 'home';
+}
+
+async function executePunt() {
+    // Roll for punt distance (40-65 yards)
+    const distance = Math.floor(Math.random() * 26) + 40; // 40 to 65
+    
+    // Calculate new yardline
+    let newYardline;
+    if (gameState["opp-yardline"] - distance < 0) {
+        // Touchback
+        newYardline = 80;
+    } else {
+        // 100 - (current yardline - distance)
+        newYardline = 100 - (gameState["opp-yardline"] - distance);
+    }
+    
+    const result = {
+        specialTeams: 'punt',
+        yards: distance,
+        newYardline: newYardline,
+        description: `Punt traveled ${distance} yards. ${newYardline === 80 ? 'Touchback.' : `Opponent starts at ${newYardline} yard line.`}`
+    };
+    
+    // Show result
+    showSpecialTeamsResult(result);
+    updateGameState(result);
+    resetPlay();
+}
+
+async function executeFieldGoal() {
+    const currentYardline = gameState["opp-yardline"];
+    // 95% success minus 1.81% per yardline
+    const successChance = 95 - (currentYardline * 1.81);
+    const roll = Math.random() * 100;
+    
+    let result;
+    if (roll <= successChance) {
+        // Field goal made
+        result = {
+            specialTeams: 'field-goal-success',
+            points: 3,
+            description: `Field goal is GOOD! 3 points awarded.`
+        };
+    } else {
+        // Field goal missed
+        const newYardline = 100 - currentYardline;
+        result = {
+            specialTeams: 'field-goal-miss',
+            newYardline: newYardline,
+            description: `Field goal is NO GOOD. Turnover on downs. Opponent starts at ${newYardline} yard line.`
+        };
+    }
+    
+    // Show result
+    showSpecialTeamsResult(result);
+    updateGameState(result);
+    resetPlay();
+}
+
+function showSpecialTeamsResult(result) {
+    // Show results in the results section
+    document.getElementById('results').classList.remove('hidden');
+    document.getElementById('llmOutput').textContent = '';
+    document.getElementById('playRationale').value = '';
+    document.getElementById('outcomeType').textContent = result.specialTeams === 'punt' ? 'Punt' : 
+        (result.specialTeams === 'field-goal-success' ? 'Field Goal - GOOD' : 'Field Goal - NO GOOD');
+    document.getElementById('outcomeText').textContent = result.description;
+    document.getElementById('yardsGained').textContent = result.yards ? `Distance: ${result.yards} yards` : '';
+    document.getElementById('rateComparison').style.display = 'none';
+}
+
 function updateFatigue(playData) {
     // Get all players who were on the field
     const playersOnField = new Set();
@@ -4933,7 +5142,26 @@ function updateFatigue(playData) {
         playersOnField.add(player.name);
     });
     
-    // Update stamina for all players in rosters
+    // Update stamina for all players in all rosters
+    Object.keys(rosters).forEach(rosterKey => {
+        if (rosterKey !== 'offense' && rosterKey !== 'defense') {
+            rosters[rosterKey].forEach(player => {
+                if (player.stamina !== undefined) {
+                    if (playersOnField.has(player.name)) {
+                        // Player was on field: reduce stamina by 1-2%
+                        const reduction = Math.floor(Math.random() * 2) + 1;
+                        player.stamina = Math.max(0, player.stamina - reduction);
+                    } else {
+                        // Player was not on field: increase stamina by 3-5%
+                        const recovery = Math.floor(Math.random() * 3) + 3;
+                        player.stamina = Math.min(100, player.stamina + recovery);
+                    }
+                }
+            });
+        }
+    });
+    
+    // Also update active rosters
     [...rosters.offense, ...rosters.defense].forEach(player => {
         if (player.stamina !== undefined) {
             if (playersOnField.has(player.name)) {
@@ -4997,8 +5225,13 @@ function resetPlay() {
     selectedDefense = [];
     playerPositions = {};
     assignments = { offense: {}, defense: {} };
-    renderStep(1);
-    renderPersonnelSelection();
+    // Show step 0 if 4th down, otherwise step 1
+    if (gameState.down === 4) {
+        renderStep(0);
+    } else {
+        renderStep(1);
+        renderPersonnelSelection();
+    }
     document.getElementById('results').classList.add('hidden');
 }
 

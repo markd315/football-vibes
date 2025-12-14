@@ -372,11 +372,31 @@
         </div>
 
         <div class="step-indicator">
+            <div class="step" data-step="0">0. Special Teams</div>
             <div class="step active" data-step="1">1. Personnel</div>
             <div class="step" data-step="2">2. Formation</div>
             <div class="step" data-step="3">3. Motions</div>
             <div class="step" data-step="4">4. Assignments</div>
             <div class="step" data-step="5">5. Coaching</div>
+        </div>
+
+        <!-- Step 0: Special Teams -->
+        <div class="step-content hidden" id="step0">
+            <h2>Step 0: Special Teams Decision</h2>
+            <p>On 4th down, choose to punt or attempt a field goal.</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px;">
+                <button class="btn-primary" onclick="executePunt()" style="padding: 30px; font-size: 1.3em;">
+                    Punt
+                </button>
+                <button class="btn-success" onclick="executeFieldGoal()" style="padding: 30px; font-size: 1.3em;">
+                    Field Goal
+                </button>
+            </div>
+            
+            <div class="button-group" style="margin-top: 30px;">
+                <button class="btn-secondary" onclick="nextStep()">Continue to Personnel</button>
+            </div>
         </div>
 
         <!-- Step 1: Personnel Selection -->

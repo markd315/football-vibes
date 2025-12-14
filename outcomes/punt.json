@@ -1,0 +1,8 @@
+{
+    "description": "The punt traveled {yards} yards.",
+    "average-yards-gained": 52.5,
+    "standard-deviation": 8.0,
+    "turnover": true,
+    "possession-change": true
+}
+
