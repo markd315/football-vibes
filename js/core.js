@@ -112,8 +112,7 @@ async function loadGameState() {
             },
             time: "15:00",
             timeouts: { home: 3, away: 3 },
-            timeoutCalled: false,
-            consecutiveUnsuccessfulPlays: 0
+            timeoutCalled: false
         };
     }
 }

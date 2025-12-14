@@ -6,7 +6,6 @@
         "havoc": 11.0,
         "explosive": 13.0
     },
-    "personnel-adjustment-range": 10.0,
     "yac-rates": {
         "explosive-play-tackle-percentage": 40.0,
         "non-explosive-tackle-percentage": 60.0
@@ -22,18 +21,10 @@
             "step": 1,
             "name": "Determine Basic Play Outcome",
             "description": "Roll 1-100 to determine if play is Success, Unsuccessful, Havoc, or Explosive",
-            "method": "weighted-random",
-            "adjustments": "Apply personnel-based adjustments (+/- 10% from baseline based on player matchups)"
+            "method": "weighted-random"
         },
         {
             "step": 2,
-            "name": "Apply Personnel Adjustments",
-            "description": "Adjust outcome probabilities based on player percentile ratings and traits",
-            "method": "percentile-calculation",
-            "formula": "base_rate + (personnel_advantage * 0.1)"
-        },
-        {
-            "step": 3,
             "name": "Explosive Play YAC Check",
             "condition": "if outcome == 'explosive'",
             "description": "Roll for YAC (yards after catch/contact). Base tackle percentage is 40%",
@@ -41,7 +32,7 @@
             "tackle-threshold": 40
         },
         {
-            "step": 4,
+            "step": 3,
             "name": "Non-Explosive YAC Check",
             "condition": "if outcome == 'success' and not explosive",
             "description": "Roll for YAC. Base tackle percentage is 60%",
@@ -49,7 +40,7 @@
             "tackle-threshold": 60
         },
         {
-            "step": 5,
+            "step": 4,
             "name": "Havoc Outcome Roll",
             "condition": "if outcome == 'havoc'",
             "description": "Determine specific havoc outcome (sack, turnover, TFL, etc.)",
@@ -57,7 +48,7 @@
             "outcomes": ["sack", "turnover", "tackle-for-loss", "incompletion-bonus"]
         },
         {
-            "step": 6,
+            "step": 5,
             "name": "Calculate Yards Gained",
             "description": "Based on outcome type, calculate yards gained using outcome distribution",
             "method": "outcome-based-calculation",
@@ -69,13 +60,13 @@
             ]
         },
         {
-            "step": 7,
+            "step": 6,
             "name": "Update Game State",
             "description": "Update gamestate.json with new down, distance, yardline, and score",
             "method": "state-update"
         },
         {
-            "step": 8,
+            "step": 7,
             "name": "Update Fatigue",
             "description": "Apply logarithmic fatigue to player stamina and adjust percentile ratings",
             "method": "logarithmic-fatigue",

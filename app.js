@@ -104,7 +104,6 @@ async function loadGameState() {
             quarter: 1,
             down: 1,
             distance: 10,
-            consecutiveUnsuccessfulPlays: 0,
             "opp-yardline": 65,
             score: { home: 0, away: 0 },
             time: "15:00",
@@ -771,7 +770,7 @@ const offensivePlaycalls = {
         'QB': { category: 'Pass', action: '3 step drop' },
         'RB': { category: 'Protect', action: 'Block right' },
         'WR': { category: 'Route', action: 'Slant' },
-        'TE': { category: 'Route', action: 'Dig' },
+        'TE': { category: 'Route', action: '6 Shallow dig' },
         'OT': { category: 'Pass Block', action: 'Outside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
         'C': { category: 'Pass Block', action: 'Inside priority' }
@@ -779,7 +778,7 @@ const offensivePlaycalls = {
     'Dagger': {
         'QB': { category: 'Pass', action: '5 step drop' },
         'RB': { category: 'Protect', action: 'Block left' },
-        'WR': { category: 'Route', action: 'Dig' },
+        'WR': { category: 'Route', action: '6 Shallow dig' },
         'TE': { category: 'Route', action: 'Post' },
         'OT': { category: 'Pass Block', action: 'Outside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
@@ -789,23 +788,23 @@ const offensivePlaycalls = {
         'QB': { category: 'Pass', action: '5 step drop' },
         'RB': { category: 'Protect', action: 'Block right' },
         'WR': { category: 'Route', action: 'Corner' },
-        'TE': { category: 'Route', action: 'Flat' },
+        'TE': { category: 'Route', action: '1 Flat' },
         'OT': { category: 'Pass Block', action: 'Outside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
         'C': { category: 'Pass Block', action: 'Inside priority' }
     },
     'Levels': {
         'QB': { category: 'Pass', action: '3 step drop' },
-        'RB': { category: 'Route', action: 'Checkdown' },
-        'WR': { category: 'Route', action: 'Dig' },
-        'TE': { category: 'Route', action: 'Curl' },
+        'RB': { category: 'Route', action: '1 Flat' },
+        'WR': { category: 'Route', action: '6 Shallow dig' },
+        'TE': { category: 'Route', action: 'Deep dig' },
         'OT': { category: 'Pass Block', action: 'Inside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
         'C': { category: 'Pass Block', action: 'Inside priority' }
     },
     'Sail': {
         'QB': { category: 'Pass', action: '5 step drop' },
-        'RB': { category: 'Route', action: 'Flat' },
+        'RB': { category: 'Route', action: '1 Flat' },
         'WR': { category: 'Route', action: 'Corner' },
         'TE': { category: 'Route', action: 'Out' },
         'OT': { category: 'Pass Block', action: 'Outside priority' },
@@ -823,7 +822,7 @@ const offensivePlaycalls = {
     },
     'Curl flats': {
         'QB': { category: 'Pass', action: '3 step drop' },
-        'RB': { category: 'Route', action: 'Flat' },
+        'RB': { category: 'Route', action: '1 Flat' },
         'WR': { category: 'Route', action: 'Curl' },
         'TE': { category: 'Route', action: 'Curl' },
         'OT': { category: 'Pass Block', action: 'Inside priority' },
@@ -841,9 +840,9 @@ const offensivePlaycalls = {
     },
     'Drive': {
         'QB': { category: 'Pass', action: '3 step drop' },
-        'RB': { category: 'Route', action: 'Flat' },
-        'WR': { category: 'Route', action: 'Dig' },
-        'TE': { category: 'Route', action: 'Dig' },
+        'RB': { category: 'Route', action: '1 Flat' },
+        'WR': { category: 'Route', action: '6 Shallow dig' },
+        'TE': { category: 'Route', action: '6 Shallow dig' },
         'OT': { category: 'Pass Block', action: 'Inside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
         'C': { category: 'Pass Block', action: 'Inside priority' }
@@ -935,26 +934,26 @@ const offensiveAssignments = {
     'RB': {
         'Protect': ['Block left', 'Block right', 'Leak/delay left', 'Leak/delay right'],
         'Run': ['IZR', 'OZR', 'Left A gap', 'Left B gap', 'Right A gap', 'Right B gap', 'Left C gap', 'Right C gap'],
-        'Route': ['Wheel', 'Tunnel screen', 'Flat', 'Checkdown']
+        'Route': ['Wheel', 'Tunnel screen', '1 Flat', 'Checkdown']
     },
     'WR': {
         'Block': ['Block', 'Jet Motion', 'Jet motion option'],
-        'Route': ['Slant', 'Dig', 'Out', 'Curl', 'Comeback', 'Corner', 'Post', 'Fade', 'Seam/Go', 'Chip+Delay', 'Screen']
+        'Route': ['1 Flat', '2 Slant', '3 Comeback', '4 Curl/Hook', '5 Out', 'Deep out', '6 Shallow dig', '7 Corner', '8 Post', '9 Go/Fly/Fade', 'Deep dig', 'Chip+Delay', 'Screen']
     },
     'TE': {
         'Block': ['Block', 'Jet Motion', 'Jet motion option'],
-        'Route': ['Slant', 'Dig', 'Out', 'Curl', 'Comeback', 'Corner', 'Post', 'Fade', 'Seam/Go', 'Chip+Delay', 'Flat']
+        'Route': ['1 Flat', '2 Slant', '3 Comeback', '4 Curl/Hook', '5 Out', 'Deep out', '6 Shallow dig', '7 Corner', '8 Post', '9 Go/Fly/Fade', 'Deep dig', 'Chip+Delay']
     },
     'OT': {
-        'Pass Block': ['Inside priority', 'Outside priority'],
+        'Pass Block': ['Inside priority', 'Outside priority', 'Slide left', 'Slide right'],
         'Run Block': ['Zone inside left', 'Zone inside right', 'Zone outside left', 'Zone outside right', 'Pull', 'Seal edge', 'Combo']
     },
     'OG': {
-        'Pass Block': ['Inside priority', 'Outside priority'],
+        'Pass Block': ['Inside priority', 'Outside priority', 'Slide left', 'Slide right'],
         'Run Block': ['Zone inside left', 'Zone inside right', 'Zone outside left', 'Zone outside right', 'Pull', 'Seal edge', 'Combo']
     },
     'C': {
-        'Pass Block': ['Inside priority', 'Outside priority'],
+        'Pass Block': ['Inside priority', 'Outside priority', 'Slide left', 'Slide right'],
         'Run Block': ['Zone inside left', 'Zone inside right', 'Zone outside left', 'Zone outside right', 'Pull', 'Seal edge', 'Combo']
     }
 };
@@ -1278,8 +1277,8 @@ function drawOffensiveAssignmentArrow(ctx, x, y, assignment, color, width, heigh
         } else if (assignment.action.includes('Out')) {
             // Out: stem forward, then 90° turn out to sideline
             routeDef = { stemLength: routeLength * 0.3, turnAngle: 90, continueLength: routeLength * 0.7, direction: 'out' };
-        } else if (assignment.action.includes('Dig')) {
-            // Dig: stem forward, then 90° turn IN toward center
+        } else if (assignment.action.includes('Shallow dig') || assignment.action.includes('Deep dig')) {
+            // Dig routes: stem forward, then 90° turn IN toward center
             routeDef = { stemLength: routeLength * 0.4, turnAngle: -90, continueLength: routeLength * 0.5, direction: 'in' };
         } else if (assignment.action.includes('Corner')) {
             // Corner: stem forward, then 45° turn out to sideline
@@ -4600,7 +4599,7 @@ async function callLLM(playData) {
     }
     
     // Build prompt with fixed instructions first (for caching), then data, then output format
-    const fixedInstructions = `You are a SHARP and OPINIONATED football play analysis engine that KNOWS BALL. Analyze the SCHEME of this play - the spatial relationships, blocking assignments, coverage vs routes, and schematic design.
+    const fixedInstructions = `You are a SHARP and OPINIONATED football play analysis engine that KNOWS BALL. Analyze the SCHEME of this play - the spatial relationships, blocking assignments, SPECIFIC coverage vs SPECIFIC combinations, and schematic design.
 
 SCHEME ANALYSIS (70% WEIGHT):
 VISUALIZE THE PLAY SPATIALLY using the X/Y coordinates. X: negative = left side, positive = right side. Y: negative = offensive side (behind LOS), positive = defensive side (past LOS).
@@ -4616,47 +4615,70 @@ CRITICAL SPATIAL CHECKS:
 Ask yourself:
 - Does the blocking scheme match the play design? (e.g., zone blocking for outside zone, gap blocking for power)
 - Are there unblocked defenders in the path of the ball carrier or QB?
-- Does the QB have protection on bootlegs/rollouts? Are there blockers where he's going?
-- Are receivers running routes into coverage? Are there open windows?
+- Does the QB have protection? Is it sufficient? Are there blockers where he's going?
+- Are receivers running routes into coverage? Are there open windows in the directions they break to?
 - Are there schematic mismatches? (e.g., WR at guard position, OL split wide, unbalanced formations)
 - Does the defensive alignment match the offensive strength? Are defenders properly positioned?
 - Are there numerical advantages at the point of attack?
 - If the offense attacks right and all defenders are on the left = MASSIVE OFFENSIVE ADVANTAGE
 - If the offense has a convoy of blockers and the defense is out of position = HIGH SUCCESS/EXPLOSIVE, LOW HAVOC
 
+COVERAGE AND GAP ANALYSIS:
+- BUSTED COVERAGE: If a route goes into an area with no nearby defender zones, or the corresponding defender is so far away that they could not outrace the receiver there, boost success rate significantly.
+- FILLED GAPS: For running plays, check if there are open gaps in the direction of the run. If all gaps are filled by defenders with proper leverage, decrease success rate.
+- PRESSURE PROTECTION: Increase havoc rate slightly if there is no player in the backfield (RB/TE) to pick up a pressure/blitz. Check if protection slides leave gaps.
+- BLOCKING MISMATCHES: Increase havoc rate significantly if there is a serious mismatch in a primary blocking assignment (e.g., inferior blocker vs elite pass rusher, or no blocker assigned to a free rusher).
+- INFERIOR BLOCKERS: Decrease success rate if there are inferior blockers or no empty gaps in the direction of the run.
+- FRONTS: A bear front reduces the success rate of zone running at the cost of giving up higher success on gap runs like counter and power.
+- DEEP ZONE COVERAGE: Decrease explosive play rate if there are deep zones (safeties, deep thirds) on the side of the play with the primary receiver and/or conflict defender.
+- MAN COVERAGE: Slightly decrease success rate, but moderately increase explosive play rate. (-5% success, +3% explosive)
+- Increase havoc rate against blitz defenses: 20% minimum havoc, higher with great scheme.
+
 EXAMPLES OF DEFENSIVE SCHEME ADVANTAGES (High Havoc, Low Success):
-- Naked bootleg with no blockers = 80%+ havoc rate, 3% success
-- WR at guard position with no blocking = schematic failure
-- Entire OL split left, QB bootlegs right = unblocked DE = 80% havoc, 3% success
-- 5-man protection vs 6 rushers = pressure/havoc
-- Route concepts that don't attack coverage weaknesses = low success
+- Naked bootleg into traffic with no blockers and an unblocked defender = 80%+ havoc rate, 3% success
+- WR at guard position = schematic failure, 60% havoc rate
+- Entire OL split left as receivers, QB bootlegs right = unblocked DE = 80% havoc, 3% success
+- 5-man protection vs 6 rushers = 60% havoc
+- Route concepts that don't attack coverage weaknesses = low success rate: 25%
 
-Passing plays have both slightly higher havoc rates and significantly higher explosive rates than running plays. The havoc will also be worse, but that's handled programmatically after your response.
+Passing plays have both slightly higher havoc rates and significantly higher explosive rates than running plays.
 
-EXAMPLES OF OFFENSIVE SCHEME ADVANTAGES (High Success/Explosive, Low Havoc):
+EXAMPLES OF OFFENSIVE SCHEME ADVANTAGES (High Success/Explosive, and/or Low Havoc):
 - Convoy of blockers with ball carrier, defense all on opposite side = 15%+ success, 80%+ explosive, 5% havoc
 - Offense attacks right, all defenders aligned left = massive advantage for offense
 - Offense attacks a sideline with a deep route, the defense has only a middle defender in deep cover 1 and a mediocre corner in man: high likelihood to win with a good pass: 30% success, 40% explosive, 10% havoc 
 - Numerical advantage running at point of attack (6 blockers vs 3 defenders) = 30% success, 40% explosive, 3% havoc 
 - Routes attacking coverage voids = high success
 - Proper blocking scheme with defenders out of position = high success/explosive
-- Out-breaking routes against middle-field defense and inside leverage: 30% success, 35% explosive, 15% havoc
+- Out-breaking routes against middle-field defense and inside leverage: 30% success, 35% explosive, 10% havoc
+- In-breaking routes against sideline coverage (cover 2) and outside leverage: 30% success, 35% explosive, 10% havoc
+- Route concepts with man defenders that are far from the assigned defender = high success rate: 70%, 20% explosive
 
 PERSONNEL (10% WEIGHT): Effective percentile ratings matter, but scheme trumps talent.
 
-POSITIONAL MATCHUPS (20% WEIGHT): Individual matchups matter (CB has to tackle RB, LB has to cover WR, etc.), but only if the scheme allows them to matter.
+POSITIONAL MATCHUPS (20% WEIGHT): Individual matchups matter even more than ratings (CB has to tackle RB, LB has to cover WR, etc.), but only if the scheme allows them to matter.
 
-RETURN ONLY NUMERIC VALUES. If the OFFENSIVE scheme is dominant (defense out of position, numerical advantages, proper blocking), return: success-rate 70-90%, explosive-rate 10-20%, havoc-rate 3-10%. If the DEFENSIVE scheme is dominant (unblocked defenders, coverage matches routes, obvious pressure), return: havoc-rate 30-70%, success-rate 3-15%, explosive-rate 2-5%.
+RETURN ONLY NUMERIC VALUES. 
+
+CRITICAL: The rates MUST match the offense-advantage value:
+- offense-advantage +10 (massive offensive advantage): success-rate 70-90%, explosive-rate 10-20%, havoc-rate 3-10% (TOTAL GOOD OUTCOMES: 80-100%)
+- offense-advantage +5 to +9 (strong offensive advantage): success-rate 55-75%, explosive-rate 8-15%, havoc-rate 5-12% (TOTAL GOOD OUTCOMES: 63-90%)
+- offense-advantage 0 to +4 (slight offensive advantage): success-rate 40-55%, explosive-rate 10-15%, havoc-rate 10-15% (TOTAL GOOD OUTCOMES: 50-70%)
+- offense-advantage -1 to -4 (slight defensive advantage): success-rate 30-45%, explosive-rate 8-12%, havoc-rate 15-20% (TOTAL GOOD OUTCOMES: 38-57%)
+- offense-advantage -5 to -9 (strong defensive advantage): success-rate 15-35%, explosive-rate 5-10%, havoc-rate 25-40% (TOTAL GOOD OUTCOMES: 20-45%)
+- offense-advantage -10 (massive defensive advantage): success-rate 3-15%, explosive-rate 2-5%, havoc-rate 30-70% (TOTAL GOOD OUTCOMES: 5-20%)
+
+BASELINE (median play): success-rate 40%, explosive-rate 12%, havoc-rate 12% = 52% good outcomes. If you detect an offensive advantage, the rates MUST be better than baseline. If you detect a defensive advantage, the rates MUST be worse than baseline.
 
 FIRST: Provide a brief rationale (2-3 sentences) describing:
 - Point of attack: Where is the play designed to go? (left/right, gap, route concept)
 - Key matchups (1-3): Identify the most important individual matchups that will determine success
-- Conflict defender: Which defender is in conflict (must choose between run/pass responsibility)?
+- Conflict defender: Which defender is in conflict (must abandon assignment to save the play, cover multiple eligibles, or choose quickly between run/pass responsibility)?
 
 THEN: Your JSON response (NUMBERS ONLY) as the last line:
 {"success-rate": [NUMBER], "havoc-rate": [NUMBER], "explosive-rate": [NUMBER], "offense-advantage": [NUMBER -10 to 10], "risk-leverage": [NUMBER 0 to 10]}
 
-OFFENSE-ADVANTAGE (-10 to 10): Represents the schematic advantage for the offense. -10 means defense has massive advantage (5% success+explosive), +10 means offense has massive advantage (95% success+explosive). This corresponds to about a 5-95 percent difference in the sum of success+explosive play rate.
+OFFENSE-ADVANTAGE (-10 to 10): Represents the schematic advantage for the offense. -10 means defense has massive advantage (5% success+explosive), +10 means offense has massive advantage (95% success+explosive).
 
 RISK-LEVERAGE (0 to 10): Specifies the amount of havoc+explosives vs standard results. 0 = mostly standard plays, 10 = extreme outcomes (mostly havoc or explosive plays).`;
 
@@ -4667,10 +4689,12 @@ RISK-LEVERAGE (0 to 10): Specifies the amount of havoc+explosives vs standard re
     // Add offensive players
     playData.offense.forEach(p => {
         let playerId = null;
+        let actualPlayer = null;
         for (const id of selectedPlayers) {
             const player = getPlayerById(id);
             if (player && player.name === p.name) {
                 playerId = id;
+                actualPlayer = player;
                 break;
             }
         }
@@ -4686,7 +4710,7 @@ RISK-LEVERAGE (0 to 10): Specifies the amount of havoc+explosives vs standard re
             side: 'OFFENSE',
             x: x,
             name: p.name,
-            position: p.position,
+            position: actualPlayer ? actualPlayer.position : (p.position || 'Unknown'),
             location: pos.location || 'Not placed',
             coords: coords,
             effectivePercentile: effectivePercentile,
@@ -4699,10 +4723,12 @@ RISK-LEVERAGE (0 to 10): Specifies the amount of havoc+explosives vs standard re
     // Add defensive players
     playData.defense.forEach(p => {
         let playerId = null;
+        let actualPlayer = null;
         for (const id of selectedDefense) {
             const player = getPlayerById(id);
             if (player && player.name === p.name) {
                 playerId = id;
+                actualPlayer = player;
                 break;
             }
         }
@@ -4715,13 +4741,14 @@ RISK-LEVERAGE (0 to 10): Specifies the amount of havoc+explosives vs standard re
         const manTarget = (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) ? ` (Man coverage on: ${assignment.manCoverageTarget})` : '';
         const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
         // Check if defensive lineman is in an offensive skill position (actual offsides/misalignment)
-        const isDLInOffensivePosition = (p.position === 'DE' || p.position === 'DT') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Trips') || pos.location.includes('Max split'));
+        const actualPosition = actualPlayer ? actualPlayer.position : (p.position || 'Unknown');
+        const isDLInOffensivePosition = (actualPosition === 'DE' || actualPosition === 'DT') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Trips') || pos.location.includes('Max split'));
         const warning = isDLInOffensivePosition ? ' ⚠️ DEFENSIVE LINEMAN IN OFFENSIVE SKILL POSITION!' : '';
         allPlayers.push({
             side: 'DEFENSE',
             x: x,
             name: p.name,
-            position: p.position,
+            position: actualPosition,
             location: pos.location || 'Not placed',
             coords: coords,
             effectivePercentile: effectivePercentile,
@@ -4738,7 +4765,7 @@ RISK-LEVERAGE (0 to 10): Specifies the amount of havoc+explosives vs standard re
 
 PLAYERS (LEFT TO RIGHT BY X COORDINATE):
 ${allPlayers.map(p => {
-        return `${p.position} ${p.name}-, Aligned: ${p.coords} (${p.location}) ${p.warning}, Effective Rating: ${p.effectivePercentile.toFixed(0)}th percentile, Assignment: ${p.assignmentText}${p.manTarget}`;
+        return `${p.position} ${p.name}, Alignment: ${p.location}${p.coords} ${p.warning}, Effective Rating: ${p.effectivePercentile.toFixed(0)}th percentile, Assignment: ${p.assignmentText}${p.manTarget}`;
     }).join('\n')}
 
 ${playData.coachingPointOffense ? `OFFENSIVE COACHING POINT: ${playData.coachingPointOffense.player.name} (${playData.coachingPointOffense.player.position}) - "${playData.coachingPointOffense.point}"` : ''}
@@ -4935,32 +4962,10 @@ async function runStateMachine(evalData, playData) {
     );
     const playType = isPass ? 'pass' : 'run';
     
-    // Apply consecutive unsuccessful play boost
-    let adjustedEvalData = { ...evalData };
-    let penaltyYards = 0;
-    if (gameState.consecutiveUnsuccessfulPlays >= 2 && gameState.down >= 3) {
-        if (playType === 'pass') {
-            // For passes: chance of defensive penalty or completion boost
-            const penaltyRoll = Math.floor(Math.random() * 100) + 1;
-            if (penaltyRoll <= 10) {
-                penaltyYards = 5; // Defensive penalty
-            } else if (penaltyRoll <= 18) {
-                penaltyYards = 3; // Smaller penalty
-            } else {
-                // Boost completion chance
-                adjustedEvalData['success-rate'] = Math.min(100, (evalData['success-rate'] || 45.0) + 30.0);
-            }
-        } else {
-            // For runs: boost success rate slightly
-            const conversionBoost = evalData['conversion-rate-1st-2nd-down-only'] || 31.0;
-            adjustedEvalData['success-rate'] = Math.min(100, (evalData['success-rate'] || 45.0) + conversionBoost * 0.2);
-        }
-    }
-    
-    // Step 1: Roll 1-100 to determine basic play outcome (using adjusted LLM rates)
-    const successRate = adjustedEvalData['success-rate'] || 45.0;
-    const havocRate = adjustedEvalData['havoc-rate'] || 11.0;
-    const explosiveRate = adjustedEvalData['explosive-rate'] || 13.0;
+    // Step 1: Roll 1-100 to determine basic play outcome (using LLM rates)
+    const successRate = evalData['success-rate'] || 45.0;
+    const havocRate = evalData['havoc-rate'] || 11.0;
+    const explosiveRate = evalData['explosive-rate'] || 13.0;
     const unsuccessfulRate = 100 - successRate - havocRate - explosiveRate;
     
     // Build cumulative probability ranges
@@ -5065,9 +5070,6 @@ async function runStateMachine(evalData, playData) {
         const yardsRoll = Math.floor(Math.random() * 100) + 1;
         yards = calculateYardsFromRoll(yardsRoll, outcomeFile);
     }
-    
-    // Add penalty yards if applicable
-    yards += penaltyYards;
     
     // Round yards to 1 decimal place for display
     yards = Math.round(yards * 10) / 10;
@@ -5243,7 +5245,6 @@ function updateGameState(result) {
             gameState["opp-yardline"] = result.newYardline;
             gameState.down = 1;
             gameState.distance = 10;
-            gameState.consecutiveUnsuccessfulPlays = 0;
             updateRostersForPossession();
         } else if (result.specialTeams === 'field-goal-success') {
             // Field goal made: add 3 points, change possession
@@ -5253,7 +5254,6 @@ function updateGameState(result) {
             gameState["opp-yardline"] = 65; // Opponent gets ball at 65 after score
             gameState.down = 1;
             gameState.distance = 10;
-            gameState.consecutiveUnsuccessfulPlays = 0;
             updateRostersForPossession();
         } else if (result.specialTeams === 'field-goal-miss') {
             // Field goal missed: change possession
@@ -5261,7 +5261,6 @@ function updateGameState(result) {
             gameState["opp-yardline"] = result.newYardline;
             gameState.down = 1;
             gameState.distance = 10;
-            gameState.consecutiveUnsuccessfulPlays = 0;
             updateRostersForPossession();
         }
         updateGameStateDisplay();
@@ -5277,7 +5276,6 @@ function updateGameState(result) {
         gameState["opp-yardline"] = 65; // Opponent gets ball at 65 after score
         gameState.down = 1;
         gameState.distance = 10;
-        gameState.consecutiveUnsuccessfulPlays = 0;
         updateRostersForPossession();
         updateGameStateDisplay();
         saveGameState();
@@ -5296,7 +5294,6 @@ function updateGameState(result) {
         gameState["opp-yardline"] = 65; // Opponent gets ball at 65 after score
         gameState.down = 1;
         gameState.distance = 10;
-        gameState.consecutiveUnsuccessfulPlays = 0;
         updateRostersForPossession();
         updateGameStateDisplay();
         saveGameState();
@@ -5308,7 +5305,6 @@ function updateGameState(result) {
         // First down achieved
         gameState.down = 1;
         gameState.distance = 10;
-        gameState.consecutiveUnsuccessfulPlays = 0;
     } else {
         // Did not get first down - update down and distance
         gameState.down += 1;
@@ -5319,7 +5315,6 @@ function updateGameState(result) {
             changePossession();
             gameState.down = 1;
             gameState.distance = 10;
-            gameState.consecutiveUnsuccessfulPlays = 0;
             // Opponent gets ball at current yardline (100 - current yardline)
             gameState["opp-yardline"] = 100 - gameState["opp-yardline"];
             updateRostersForPossession();
@@ -5331,17 +5326,9 @@ function updateGameState(result) {
         changePossession();
         gameState.down = 1;
         gameState.distance = 10;
-        gameState.consecutiveUnsuccessfulPlays = 0;
         // Opponent gets ball at current yardline
         gameState["opp-yardline"] = 100 - gameState["opp-yardline"];
         updateRostersForPossession();
-    }
-    
-    // Track consecutive unsuccessful plays
-    if (result.outcomeType === 'unsuccessful' || (result.yards < gameState.distance && result.outcomeType !== 'explosive' && result.outcomeType !== 'successful')) {
-        gameState.consecutiveUnsuccessfulPlays = (gameState.consecutiveUnsuccessfulPlays || 0) + 1;
-    } else {
-        gameState.consecutiveUnsuccessfulPlays = 0;
     }
     
     updateGameStateDisplay();

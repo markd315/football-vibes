@@ -210,8 +210,7 @@ function runTest(testName, evalData, playType, forceOutcomes, targetMin, targetM
 const defaultEvalData = {
     'success-rate': 45.0,
     'havoc-rate': 11.0,
-    'explosive-rate': 13.0,
-    'conversion-rate-1st-2nd-down-only': 31.0
+    'explosive-rate': 13.0
 };
 
 console.log('='.repeat(60));
