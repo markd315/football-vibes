@@ -4201,8 +4201,36 @@ async function executePlay() {
     // Update fatigue
     updateFatigue(playData);
     
+    // Extract rationale from LLM output (everything before the JSON)
+    const lines = llmOutput.split('\n');
+    let rationale = '';
+    let jsonStartIndex = -1;
+    
+    // Find where JSON starts (last line with {)
+    for (let i = lines.length - 1; i >= 0; i--) {
+        const line = lines[i].trim();
+        if (line.startsWith('{') && line.includes('success-rate')) {
+            jsonStartIndex = i;
+            break;
+        }
+    }
+    
+    // Extract everything before the JSON as rationale
+    if (jsonStartIndex > 0) {
+        rationale = lines.slice(0, jsonStartIndex).join('\n').trim();
+    } else {
+        // If no JSON found, use everything except the last line
+        rationale = lines.slice(0, -1).join('\n').trim();
+    }
+    
     // Display results
     document.getElementById('llmOutput').textContent = llmOutput;
+    
+    // Display rationale
+    const rationaleEl = document.getElementById('playRationale');
+    if (rationaleEl) {
+        rationaleEl.value = rationale || 'No rationale provided.';
+    }
     
     // Display outcome type
     const outcomeTypeNames = {
@@ -4281,63 +4309,8 @@ async function callLLM(playData) {
         // Fall through to mock output
     }
     
-    // Build detailed LLM prompt with actual player data - NO BIAS, JUST FACTS
-    let llmPrompt = `You are a SHARP and OPINIONATED football play analysis engine that KNOWS BALL. Analyze the SCHEME of this play - the spatial relationships, blocking assignments, coverage vs routes, and schematic design. 
-
-CRITICAL: You MUST return ONLY NUMERIC VALUES. NO TEXT. NO "moderate" or "high" or "low". ONLY NUMBERS between 0-100.
-
-The last line of your response MUST be a JSON object with ONLY NUMERIC VALUES:
-{"success-rate": 45.0, "havoc-rate": 12.0, "explosive-rate": 10.0}
-
-Game Situation: ${gameState.down}${getDownSuffix(gameState.down)} and ${gameState.distance} at the ${gameState["opp-yardline"]} yard line. Q${gameState.quarter} ${gameState.time}. Score: ${gameState.score.home} - ${gameState.score.away}
-
-OFFENSIVE PERSONNEL AND ALIGNMENTS:
-${playData.offense.map(p => {
-        // Find player position from playerPositions
-        let playerId = null;
-        for (const id of selectedPlayers) {
-            const player = getPlayerById(id);
-            if (player && player.name === p.name) {
-                playerId = id;
-                break;
-            }
-        }
-        const pos = playerId ? (playerPositions[playerId] || {}) : {};
-        const effectivePercentile = calculateEffectivePercentile(p);
-        const assignment = assignments.offense[p.name] || {};
-        const assignmentText = assignment.action || assignment.category || 'None';
-        const manTarget = (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) ? ` (Man coverage on: ${assignment.manCoverageTarget})` : '';
-        const locCoords = pos.location ? getLocationCoords(pos.location) : null;
-        const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
-        return `${p.name} - Position: ${p.position}, Alignment: ${pos.location || 'Not placed'}${coords}, Effective Rating: ${effectivePercentile.toFixed(0)}th percentile, Assignment: ${assignmentText}${manTarget}`;
-    }).join('\n')}
-
-DEFENSIVE PERSONNEL AND ALIGNMENTS:
-${playData.defense.map(p => {
-        // Find player position from playerPositions
-        let playerId = null;
-        for (const id of selectedDefense) {
-            const player = getPlayerById(id);
-            if (player && player.name === p.name) {
-                playerId = id;
-                break;
-            }
-        }
-        const pos = playerId ? (playerPositions[playerId] || {}) : {};
-        const effectivePercentile = calculateEffectivePercentile(p);
-        const assignment = assignments.defense[p.name] || {};
-        const assignmentText = assignment.action || assignment.category || 'None';
-        const manTarget = (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) ? ` (Man coverage on: ${assignment.manCoverageTarget})` : '';
-        const locCoords = pos.location ? getLocationCoords(pos.location) : null;
-        const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
-        // Check if defensive lineman is in an offensive skill position (actual offsides/misalignment)
-        const isDLInOffensivePosition = (p.position === 'DE' || p.position === 'DT') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Trips') || pos.location.includes('Max split'));
-        const warning = isDLInOffensivePosition ? ' ⚠️ DEFENSIVE LINEMAN IN OFFENSIVE SKILL POSITION!' : '';
-        return `${p.name} - Position: ${p.position}, Alignment: ${pos.location || 'Not placed'}${coords}${warning}, Effective Rating: ${effectivePercentile.toFixed(0)}th percentile, Assignment: ${assignmentText}${manTarget}`;
-    }).join('\n')}
-
-${playData.coachingPointOffense ? `OFFENSIVE COACHING POINT: ${playData.coachingPointOffense.player.name} (${playData.coachingPointOffense.player.position}) - "${playData.coachingPointOffense.point}"` : ''}
-${playData.coachingPointDefense ? `DEFENSIVE COACHING POINT: ${playData.coachingPointDefense.player.name} (${playData.coachingPointDefense.player.position}) - "${playData.coachingPointDefense.point}"` : ''}
+    // Build prompt with fixed instructions first (for caching), then data, then output format
+    const fixedInstructions = `You are a SHARP and OPINIONATED football play analysis engine that KNOWS BALL. Analyze the SCHEME of this play - the spatial relationships, blocking assignments, coverage vs routes, and schematic design.
 
 SCHEME ANALYSIS (70% WEIGHT):
 VISUALIZE THE PLAY SPATIALLY using the X/Y coordinates. X: negative = left side, positive = right side. Y: negative = offensive side (behind LOS), positive = defensive side (past LOS).
@@ -4385,54 +4358,96 @@ POSITIONAL MATCHUPS (20% WEIGHT): Individual matchups matter (CB has to tackle R
 
 RETURN ONLY NUMERIC VALUES. If the OFFENSIVE scheme is dominant (defense out of position, numerical advantages, proper blocking), return: success-rate 70-90%, explosive-rate 10-20%, havoc-rate 3-10%. If the DEFENSIVE scheme is dominant (unblocked defenders, coverage matches routes, obvious pressure), return: havoc-rate 30-70%, success-rate 3-15%, explosive-rate 2-5%.
 
-FIRST: Provide a detailed analysis explaining your reasoning - identify spatial mismatches, blocking schemes, coverage vs routes, numerical advantages, and any defensive players in offensive positions. This helps with debugging.
+FIRST: Provide a brief rationale (2-3 sentences) describing:
+- Point of attack: Where is the play designed to go? (left/right, gap, route concept)
+- Key matchups (1-3): Identify the most important individual matchups that will determine success
+- Conflict defender: Which defender is in conflict (must choose between run/pass responsibility)?
 
 THEN: Your JSON response (NUMBERS ONLY) as the last line:
 {"success-rate": [NUMBER], "havoc-rate": [NUMBER], "explosive-rate": [NUMBER]}`;
-    
-    const llmOutput = llmPrompt;
 
+    // Variable data (user message content)
+    let userMessageContent = `Game Situation: ${gameState.down}${getDownSuffix(gameState.down)} and ${gameState.distance} at the ${gameState["opp-yardline"]} yard line. Q${gameState.quarter} ${gameState.time}. Score: ${gameState.score.home} - ${gameState.score.away}
+
+OFFENSIVE PERSONNEL AND ALIGNMENTS:
+${playData.offense.map(p => {
+        // Find player position from playerPositions
+        let playerId = null;
+        for (const id of selectedPlayers) {
+            const player = getPlayerById(id);
+            if (player && player.name === p.name) {
+                playerId = id;
+                break;
+            }
+        }
+        const pos = playerId ? (playerPositions[playerId] || {}) : {};
+        const effectivePercentile = calculateEffectivePercentile(p);
+        const assignment = assignments.offense[p.name] || {};
+        const assignmentText = assignment.action || assignment.category || 'None';
+        const manTarget = (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) ? ` (Man coverage on: ${assignment.manCoverageTarget})` : '';
+        const locCoords = pos.location ? getLocationCoords(pos.location) : null;
+        const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
+        return `${p.name} - Position: ${p.position}, Alignment: ${pos.location || 'Not placed'}${coords}, Effective Rating: ${effectivePercentile.toFixed(0)}th percentile, Assignment: ${assignmentText}${manTarget}`;
+    }).join('\n')}
+
+DEFENSIVE PERSONNEL AND ALIGNMENTS:
+${playData.defense.map(p => {
+        // Find player position from playerPositions
+        let playerId = null;
+        for (const id of selectedDefense) {
+            const player = getPlayerById(id);
+            if (player && player.name === p.name) {
+                playerId = id;
+                break;
+            }
+        }
+        const pos = playerId ? (playerPositions[playerId] || {}) : {};
+        const effectivePercentile = calculateEffectivePercentile(p);
+        const assignment = assignments.defense[p.name] || {};
+        const assignmentText = assignment.action || assignment.category || 'None';
+        const manTarget = (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) ? ` (Man coverage on: ${assignment.manCoverageTarget})` : '';
+        const locCoords = pos.location ? getLocationCoords(pos.location) : null;
+        const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
+        // Check if defensive lineman is in an offensive skill position (actual offsides/misalignment)
+        const isDLInOffensivePosition = (p.position === 'DE' || p.position === 'DT') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Trips') || pos.location.includes('Max split'));
+        const warning = isDLInOffensivePosition ? ' ⚠️ DEFENSIVE LINEMAN IN OFFENSIVE SKILL POSITION!' : '';
+        return `${p.name} - Position: ${p.position}, Alignment: ${pos.location || 'Not placed'}${coords}${warning}, Effective Rating: ${effectivePercentile.toFixed(0)}th percentile, Assignment: ${assignmentText}${manTarget}`;
+    }).join('\n')}
+
+${playData.coachingPointOffense ? `OFFENSIVE COACHING POINT: ${playData.coachingPointOffense.player.name} (${playData.coachingPointOffense.player.position}) - "${playData.coachingPointOffense.point}"` : ''}
+${playData.coachingPointDefense ? `DEFENSIVE COACHING POINT: ${playData.coachingPointDefense.player.name} (${playData.coachingPointDefense.player.position}) - "${playData.coachingPointDefense.point}"` : ''}`;
+    
     // Log the intended LLM output
-    console.log('=== INTENDED LLM OUTPUT ===');
-    console.log(llmOutput);
-    console.log('=== END LLM OUTPUT ===');
+    console.log('=== SYSTEM PROMPT ===');
+    console.log(fixedInstructions);
+    console.log('=== USER MESSAGE ===');
+    console.log(userMessageContent);
+    console.log('=== END PROMPT ===');
     
     // If we have API keys, make actual API calls
-    if (openaiKey || claudeKey) {
+    if (openaiKey) {
         try {
-            // Try OpenAI first if key is available
-            if (openaiKey) {
-                console.log('Calling OpenAI API...');
-                const openaiResponse = await callOpenAI(llmOutput, openaiKey);
-                if (openaiResponse) {
-                    console.log('=== OPENAI RESPONSE ===');
-                    console.log(openaiResponse);
-                    console.log('=== END OPENAI RESPONSE ===');
-                    return openaiResponse;
-                }
-            }
-            
-            // Fall back to Claude if OpenAI failed or not available
-            if (claudeKey) {
-                console.log('Calling Claude API...');
-                const claudeResponse = await callClaude(llmOutput, claudeKey);
-                if (claudeResponse) {
-                    console.log('=== CLAUDE RESPONSE ===');
-                    console.log(claudeResponse);
-                    console.log('=== END CLAUDE RESPONSE ===');
-                    return claudeResponse;
-                }
+            console.log('Calling OpenAI API...');
+            const openaiResponse = await callOpenAI(fixedInstructions, userMessageContent, openaiKey);
+            if (openaiResponse) {
+                console.log('=== OPENAI RESPONSE ===');
+                console.log(openaiResponse);
+                console.log('=== END OPENAI RESPONSE ===');
+                return openaiResponse;
             }
         } catch (error) {
-            console.error('Error calling LLM API:', error);
+            console.error('Error calling OpenAI API:', error);
             console.log('Falling back to mock output');
         }
     }
     
-    return llmOutput;
+    // Fallback: return mock output with rationale and JSON
+    return `Point of attack: Right side B gap. Key matchups: Left guard vs defensive tackle, slot receiver vs nickel corner. Conflict defender: Weakside linebacker must choose between run fit and pass coverage.
+
+{"success-rate": 45.0, "havoc-rate": 12.0, "explosive-rate": 10.0}`;
 }
 
-async function callOpenAI(prompt, apiKey) {
+async function callOpenAI(systemPrompt, userPrompt, apiKey) {
     try {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
@@ -4441,18 +4456,18 @@ async function callOpenAI(prompt, apiKey) {
                 'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: 'gpt-5',
+                model: 'gpt-4',
                 messages: [
                     {
                         role: 'system',
-                        content: 'You are a SHARP and OPINIONATED football play analysis engine that KNOWS BALL. Analyze the SCHEME of the play - spatial relationships, blocking assignments, coverage vs routes. Return ONLY NUMERIC VALUES (0-100) in JSON. NO TEXT VALUES. Scheme analysis is 70% of your evaluation. If the scheme is broken (e.g., unblocked defenders, impossible alignments), return extreme numbers. The last line must be JSON: {"success-rate": [NUMBER], "havoc-rate": [NUMBER], "explosive-rate": [NUMBER]}'
+                        content: systemPrompt
                     },
                     {
                         role: 'user',
-                        content: prompt
+                        content: userPrompt
                     }
                 ],
-                temperature: 1,
+                temperature: 0.2,
                 max_tokens: 4000
             })
         });
@@ -5008,6 +5023,64 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+function toggleOffenseAssignments() {
+    const hide = document.getElementById('hideOffenseAssignments').checked;
+    const offenseGroups = ['offenseSkillAssignments', 'offenseLineAssignments'];
+    offenseGroups.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.display = hide ? 'none' : '';
+        }
+    });
+    // Also hide offensive playcall dropdown
+    const playcallSelect = document.getElementById('offensivePlaycall');
+    if (playcallSelect) {
+        playcallSelect.parentElement.style.display = hide ? 'none' : '';
+    }
+    // Hide offensive playcall diagram
+    const diagram = document.getElementById('playcallDiagram');
+    if (diagram) {
+        diagram.parentElement.style.display = hide ? 'none' : '';
+    }
+}
+
+function toggleDefenseAssignments() {
+    const hide = document.getElementById('hideDefenseAssignments').checked;
+    const defenseGroups = ['defenseLineAssignments', 'defenseLBAssignments', 'defenseSecondaryAssignments'];
+    defenseGroups.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.style.display = hide ? 'none' : '';
+        }
+    });
+    // Also hide defensive playcall dropdown
+    const playcallSelect = document.getElementById('defensivePlaycall');
+    if (playcallSelect) {
+        playcallSelect.parentElement.style.display = hide ? 'none' : '';
+    }
+    // Hide defensive playcall diagram
+    const diagram = document.getElementById('defensePlaycallDiagram');
+    if (diagram) {
+        diagram.parentElement.style.display = hide ? 'none' : '';
+    }
+}
+
+function toggleOffenseCoaching() {
+    const hide = document.getElementById('hideOffenseCoaching').checked;
+    const coachingDiv = document.getElementById('coachingPlayerOffense').parentElement;
+    if (coachingDiv) {
+        coachingDiv.style.display = hide ? 'none' : '';
+    }
+}
+
+function toggleDefenseCoaching() {
+    const hide = document.getElementById('hideDefenseCoaching').checked;
+    const coachingDiv = document.getElementById('coachingPlayerDefense').parentElement;
+    if (coachingDiv) {
+        coachingDiv.style.display = hide ? 'none' : '';
+    }
+}
 
 // Initialize on load
 init();

@@ -467,7 +467,18 @@
             <h2>Step 4: Player Assignments</h2>
             <p>Select a playcall to auto-assign all players, or assign individual responsibilities.</p>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div style="position: relative;">
+                <label style="position: absolute; left: 0; top: 0; z-index: 10; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 4px; cursor: pointer; user-select: none;">
+                    <input type="checkbox" id="hideOffenseAssignments" onchange="toggleOffenseAssignments()" style="margin-right: 5px;">
+                    Hide Offense Assignments
+                </label>
+                <label style="position: absolute; right: 0; top: 0; z-index: 10; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 4px; cursor: pointer; user-select: none;">
+                    <input type="checkbox" id="hideDefenseAssignments" onchange="toggleDefenseAssignments()" style="margin-right: 5px;">
+                    Hide Defense Assignments
+                </label>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; margin-top: 50px;">
                 <div style="background: #f5f5f5; padding: 15px; border-radius: 8px;">
                     <h3 style="margin-top: 0;">Offensive Playcall</h3>
                     <select id="offensivePlaycall" style="width: 100%; padding: 10px; font-size: 1em; border-radius: 5px;">
@@ -524,7 +535,18 @@
             <h2>Step 5: Coaching Points</h2>
             <p>Each side can give one coaching point (max 50 characters each).</p>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+            <div style="position: relative;">
+                <label style="position: absolute; left: 0; top: 0; z-index: 10; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 4px; cursor: pointer; user-select: none;">
+                    <input type="checkbox" id="hideOffenseCoaching" onchange="toggleOffenseCoaching()" style="margin-right: 5px;">
+                    Hide Offense Coaching
+                </label>
+                <label style="position: absolute; right: 0; top: 0; z-index: 10; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 4px; cursor: pointer; user-select: none;">
+                    <input type="checkbox" id="hideDefenseCoaching" onchange="toggleDefenseCoaching()" style="margin-right: 5px;">
+                    Hide Defense Coaching
+                </label>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 50px;">
                 <div class="coaching-points">
                     <h3>Offensive Coaching Point</h3>
                     <select id="coachingPlayerOffense">
@@ -557,6 +579,10 @@
         <div class="step-content hidden" id="results">
             <h2>Play Results</h2>
             <div class="llm-output" id="llmOutput"></div>
+            <div style="margin-top: 20px; padding: 20px; background: #f5f5f5; border-radius: 8px; color: #333;">
+                <h3>Play Rationale</h3>
+                <textarea id="playRationale" readonly style="width: 100%; min-height: 100px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; font-size: 0.9em; line-height: 1.5; background: #fff;"></textarea>
+            </div>
             <div id="playResult" style="margin-top: 20px; padding: 20px; background: #f5f5f5; border-radius: 8px; color: #333;">
                 <h3>Play Outcome</h3>
                 <p id="outcomeType" style="font-weight: bold; font-size: 1.1em; margin-bottom: 10px;"></p>

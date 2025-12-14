@@ -89,22 +89,22 @@
             },
             {
                 "Name": "Tight left",
-                "X": -5,
+                "X": -5.5,
                 "Y": -3
             },
             {
                 "Name": "Tight right",
-                "X": 5,
+                "X": 5.5,
                 "Y": -3
             },
             {
                 "Name": "Wing left",
-                "X": -6,
+                "X": -6.5,
                 "Y": -3
             },
             {
                 "Name": "Wing right",
-                "X": 6,
+                "X": 6.5,
                 "Y": -3
             },
             {
@@ -394,22 +394,22 @@
             },
             {
                 "Name": "Tight left (press)",
-                "X": -7,
+                "X": -7.5,
                 "Y": 2.0
             },
             {
                 "Name": "Tight right (press)",
-                "X": 7,
+                "X": 7.5,
                 "Y": 2.0
             },
             {
                 "Name": "Wing left (press)",
-                "X": -8,
+                "X": -8.5,
                 "Y": 2.0
             },
             {
                 "Name": "Wing right (press)",
-                "X": 8,
+                "X": 8.5,
                 "Y": 2.0
             }
         ]
@@ -459,22 +459,22 @@
             },
             {
                 "Name": "Tight left",
-                "X": -7,
+                "X": -7.5,
                 "Y": 5.0
             },
             {
                 "Name": "Tight right",
-                "X": 7,
+                "X": 7.5,
                 "Y": 5.0
             },
             {
                 "Name": "Wing left",
-                "X": -8,
+                "X": -8.5,
                 "Y": 5.0
             },
             {
                 "Name": "Wing right",
-                "X": 8,
+                "X": 8.5,
                 "Y": 5.0
             }
         ]
@@ -524,22 +524,22 @@
             },
             {
                 "Name": "Tight left (cushion)",
-                "X": -7,
+                "X": -7.5,
                 "Y": 10.0
             },
             {
                 "Name": "Tight right (cushion)",
-                "X": 7,
+                "X": 7.5,
                 "Y": 10.0
             },
             {
                 "Name": "Wing left (cushion)",
-                "X": -8,
+                "X": -8.5,
                 "Y": 10.0
             },
             {
                 "Name": "Wing right (cushion)",
-                "X": 8,
+                "X": 8.5,
                 "Y": 10.0
             }
         ]
