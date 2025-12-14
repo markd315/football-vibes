@@ -20,27 +20,22 @@
             {
                 "Name": "Behind QB (Shotgun)",
                 "X": 0,
-                "Y": -13
+                "Y": -15
             },
             {
                 "Name": "T-left (Shotgun)",
                 "X": -3,
-                "Y": -13
+                "Y": -15
             },
             {
                 "Name": "T-right (Shotgun)",
                 "X": 3,
-                "Y": -13
+                "Y": -15
             },
             {
                 "Name": "QB (Under center)",
                 "X": 0,
-                "Y": -3
-            },
-            {
-                "Name": "Behind QB (Under center)",
-                "X": 0,
-                "Y": -6
+                "Y": -5
             },
             {
                 "Name": "QB (Pistol)",
@@ -74,103 +69,93 @@
             },
             {
                 "Name": "Left Guard",
-                "X": -3,
+                "X": -2,
                 "Y": -3
             },
             {
                 "Name": "Right Guard",
-                "X": 3,
+                "X": 2,
                 "Y": -3
             },
             {
                 "Name": "Left Tackle",
-                "X": -6,
+                "X": -4,
                 "Y": -3
             },
             {
                 "Name": "Right Tackle",
+                "X": 4,
+                "Y": -3
+            },
+            {
+                "Name": "Tight left",
+                "X": -5,
+                "Y": -3
+            },
+            {
+                "Name": "Tight right",
+                "X": 5,
+                "Y": -3
+            },
+            {
+                "Name": "Wing left",
+                "X": -6,
+                "Y": -3
+            },
+            {
+                "Name": "Wing right",
                 "X": 6,
                 "Y": -3
             },
             {
-                "Name": "Tight end inside left (LOS)",
-                "X": -7,
-                "Y": -3
-            },
-            {
-                "Name": "Tight end inside right (LOS)",
-                "X": 7,
-                "Y": -3
-            },
-            {
-                "Name": "Tight end outside left (LOS)",
+                "Name": "Seam left",
                 "X": -8,
                 "Y": -3
             },
             {
-                "Name": "Tight end outside right (LOS)",
+                "Name": "Seam right",
                 "X": 8,
                 "Y": -3
             },
             {
-                "Name": "Slot left (LOS)",
-                "X": -11,
+                "Name": "Slot left",
+                "X": -10,
                 "Y": -3
             },
             {
-                "Name": "Slot right (LOS)",
-                "X": 11,
+                "Name": "Slot right",
+                "X": 10,
                 "Y": -3
             },
             {
-                "Name": "Overlap-left (LOS)",
-                "X": -12,
+                "Name": "Wide left",
+                "X": -14,
                 "Y": -3
             },
             {
-                "Name": "Overlap-right (LOS)",
-                "X": 12,
+                "Name": "Wide right",
+                "X": 14,
                 "Y": -3
             },
             {
-                "Name": "Tight split left (LOS)",
-                "X": -15,
+                "Name": "Max split left",
+                "X": -18,
                 "Y": -3
             },
             {
-                "Name": "Tight split right (LOS)",
-                "X": 15,
+                "Name": "Max split right",
+                "X": 18,
                 "Y": -3
             },
             {
                 "Name": "Trips left",
-                "X": -14,
+                "X": -12,
                 "Y": -5
             },
             {
                 "Name": "Trips right",
-                "X": 14,
+                "X": 12,
                 "Y": -5
-            },
-            {
-                "Name": "Wide split left",
-                "X": -16,
-                "Y": -3
-            },
-            {
-                "Name": "Wide split right",
-                "X": 16,
-                "Y": -3
-            },
-            {
-                "Name": "Sideline left (LOS)",
-                "X": -19,
-                "Y": -3
-            },
-            {
-                "Name": "Sideline right (LOS)",
-                "X": 19,
-                "Y": -3
             }
         ]
     },
@@ -194,92 +179,92 @@
             },
             {
                 "Name": "Left 2i technique",
-                "X": -3,
+                "X": -1.5,
                 "Y": 2.5
             },
             {
                 "Name": "Right 2i technique",
-                "X": 3,
+                "X": 1.5,
                 "Y": 2.5
             },
             {
                 "Name": "Left 2 technique",
-                "X": -3.5,
+                "X": -2,
                 "Y": 2.5
             },
             {
                 "Name": "Right 2 technique",
-                "X": 3.5,
+                "X": 2,
                 "Y": 2.5
             },
             {
                 "Name": "Left 3 technique",
-                "X": -5,
+                "X": -3,
                 "Y": 2.5
             },
             {
                 "Name": "Right 3 technique",
-                "X": 5,
+                "X": 3,
                 "Y": 2.5
             },
             {
                 "Name": "Left 4i technique",
-                "X": -6,
+                "X": -3.5,
                 "Y": 2.5
             },
             {
                 "Name": "Right 4i technique",
-                "X": 6,
+                "X": 3.5,
                 "Y": 2.5
             },
             {
                 "Name": "Left 4 technique",
-                "X": -8,
+                "X": -4,
                 "Y": 2.5
             },
             {
                 "Name": "Right 4 technique",
-                "X": 8,
+                "X": 4,
                 "Y": 2.5
             },
             {
                 "Name": "Left 5 technique",
-                "X": -9,
+                "X": -4.5,
                 "Y": 2.5
             },
             {
                 "Name": "Right 5 technique",
-                "X": 9,
+                "X": 4.5,
                 "Y": 2.5
             },
             {
                 "Name": "Left 6i technique",
-                "X": -10,
+                "X": -4.75,
                 "Y": 2.5
             },
             {
                 "Name": "Right 6i technique",
-                "X": 10,
+                "X": 4.75,
                 "Y": 2.5
             },
             {
                 "Name": "Left 6 technique",
-                "X": -12,
+                "X": -5,
                 "Y": 2.5
             },
             {
                 "Name": "Right 6 technique",
-                "X": 12,
+                "X": 5,
                 "Y": 2.5
             },
             {
                 "Name": "Left 7 technique",
-                "X": -13,
+                "X": -6,
                 "Y": 2.5
             },
             {
                 "Name": "Right 7 technique",
-                "X": 13,
+                "X": 6,
                 "Y": 2.5
             }
         ]
@@ -294,12 +279,12 @@
             },
             {
                 "Name": "Left A gap (shallow)",
-                "X": -1.5,
+                "X": -1,
                 "Y": 6
             },
             {
                 "Name": "Right A gap (shallow)",
-                "X": 1.5,
+                "X": 1,
                 "Y": 6
             },
             {
@@ -334,12 +319,12 @@
             },
             {
                 "Name": "Left A gap (deep)",
-                "X": -1.5,
+                "X": -1,
                 "Y": 8.5
             },
             {
                 "Name": "Right A gap (deep)",
-                "X": 1.5,
+                "X": 1,
                 "Y": 8.5
             },
             {
@@ -368,44 +353,64 @@
         "Section": "Press coverage",
         "Locations": [
             {
-                "Name": "Sideline left (press)",
-                "X": -19,
-                "Y": 2.5
+                "Name": "Max split left (press)",
+                "X": -18,
+                "Y": 2.0
             },
             {
-                "Name": "Sideline right (press)",
-                "X": 19,
-                "Y": 2.5
+                "Name": "Max split right (press)",
+                "X": 18,
+                "Y": 2.0
             },
             {
-                "Name": "Tight split left (press)",
-                "X": -15,
-                "Y": 2.5
+                "Name": "Wide left (press)",
+                "X": -14,
+                "Y": 2.0
             },
             {
-                "Name": "Tight split right (press)",
-                "X": 15,
-                "Y": 2.5
+                "Name": "Wide right (press)",
+                "X": 14,
+                "Y": 2.0
             },
             {
-                "Name": "Overlap-left (press)",
-                "X": -12,
-                "Y": 2.5
+                "Name": "Seam left (press)",
+                "X": -8,
+                "Y": 2.0
             },
             {
-                "Name": "Overlap-right (press)",
-                "X": 12,
-                "Y": 2.5
+                "Name": "Seam right (press)",
+                "X": 8,
+                "Y": 2.0
             },
             {
                 "Name": "Slot left (press)",
-                "X": -11,
-                "Y": 2.5
+                "X": -10,
+                "Y": 2.0
             },
             {
                 "Name": "Slot right (press)",
-                "X": 11,
-                "Y": 2.5
+                "X": 10,
+                "Y": 2.0
+            },
+            {
+                "Name": "Tight left (press)",
+                "X": -7,
+                "Y": 2.0
+            },
+            {
+                "Name": "Tight right (press)",
+                "X": 7,
+                "Y": 2.0
+            },
+            {
+                "Name": "Wing left (press)",
+                "X": -8,
+                "Y": 2.0
+            },
+            {
+                "Name": "Wing right (press)",
+                "X": 8,
+                "Y": 2.0
             }
         ]
     },
@@ -413,64 +418,64 @@
         "Section": "Coverage second level",
         "Locations": [
             {
-                "Name": "Sideline left",
-                "X": -19,
-                "Y": 5
+                "Name": "Max split left",
+                "X": -18,
+                "Y": 5.0
             },
             {
-                "Name": "Sideline right",
-                "X": 19,
-                "Y": 5
+                "Name": "Max split right",
+                "X": 18,
+                "Y": 5.0
             },
             {
-                "Name": "Tight split left",
-                "X": -15,
-                "Y": 5
+                "Name": "Wide left",
+                "X": -14,
+                "Y": 5.0
             },
             {
-                "Name": "Tight split right",
-                "X": 15,
-                "Y": 5
+                "Name": "Wide right",
+                "X": 14,
+                "Y": 5.0
             },
             {
-                "Name": "Overlap-left",
-                "X": -12,
-                "Y": 5
+                "Name": "Seam left",
+                "X": -8,
+                "Y": 5.0
             },
             {
-                "Name": "Overlap-right",
-                "X": 12,
-                "Y": 5
+                "Name": "Seam right",
+                "X": 8,
+                "Y": 5.0
             },
             {
                 "Name": "Slot left",
-                "X": -11,
-                "Y": 5
+                "X": -10,
+                "Y": 5.0
             },
             {
                 "Name": "Slot right",
-                "X": 11,
-                "Y": 5
+                "X": 10,
+                "Y": 5.0
             },
             {
-                "Name": "Tight end inside left",
+                "Name": "Tight left",
                 "X": -7,
-                "Y": 5
+                "Y": 5.0
             },
             {
-                "Name": "Tight end inside right",
+                "Name": "Tight right",
                 "X": 7,
-                "Y": 5
+                "Y": 5.0
             },
             {
-                "Name": "Tight end outside left",
+                "Name": "Wing left",
                 "X": -8,
-                "Y": 5
+                "Y": 5.0
             },
             {
-                "Name": "Tight end outside right",
+                "Name": "Wing right",
                 "X": 8,
-                "Y": 5
+                "Y": 5.0
             }
         ]
     },
@@ -478,64 +483,64 @@
         "Section": "Coverage cushion",
         "Locations": [
             {
-                "Name": "Sideline left (cushion)",
-                "X": -19,
-                "Y": 3
+                "Name": "Max split left (cushion)",
+                "X": -18,
+                "Y": 10.0
             },
             {
-                "Name": "Sideline right (cushion)",
-                "X": 19,
-                "Y": 3
+                "Name": "Max split right (cushion)",
+                "X": 18,
+                "Y": 10.0
             },
             {
-                "Name": "Tight split left (cushion)",
-                "X": -15,
-                "Y": 3
+                "Name": "Wide left (cushion)",
+                "X": -14,
+                "Y": 10.0
             },
             {
-                "Name": "Tight split right (cushion)",
-                "X": 15,
-                "Y": 3
+                "Name": "Wide right (cushion)",
+                "X": 14,
+                "Y": 10.0
             },
             {
-                "Name": "Overlap-left (cushion)",
-                "X": -12,
-                "Y": 3
+                "Name": "Seam left (cushion)",
+                "X": -8,
+                "Y": 10.0
             },
             {
-                "Name": "Overlap-right (cushion)",
-                "X": 12,
-                "Y": 3
+                "Name": "Seam right (cushion)",
+                "X": 8,
+                "Y": 10.0
             },
             {
                 "Name": "Slot left (cushion)",
-                "X": -11,
-                "Y": 3
+                "X": -10,
+                "Y": 10.0
             },
             {
                 "Name": "Slot right (cushion)",
-                "X": 11,
-                "Y": 3
+                "X": 10,
+                "Y": 10.0
             },
             {
-                "Name": "Tight end inside left (cushion)",
+                "Name": "Tight left (cushion)",
                 "X": -7,
-                "Y": 3
+                "Y": 10.0
             },
             {
-                "Name": "Tight end inside right (cushion)",
+                "Name": "Tight right (cushion)",
                 "X": 7,
-                "Y": 3
+                "Y": 10.0
             },
             {
-                "Name": "Tight end outside left (cushion)",
+                "Name": "Wing left (cushion)",
                 "X": -8,
-                "Y": 3
+                "Y": 10.0
             },
             {
-                "Name": "Tight end outside right (cushion)",
+                "Name": "Wing right (cushion)",
                 "X": 8,
-                "Y": 3
+                "Y": 10.0
             }
         ]
     },
@@ -543,18 +548,8 @@
         "Section": "Max depth",
         "Locations": [
             {
-                "Name": "Left cornerback",
-                "X": -19,
-                "Y": 12
-            },
-            {
                 "Name": "Seam left",
                 "X": -12,
-                "Y": 12
-            },
-            {
-                "Name": "Right cornerback",
-                "X": 19,
                 "Y": 12
             },
             {
@@ -569,12 +564,12 @@
             },
             {
                 "Name": "Deep far left",
-                "X": -19,
+                "X": -18,
                 "Y": 15
             },
             {
                 "Name": "Deep far right",
-                "X": 19,
+                "X": 18,
                 "Y": 15
             },
             {

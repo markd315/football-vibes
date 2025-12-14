@@ -1,0 +1,21 @@
+
+
+
+The offensive formation is a shotgun with four wide receivers and a running back set to block left. The defense is lined up in a 5-2 alignment with two deep safeties, indicating a Cover 2 zone scheme.
+
+Starting with the offensive line, the assignments are split between inside and outside priorities. This means the offensive line is likely employing a zone blocking scheme, which should be effective against the defensive front. However, the defensive line has a higher average effective rating, indicating they may be able to disrupt the play, especially with Josh Allen on the left side having a clear advantage over the offensive right tackle, Rob Havenstein.
+
+In terms of the passing game, the receiver matchups favor the offense slightly. Cooper Kupp and Puka Nacua, who are running fade and corner routes respectively, have high effective ratings and could potentially exploit the zone coverage if they can find gaps between the safeties and cornerbacks. However, the defensive backs have a solid effective rating and their zone coverage could limit the big play potential.
+
+Kyren Williams, the running back, is set to block left, aligning with the offensive line's blocking scheme. However, this could open up a pressure lane for the right side defenders if they can beat their blocks. 
+
+The linebackers are assigned to hook zones, which can limit the short passing options. However, their effective rating is slightly lower than the offensive personnel they will likely be matched up against, potentially creating opportunities for the offense. 
+
+Overall, the defensive scheme seems well prepared for the offensive play call. The success of the play will largely depend on the offensive line's ability to hold their blocks and the receivers' ability to exploit the zone coverage.
+
+{
+  "success-rate": "45%",
+  "conversion-rate-1st-2nd-down-only": "50%",
+  "havoc-rate": "30%",
+  "explosive-rate": "20%"
+}

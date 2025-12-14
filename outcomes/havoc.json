@@ -1,0 +1,6 @@
+{
+    "outcome": "Havoc",
+    "description": "Base havoc outcome - specific outcome determined by play type",
+    "methodology": "Roll based on play type to determine specific havoc outcome"
+}
+

@@ -1,7 +1,7 @@
 
 {
     "outcome": "Successful Run",
-    "description": "The running back found daylight and gained {yards} yards.",
+    "description": "The ball carrier gained {yards} yards.",
     "methodology": "Roll 1-100 and assign the yards gained based on the roll.",
     "average-yards-gained": 3.05,
     "standard-deviation": 1.6,

@@ -1,7 +1,7 @@
 
 {
     "outcome": "Explosive Run",
-    "description": "The running back exploded through the hole and gained 10 yards.",
+    "description": "The ball carrier broke free for a gain of {yards} yards.",
     "methodology": "Roll 1-100 and assign the yards gained based on the roll.",
     "average-yards-gained": 12,
     "standard-deviation": 2.5,
