@@ -124,18 +124,24 @@ Each outcome file contains statistical properties (average-yards-gained, standar
 
 ## LLM Integration
 
-The application uses OpenAI GPT-4 for play analysis. To configure:
+The application uses OpenAI GPT-5 for play analysis. 
 
+**⚠️ IMPORTANT SECURITY NOTE**: The current implementation uses `config.js` to store API keys, which is served directly to browser users. This is **NOT SECURE** for production. For production deployments, you must implement a separate backend server endpoint to handle API key management and LLM API calls. The frontend should make requests to your backend, which then securely calls the LLM API.
+
+For local development:
 1. Create a `.env` file in the project root with:
    ```
    OPENAI_API_KEY=your_api_key_here
    ```
-2. The application will load the API key from `config.js` (which reads from `.env`)
-3. The LLM analyzes:
-   - **Spatial relationships** (X/Y coordinates, blocking schemes, coverage vs routes)
-   - **Positional matchups** (player ratings, stamina-adjusted effectiveness)
-   - **Personnel quality** (overall team strength)
-4. Returns numeric rates (0-100) for success, havoc, explosive, plus offense-advantage (-10 to 10) and risk-leverage (0-10)
+2. Manually copy the API key to `config.js` (this file is gitignored)
+3. The application will load the API key from `config.js`
+
+The LLM analyzes:
+- **Spatial relationships** (X/Y coordinates, blocking schemes, coverage vs routes)
+- **Positional matchups** (player ratings, stamina-adjusted effectiveness)
+- **Personnel quality** (overall team strength)
+
+Returns numeric rates (0-100) for success, havoc, explosive, plus offense-advantage (-10 to 10) and risk-leverage (0-10)
 
 ## Fatigue System
 
@@ -168,8 +174,11 @@ Ensure all JSON files are in the correct directories and you're accessing from `
 
 ### API Key Not Working
 1. Check that `.env` file exists with `OPENAI_API_KEY=...`
-2. Ensure `config.js` is loaded before `app.js` in `index.html`
-3. Check browser console (F12) for API errors
+2. Manually copy the API key from `.env` to `config.js`
+3. Ensure `config.js` is loaded before `app.js` in `index.html`
+4. Check browser console (F12) for API errors
+
+**Note**: In production, use a backend server endpoint for API keys instead of `config.js` to prevent exposing secrets to browser users.
 
 ### Players Not Showing
 - Check browser console for errors
@@ -181,8 +190,10 @@ Ensure all JSON files are in the correct directories and you're accessing from `
 - **Frontend-only**: Vanilla JavaScript (no frameworks)
 - **Data Loading**: All JSON loaded via `fetch()` API
 - **State Management**: Game state and rosters updated in memory (not persisted to files)
-- **API Keys**: Stored in `config.js` (gitignored) and loaded from `.env`
-- **Production**: Would need backend for persistent game state and secure API key handling
+- **API Keys**: Currently stored in `config.js` (gitignored) for local development only
+- **Production Requirements**: 
+  - **Secrets Management**: `config.js` is served directly to browsers, exposing API keys. For production, implement a separate backend server endpoint that handles API key management and makes LLM API calls on behalf of the frontend.
+  - **State Persistence**: Would need backend for persistent game state storage
 
 ## Current Rosters
 
