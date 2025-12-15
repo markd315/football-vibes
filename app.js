@@ -4601,27 +4601,39 @@ async function callLLM(playData) {
     // Build prompt with fixed instructions first (for caching), then data, then output format
     const fixedInstructions = `Analyze SCHEME: spatial (X/Y), blocking vs assignments, coverage vs routes.
 
-SPATIAL: X neg=left/pos=right, Y neg=off/pos=def. Count blockers vs defenders at POA. Check QB bootleg has blockers.
+SPATIAL: X left-/right+, Y off-/def+. Count blockers vs defenders at POA.
 
 KEY CHECKS:
-- Unblocked defenders in path?
-- Routes into coverage voids? Open windows?
-- Numerical advantages at POA?
-- Blitz w no backfield protection = less success more leverage
-- Blocking mismatches (inferior vs elite) = less success more leverage
-- Bear front hurts zone runs, helps gap runs
-- Deep zones on play side = lower leverage
-- Man coverage: = higher leverage
+
+Numerical advantages at POA via X values; one player can swing -3 to +2 alone.
+
+Late pursuit does not reduce advantage.
+
+Player ratings don't cap scheme advantage (execution failures chances handled outside LLM) and theoretical assignments can't cure wrong physical position.
+
+Evaluate: 40% alignment, 30% assignment, 20% positional mismatches, 10% player ratings.
+
+Late or missed assignments invalidate coverage.
+
+Identify routes into coverage voids or open windows.
+
+Blitz w/o backfield protection = less success, more leverage.
+
+Blocking mismatches: inferior vs elite = less success, more leverage.
+
+Bear front: hurts zone runs, helps gap runs.
+
+Deep zones on play side = lower leverage; man coverage = higher leverage.
 
 EXAMPLES:
-- Offense +8 to +10: convoy of blockers, defense out of position
-- Defense -8 to -10: unblocked rusher, routes into coverage
-- Neutral/Good defensive call -4 to 0: proper scheme, even matchups
-- Wrong coverage/commit +2 to +5: man-beater vs zone or run-commit vs pass
 
-OUTPUT: Brief rationale (POA, 1-3 matchups). JSON (last, parsed, no comments or conclusion): {"play-type":"pass"|"run"|"RPO","offense-advantage":[-10 to 10],"risk-leverage":[0 to 10]}
++8 to +10: defense entirely out of position (e.g., open TD screen).
 
-DECISIVENESS: Do not hedge. If structure is decisive, commit to extreme values ruthlessly. This is a professional simulator used by world-class coordinators. Evaluate like a coordinator grading a call with film-room brutality, not a scout grading players. Success rate is not guaranteed even with +10 - bungles are handled programmatically. Grade the SCHEME, not the 1 in 15 drop or blitzer trip.`;
+-8 to -10: unblocked rusher, routes into coverage, no quick throw.
+
+-4 to 0: neutral/good scheme, even matchups.
+
++2 to +5: wrong coverage/commit exploited.`;
 
     // Variable data (user message content)
     // Combine all players and sort by X coordinate (left to right)
@@ -4706,13 +4718,21 @@ DECISIVENESS: Do not hedge. If structure is decisive, commit to extreme values r
 
 This is a professional simulator used in training by world-class coordinators. Evaluate like a coordinator grading a call with film-room brutality, not a scout grading players. Success rate is not guaranteed even with +10 - bungles are handled programmatically. Grade the SCHEME, as execution errors are handled programmatically. Do not hedge, commit to extreme values ruthlessly when warranted. 
 
-Pos,Name,Align,X,Y,Rating,Assignment${allPlayers.map(p => {
+Pos,Initials,Align,X (yds),Y (yds),Rating,Assignment${allPlayers.map(p => {
         const coords = p.coords.match(/X:([-\d.]+).*Y:([-\d.]+)/);
-        const x = coords ? coords[1] : '0';
-        const y = coords ? coords[2] : '0';
+        const x = coords ? (parseFloat(coords[1]) * 1.37).toFixed(2) : '0.00';
+        const y = coords ? (parseFloat(coords[2]) * 1.37).toFixed(2) : '0.00';
         const assignment = `${p.assignmentText}${p.manTarget}`.replace(/[,\n]/g, ' ').trim();
-        return `\n${p.position},${p.name},${p.location},${x},${y},${p.effectivePercentile.toFixed(0)},${assignment}${p.warning}`;
-    }).join('')}${playData.coachingPointOffense ? `\nOff: ${playData.coachingPointOffense.player.name} - "${playData.coachingPointOffense.point}"` : ''}${playData.coachingPointDefense ? `\nDef: ${playData.coachingPointDefense.player.name} - "${playData.coachingPointDefense.point}"` : ''}`;
+        // Convert name to initials (e.g., "Cooper Kupp" -> "CK")
+        const initials = p.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        return `\n${p.position},${initials},${p.location},${x},${y},${p.effectivePercentile.toFixed(0)},${assignment}${p.warning}`;
+    }).join('')}${playData.coachingPointOffense ? `\nOff: ${playData.coachingPointOffense.player.name} - "${playData.coachingPointOffense.point}"` : ''}${playData.coachingPointDefense ? `\nDef: ${playData.coachingPointDefense.player.name} - "${playData.coachingPointDefense.point}"` : ''}
+
+OUTPUT: Brief rationale (POA, 1-3 matchups). JSON only:
+
+{"play-type":"pass"|"run"|"RPO","offense-advantage":[-10 to 10],"risk-leverage":[0 to 10]}
+
+Grade purely on scheme potential; commit fully to numeric advantage, ignoring execution variance. Near-automatic scoring or unblocked advantage = max/min values.`;
     
     // Log the intended LLM output
     console.log('=== SYSTEM PROMPT ===');
