@@ -4492,7 +4492,7 @@ async function executePlay() {
     // Find where JSON starts (last line with {)
     for (let i = lines.length - 1; i >= 0; i--) {
         const line = lines[i].trim();
-        if (line.startsWith('{') && line.includes('success-rate')) {
+        if (line.startsWith('{') && (line.includes('play-type') || line.includes('offense-advantage'))) {
             jsonStartIndex = i;
             break;
         }
@@ -4599,88 +4599,29 @@ async function callLLM(playData) {
     }
     
     // Build prompt with fixed instructions first (for caching), then data, then output format
-    const fixedInstructions = `You are a SHARP and OPINIONATED football play analysis engine that KNOWS BALL. Analyze the SCHEME of this play - the spatial relationships, blocking assignments, SPECIFIC coverage vs SPECIFIC combinations, and schematic design.
+    const fixedInstructions = `Analyze SCHEME: spatial (X/Y), blocking vs assignments, coverage vs routes.
 
-SCHEME ANALYSIS (70% WEIGHT):
-VISUALIZE THE PLAY SPATIALLY using the X/Y coordinates. X: negative = left side, positive = right side. Y: negative = offensive side (behind LOS), positive = defensive side (past LOS).
+SPATIAL: X neg=left/pos=right, Y neg=off/pos=def. Count blockers vs defenders at POA. Check QB bootleg has blockers.
 
-CRITICAL SPATIAL CHECKS:
-- If defensive LINEMEN (DE, DT) have alignments like "Wide left", "Slot", "Seam" - these are skill positions, not DL positions = offsides/misalignment.
-- If ALL defenders (including DL, LB, secondary) are bunched on one side (check X coordinates) and the offense attacks the other side = MASSIVE OFFENSIVE ADVANTAGE.
-- If offensive players are aligned properly but defenders are on the wrong side of the field relative to where the play is going = defense out of position.
-- Count blockers vs defenders at the point of attack using coordinates (compare X values).
-- Check if QB bootleg direction has blockers (look at X coordinates of OL/TE vs bootleg direction).
-- Secondary players (CB, S) can align wide/slot/seam - that's normal. The issue is if they're ALL on one side or out of position.
+KEY CHECKS:
+- Unblocked defenders in path?
+- Routes into coverage voids? Open windows?
+- Numerical advantages at POA?
+- Blitz w no backfield protection = less success more leverage
+- Blocking mismatches (inferior vs elite) = less success more leverage
+- Bear front hurts zone runs, helps gap runs
+- Deep zones on play side = lower leverage
+- Man coverage: = higher leverage
 
-Ask yourself:
-- Does the blocking scheme match the play design? (e.g., zone blocking for outside zone, gap blocking for power)
-- Are there unblocked defenders in the path of the ball carrier or QB?
-- Does the QB have protection? Is it sufficient? Are there blockers where he's going?
-- Are receivers running routes into coverage? Are there open windows in the directions they break to?
-- Are there schematic mismatches? (e.g., WR at guard position, OL split wide, unbalanced formations)
-- Does the defensive alignment match the offensive strength? Are defenders properly positioned?
-- Are there numerical advantages at the point of attack?
-- If the offense attacks right and all defenders are on the left = MASSIVE OFFENSIVE ADVANTAGE
-- If the offense has a convoy of blockers and the defense is out of position = HIGH SUCCESS/EXPLOSIVE, LOW HAVOC
+EXAMPLES:
+- Offense +8 to +10: convoy of blockers, defense out of position
+- Defense -8 to -10: unblocked rusher, routes into coverage
+- Neutral/Good defensive call -4 to 0: proper scheme, even matchups
+- Wrong coverage/commit +2 to +5: man-beater vs zone or run-commit vs pass
 
-COVERAGE AND GAP ANALYSIS:
-- BUSTED COVERAGE: If a route goes into an area with no nearby defender zones, or the corresponding defender is so far away that they could not outrace the receiver there, boost success rate significantly.
-- FILLED GAPS: For running plays, check if there are open gaps in the direction of the run. If all gaps are filled by defenders with proper leverage, decrease success rate.
-- PRESSURE PROTECTION: Increase havoc rate slightly if there is no player in the backfield (RB/TE) to pick up a pressure/blitz. Check if protection slides leave gaps.
-- BLOCKING MISMATCHES: Increase havoc rate significantly if there is a serious mismatch in a primary blocking assignment (e.g., inferior blocker vs elite pass rusher, or no blocker assigned to a free rusher).
-- INFERIOR BLOCKERS: Decrease success rate if there are inferior blockers or no empty gaps in the direction of the run.
-- FRONTS: A bear front reduces the success rate of zone running at the cost of giving up higher success on gap runs like counter and power.
-- DEEP ZONE COVERAGE: Decrease explosive play rate if there are deep zones (safeties, deep thirds) on the side of the play with the primary receiver and/or conflict defender.
-- MAN COVERAGE: Slightly decrease success rate, but moderately increase explosive play rate. (-5% success, +3% explosive)
-- Increase havoc rate against blitz defenses: 20% minimum havoc, higher with great scheme.
+OUTPUT: Brief rationale (POA, 1-3 matchups). JSON (last, parsed, no comments or conclusion): {"play-type":"pass"|"run"|"RPO","offense-advantage":[-10 to 10],"risk-leverage":[0 to 10]}
 
-EXAMPLES OF DEFENSIVE SCHEME ADVANTAGES (High Havoc, Low Success):
-- Naked bootleg into traffic with no blockers and an unblocked defender = 80%+ havoc rate, 3% success
-- WR at guard position = schematic failure, 60% havoc rate
-- Entire OL split left as receivers, QB bootlegs right = unblocked DE = 80% havoc, 3% success
-- 5-man protection vs 6 rushers = 60% havoc
-- Route concepts that don't attack coverage weaknesses = low success rate: 25%
-
-Passing plays have both slightly higher havoc rates and significantly higher explosive rates than running plays.
-
-EXAMPLES OF OFFENSIVE SCHEME ADVANTAGES (High Success/Explosive, and/or Low Havoc):
-- Convoy of blockers with ball carrier, defense all on opposite side = 15%+ success, 80%+ explosive, 5% havoc
-- Offense attacks right, all defenders aligned left = massive advantage for offense
-- Offense attacks a sideline with a deep route, the defense has only a middle defender in deep cover 1 and a mediocre corner in man: high likelihood to win with a good pass: 30% success, 40% explosive, 10% havoc 
-- Numerical advantage running at point of attack (6 blockers vs 3 defenders) = 30% success, 40% explosive, 3% havoc 
-- Routes attacking coverage voids = high success
-- Proper blocking scheme with defenders out of position = high success/explosive
-- Out-breaking routes against middle-field defense and inside leverage: 30% success, 35% explosive, 10% havoc
-- In-breaking routes against sideline coverage (cover 2) and outside leverage: 30% success, 35% explosive, 10% havoc
-- Route concepts with man defenders that are far from the assigned defender = high success rate: 70%, 20% explosive
-
-PERSONNEL (10% WEIGHT): Effective percentile ratings matter, but scheme trumps talent.
-
-POSITIONAL MATCHUPS (20% WEIGHT): Individual matchups matter even more than ratings (CB has to tackle RB, LB has to cover WR, etc.), but only if the scheme allows them to matter.
-
-RETURN ONLY NUMERIC VALUES. 
-
-CRITICAL: The rates MUST match the offense-advantage value:
-- offense-advantage +10 (massive offensive advantage): success-rate 70-90%, explosive-rate 10-20%, havoc-rate 3-10% (TOTAL GOOD OUTCOMES: 80-100%)
-- offense-advantage +5 to +9 (strong offensive advantage): success-rate 55-75%, explosive-rate 8-15%, havoc-rate 5-12% (TOTAL GOOD OUTCOMES: 63-90%)
-- offense-advantage 0 to +4 (slight offensive advantage): success-rate 40-55%, explosive-rate 10-15%, havoc-rate 10-15% (TOTAL GOOD OUTCOMES: 50-70%)
-- offense-advantage -1 to -4 (slight defensive advantage): success-rate 30-45%, explosive-rate 8-12%, havoc-rate 15-20% (TOTAL GOOD OUTCOMES: 38-57%)
-- offense-advantage -5 to -9 (strong defensive advantage): success-rate 15-35%, explosive-rate 5-10%, havoc-rate 25-40% (TOTAL GOOD OUTCOMES: 20-45%)
-- offense-advantage -10 (massive defensive advantage): success-rate 3-15%, explosive-rate 2-5%, havoc-rate 30-70% (TOTAL GOOD OUTCOMES: 5-20%)
-
-BASELINE (median play): success-rate 40%, explosive-rate 12%, havoc-rate 12% = 52% good outcomes. If you detect an offensive advantage, the rates MUST be better than baseline. If you detect a defensive advantage, the rates MUST be worse than baseline.
-
-FIRST: Provide a brief rationale (2-3 sentences) describing:
-- Point of attack: Where is the play designed to go? (left/right, gap, route concept)
-- Key matchups (1-3): Identify the most important individual matchups that will determine success
-- Conflict defender: Which defender is in conflict (must abandon assignment to save the play, cover multiple eligibles, or choose quickly between run/pass responsibility)?
-
-THEN: Your JSON response (NUMBERS ONLY) as the last line:
-{"success-rate": [NUMBER], "havoc-rate": [NUMBER], "explosive-rate": [NUMBER], "offense-advantage": [NUMBER -10 to 10], "risk-leverage": [NUMBER 0 to 10]}
-
-OFFENSE-ADVANTAGE (-10 to 10): Represents the schematic advantage for the offense. -10 means defense has massive advantage (5% success+explosive), +10 means offense has massive advantage (95% success+explosive).
-
-RISK-LEVERAGE (0 to 10): Specifies the amount of havoc+explosives vs standard results. 0 = mostly standard plays, 10 = extreme outcomes (mostly havoc or explosive plays).`;
+DECISIVENESS: Do not hedge. If structure is decisive, commit to extreme values ruthlessly. This is a professional simulator used by world-class coordinators. Evaluate like a coordinator grading a call with film-room brutality, not a scout grading players. Success rate is not guaranteed even with +10 - bungles are handled programmatically. Grade the SCHEME, not the 1 in 15 drop or blitzer trip.`;
 
     // Variable data (user message content)
     // Combine all players and sort by X coordinate (left to right)
@@ -4761,15 +4702,17 @@ RISK-LEVERAGE (0 to 10): Specifies the amount of havoc+explosives vs standard re
     // Sort by X coordinate (left to right: negative to positive)
     allPlayers.sort((a, b) => a.x - b.x);
     
-    let userMessageContent = `Game Situation: ${gameState.down}${getDownSuffix(gameState.down)} and ${gameState.distance} at the ${gameState["opp-yardline"]} yard line. Q${gameState.quarter} ${gameState.time}. Score: ${gameState.score.home} - ${gameState.score.away}
+    let userMessageContent = `${gameState.down}${getDownSuffix(gameState.down)} & ${gameState.distance} @ ${gameState["opp-yardline"]}yd Q${gameState.quarter} ${gameState.time} ${gameState.score.home}-${gameState.score.away}
 
-PLAYERS (LEFT TO RIGHT BY X COORDINATE):
-${allPlayers.map(p => {
-        return `${p.position} ${p.name}, Alignment: ${p.location}${p.coords} ${p.warning}, Effective Rating: ${p.effectivePercentile.toFixed(0)}th percentile, Assignment: ${p.assignmentText}${p.manTarget}`;
-    }).join('\n')}
+This is a professional simulator used in training by world-class coordinators. Evaluate like a coordinator grading a call with film-room brutality, not a scout grading players. Success rate is not guaranteed even with +10 - bungles are handled programmatically. Grade the SCHEME, as execution errors are handled programmatically. Do not hedge, commit to extreme values ruthlessly when warranted. 
 
-${playData.coachingPointOffense ? `OFFENSIVE COACHING POINT: ${playData.coachingPointOffense.player.name} (${playData.coachingPointOffense.player.position}) - "${playData.coachingPointOffense.point}"` : ''}
-${playData.coachingPointDefense ? `DEFENSIVE COACHING POINT: ${playData.coachingPointDefense.player.name} (${playData.coachingPointDefense.player.position}) - "${playData.coachingPointDefense.point}"` : ''}`;
+Pos,Name,Align,X,Y,Rating,Assignment${allPlayers.map(p => {
+        const coords = p.coords.match(/X:([-\d.]+).*Y:([-\d.]+)/);
+        const x = coords ? coords[1] : '0';
+        const y = coords ? coords[2] : '0';
+        const assignment = `${p.assignmentText}${p.manTarget}`.replace(/[,\n]/g, ' ').trim();
+        return `\n${p.position},${p.name},${p.location},${x},${y},${p.effectivePercentile.toFixed(0)},${assignment}${p.warning}`;
+    }).join('')}${playData.coachingPointOffense ? `\nOff: ${playData.coachingPointOffense.player.name} - "${playData.coachingPointOffense.point}"` : ''}${playData.coachingPointDefense ? `\nDef: ${playData.coachingPointDefense.player.name} - "${playData.coachingPointDefense.point}"` : ''}`;
     
     // Log the intended LLM output
     console.log('=== SYSTEM PROMPT ===');
@@ -4796,9 +4739,9 @@ ${playData.coachingPointDefense ? `DEFENSIVE COACHING POINT: ${playData.coaching
     }
     
     // Fallback: return mock output with rationale and JSON
-    return `Point of attack: Right side B gap. Key matchups: Left guard vs defensive tackle, slot receiver vs nickel corner. Conflict defender: Weakside linebacker must choose between run fit and pass coverage.
+    return `Point of attack: Right side B gap. Key matchups: Left guard vs defensive tackle, slot receiver vs nickel corner.
 
-{"success-rate": 45.0, "havoc-rate": 12.0, "explosive-rate": 10.0, "offense-advantage": 0.0, "risk-leverage": 5.0}`;
+{"play-type": "run", "offense-advantage": 0.0, "risk-leverage": 5.0}`;
 }
 
 async function callOpenAI(systemPrompt, userPrompt, apiKey) {
@@ -4890,6 +4833,40 @@ function getFormationDescription(offense) {
 }
 
 
+function calculateRatesFromAdvantage(playType, offenseAdvantage, riskLeverage) {
+    // Baseline: 40% success, 12% explosive, 12% havoc = 52% good outcomes
+    const baselineSuccess = 40.0;
+    const baselineExplosive = 12.0;
+    const baselineHavoc = 12.0;
+    
+    // Map offense-advantage to success+explosive total (good outcomes)
+    // +10 = 95% good, 0 = 52% good, -10 = 5% good
+    const goodOutcomesBase = 52.0 + (offenseAdvantage * 4.5); // 4.5% per point
+    const goodOutcomes = Math.max(5, Math.min(95, goodOutcomesBase));
+    
+    // Risk-leverage shifts between success/explosive vs havoc
+    // risk-leverage 0 = mostly success, risk-leverage 10 = more explosive/havoc
+    const riskFactor = riskLeverage / 10.0;
+    
+    // Play type adjustments
+    const passExplosiveBoost = playType === 'pass' ? 3.0 : 0.0;
+    const passHavocBoost = playType === 'pass' ? 1.0 : 0.0;
+    
+    // Calculate base rates
+    // Good outcomes split between success and explosive based on risk
+    const explosiveBase = baselineExplosive + (riskFactor * 8.0) + passExplosiveBoost;
+    const successBase = goodOutcomes - explosiveBase;
+    
+    // Havoc increases with risk and decreases with good outcomes
+    const havocBase = baselineHavoc + (riskFactor * 8.0) - ((goodOutcomes - 52) * 0.3) + passHavocBoost;
+    
+    return {
+        "success-rate": Math.max(3, Math.min(90, successBase)),
+        "explosive-rate": Math.max(2, Math.min(25, explosiveBase)),
+        "havoc-rate": Math.max(3, Math.min(70, havocBase))
+    };
+}
+
 function parseLLMOutput(output) {
     // Extract JSON from last line
     const lines = output.split('\n');
@@ -4900,7 +4877,7 @@ function parseLLMOutput(output) {
         // Search backwards for JSON
         for (let i = lines.length - 1; i >= 0; i--) {
             const line = lines[i].trim();
-            if (line.startsWith('{') && line.includes('success-rate')) {
+            if (line.startsWith('{') && (line.includes('play-type') || line.includes('offense-advantage'))) {
                 lastLine = line;
                 break;
             }
@@ -4913,37 +4890,37 @@ function parseLLMOutput(output) {
     try {
         const parsed = JSON.parse(lastLine);
         
-        // VALIDATE: All values must be numbers
-        const validated = {
-            "success-rate": typeof parsed["success-rate"] === 'number' ? parsed["success-rate"] : parseFloat(parsed["success-rate"]) || 45.0,
-            "havoc-rate": typeof parsed["havoc-rate"] === 'number' ? parsed["havoc-rate"] : parseFloat(parsed["havoc-rate"]) || 11.0,
-            "explosive-rate": typeof parsed["explosive-rate"] === 'number' ? parsed["explosive-rate"] : parseFloat(parsed["explosive-rate"]) || 10.0,
-            "offense-advantage": typeof parsed["offense-advantage"] === 'number' ? parsed["offense-advantage"] : parseFloat(parsed["offense-advantage"]) || 0.0,
-            "risk-leverage": typeof parsed["risk-leverage"] === 'number' ? parsed["risk-leverage"] : parseFloat(parsed["risk-leverage"]) || 5.0
-        };
+        // Validate and extract values
+        const playType = (parsed["play-type"] || 'run').toLowerCase();
+        const offenseAdvantage = typeof parsed["offense-advantage"] === 'number' ? parsed["offense-advantage"] : parseFloat(parsed["offense-advantage"]) || 0.0;
+        const riskLeverage = typeof parsed["risk-leverage"] === 'number' ? parsed["risk-leverage"] : parseFloat(parsed["risk-leverage"]) || 5.0;
         
         // Clamp values
-        validated["success-rate"] = Math.max(0, Math.min(100, validated["success-rate"]));
-        validated["havoc-rate"] = Math.max(0, Math.min(100, validated["havoc-rate"]));
-        validated["explosive-rate"] = Math.max(0, Math.min(100, validated["explosive-rate"]));
-        validated["offense-advantage"] = Math.max(-10, Math.min(10, validated["offense-advantage"]));
-        validated["risk-leverage"] = Math.max(0, Math.min(10, validated["risk-leverage"]));
+        const clampedAdvantage = Math.max(-10, Math.min(10, offenseAdvantage));
+        const clampedLeverage = Math.max(0, Math.min(10, riskLeverage));
         
-        // Warn if we had to convert non-numeric values
-        if (typeof parsed["success-rate"] !== 'number' || typeof parsed["havoc-rate"] !== 'number' || typeof parsed["explosive-rate"] !== 'number') {
-            console.warn('LLM returned non-numeric values! Original:', parsed, 'Converted to:', validated);
-        }
+        // Calculate rates from advantage and leverage
+        const rates = calculateRatesFromAdvantage(playType, clampedAdvantage, clampedLeverage);
         
-        return validated;
+        return {
+            "play-type": playType,
+            "success-rate": rates["success-rate"],
+            "explosive-rate": rates["explosive-rate"],
+            "havoc-rate": rates["havoc-rate"],
+            "offense-advantage": clampedAdvantage,
+            "risk-leverage": clampedLeverage
+        };
     } catch (error) {
         console.error('Error parsing LLM output:', error);
         console.error('Last line was:', lastLine);
         console.error('Full output:', output);
         // Return default values
+        const defaultRates = calculateRatesFromAdvantage('run', 0.0, 5.0);
         return {
-            "success-rate": 45.0,
-            "havoc-rate": 11.0,
-            "explosive-rate": 10.0,
+            "play-type": "run",
+            "success-rate": defaultRates["success-rate"],
+            "explosive-rate": defaultRates["explosive-rate"],
+            "havoc-rate": defaultRates["havoc-rate"],
             "offense-advantage": 0.0,
             "risk-leverage": 5.0
         };

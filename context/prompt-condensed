@@ -1,0 +1,39 @@
+SPATIAL: X neg=left/pos=right, Y neg=off/pos=def. Count blockers vs defenders at POA. Check QB bootleg has blockers.
+KEY CHECKS:
+- Unblocked defenders in path?
+- Routes into coverage voids? Open windows?
+- Numerical advantages at POA?
+- Blitz w no backfield protection = less success more leverage
+- Blocking mismatches (inferior vs elite) = less success more leverage
+- Bear front hurts zone runs, helps gap runs
+- Deep zones on play side = lower leverage
+- Man coverage: = higher leverage
+EXAMPLES:
+- Offense +8 to +10: convoy of blockers, defense out of position
+- Defense -8 to -10: unblocked rusher, routes into coverage
+- Neutral/Good defensive call -4 to 0: proper scheme, even matchups
+- Wrong coverage/commit +2 to +5: man-beater vs zone or run-commit vs pass
+OUTPUT: Brief rationale (POA, 1-3 matchups). JSON (last, parsed, no comments or conclusion): {\"play-type\":\"pass\"|\"run\"|\"RPO\",\"offense-advantage\":[-10 to 10],\"risk-leverage\":[0 to 10]}"},{"role":"user","content":"1st & 10 @ 65yd Q1 15:00 0-0
+Pos,Name,Align,X,Y,Rating,Assignment
+WR,Cooper Kupp,Wide left,-14.0,-3.0,75,Block
+CB,Tyson Campbell,Wide left (press),-14.0,2.0,73,Outside release man (Man coverage on: Tyler Higbee)
+CB,Jarrian Jones,Seam left,-8.0,-3.0,40,Outside release man (Man coverage on: Kyren Williams)
+S,Antonio Johnson,Deep left hash,-6.0,15.0,51,Outside release man (Man coverage on: Cooper Kupp)
+DE,Josh Allen,Left 5 technique,-4.5,2.5,82,Left C gap
+OT,Alaric Jackson,Left Tackle,-4.0,-3.0,53,Inside priority
+DT,Arik Armstead,Left 3 technique,-3.0,2.5,66,Left B gap
+MLB,Foye Oluokun,Left B gap (shallow),-3.0,6.0,77,Hook
+OG,Steve Avila,Left Guard,-2.0,-3.0,59,Inside priority
+S,Andre Cisco,Left A gap (deep),-1.0,8.5,69,Deep middle 1/3
+QB,Matthew Stafford,QB (Shotgun),0.0,-10.0,61,Boot right
+C,Coleman Shelton,Center,0.0,-3.0,49,Inside priority
+DT,Roy Robertson-Harris,0 technique,0.0,2.5,49,Left A gap
+OG,Kevin Dotson,Right Guard,2.0,-3.0,61,Inside priority
+DE,Travon Walker,Right 3 technique,3.0,2.5,64,Right B gap
+LB,Devin Lloyd,Right B gap (shallow),3.0,6.0,61,Inside release man (Man coverage on: Puka Nacua)
+OT,Rob Havenstein,Right Tackle,4.0,-3.0,62,Inside priority
+TE,Tyler Higbee,Tight right,5.5,-3.0,53,Block
+RB,Kyren Williams,Behind tight end (Right),8.0,-8.0,67,Block right
+WR,Tutu Atwell,Wide right,14.0,-3.0,44,Block
+CB,Ronald Darby,Wide right (press),14.0,2.0,53,Outside release man (Man coverage on: Tutu Atwell)
+WR,Puka Nacua,Max split right,18.0,-3.0,81,Screen"}],"temperature":0.2,"max_tokens":4000}
