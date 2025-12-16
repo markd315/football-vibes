@@ -19,6 +19,7 @@ let stateMachine = {};
 let outcomeFiles = {}; // Cache for loaded outcome files
 let baselineRates = null; // Baseline rates from eval-format.json
 let timingConfig = null; // Timing configuration from timing.json
+let fatigueConfig = null; // Fatigue configuration from fatigue.json
 
 // Initialize
 async function init() {
@@ -31,6 +32,8 @@ async function init() {
         await loadStateMachine();
         await loadBaselineRates();
         await loadTiming();
+        await loadFatigue();
+        await loadFatigue();
         
         console.log('Rosters loaded:', {
             'home-offense': rosters['home-offense'].length,
@@ -47,49 +50,101 @@ async function init() {
     }
 }
 
+// General helper to load JSON config files
+async function loadJsonConfig(path, defaultValue = null) {
+    try {
+        const response = await fetch(path);
+        if (!response.ok) {
+            throw new Error(`Failed to load ${path}: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error(`Error loading ${path}:`, error);
+        if (defaultValue !== null) {
+            console.warn(`Using default value for ${path}`);
+            return defaultValue;
+        }
+        throw error;
+    }
+}
+
 // Load baseline rates
 async function loadBaselineRates() {
-    try {
-        const response = await fetch('context/eval-format.json');
-        baselineRates = await response.json();
-    } catch (error) {
-        console.error('Error loading baseline rates:', error);
-        // Default baseline rates
-        baselineRates = {
-            "success-rate": 43.0,
-            "havoc-rate": 12.0,
-            "explosive-rate": 10.0
-        };
-    }
+    const defaultValue = {
+        "success-rate": 43.0,
+        "havoc-rate": 12.0,
+        "explosive-rate": 10.0
+    };
+    baselineRates = await loadJsonConfig('context/eval-format.json', defaultValue);
 }
 
 // Load timing configuration
 async function loadTiming() {
-    try {
-        const response = await fetch('outcomes/timing.json');
-        timingConfig = await response.json();
-    } catch (error) {
-        console.error('Error loading timing config:', error);
-        // Default timing values
-        timingConfig = {
-            "timeout-runoff": 6,
-            "winning-team": {
-                "run": 44,
-                "pass": 28
+    const defaultValue = {
+        "timeout-runoff": 6,
+        "winning-team": {
+            "run": 44,
+            "pass": 28
+        },
+        "losing-team": {
+            "run": 36,
+            "pass": 19
+        }
+    };
+    timingConfig = await loadJsonConfig('outcomes/timing.json', defaultValue);
+}
+
+// Load fatigue configuration
+async function loadFatigue() {
+    const defaultValue = {
+        "baseline-fatigue": 2.5,
+        "baseline-recovery": 2.25,
+        "position-modifiers": {
+            "always": {
+                "DE": 1.0,
+                "DT": 1.0
             },
-            "losing-team": {
-                "run": 36,
-                "pass": 19
+            "run": {
+                "LB": 1.0,
+                "MLB": 1.0,
+                "RB": 1.0,
+                "OT": 0.5,
+                "OG": 0.5,
+                "C": 0.5
+            },
+            "pass": {
+                "WR": 1.0,
+                "CB": 1.0,
+                "S": 1.0
             }
-        };
-    }
+        },
+        "effectiveness-curve": {
+            "high-stamina-threshold": 85,
+            "high-stamina-multiplier": 0.99,
+            "medium-stamina-threshold": 60,
+            "medium-stamina-multiplier": 0.80,
+            "min-multiplier": 0.20
+        }
+    };
+    fatigueConfig = await loadJsonConfig('fatigue.json', defaultValue);
 }
 
 // Load data files
 async function loadGameState() {
+    const defaultValue = {
+        possession: "home",
+        quarter: 1,
+        down: 1,
+        distance: 10,
+        "opp-yardline": 65,
+        score: { home: 0, away: 0 },
+        time: "15:00",
+        timeouts: { home: 3, away: 3 },
+        timeoutCalled: false
+    };
+    
     try {
-        const response = await fetch('gamestate.json');
-        gameState = await response.json();
+        gameState = await loadJsonConfig('gamestate.json', defaultValue);
         // Initialize timeouts if missing
         if (!gameState.timeouts) {
             gameState.timeouts = { home: 3, away: 3 };
@@ -98,34 +153,17 @@ async function loadGameState() {
             gameState.timeoutCalled = false;
         }
     } catch (error) {
-        console.error('Error loading game state:', error);
-        gameState = {
-            possession: "home",
-            quarter: 1,
-            down: 1,
-            distance: 10,
-            "opp-yardline": 65,
-            score: { home: 0, away: 0 },
-            time: "15:00",
-            timeouts: { home: 3, away: 3 },
-            timeoutCalled: false
-        };
+        gameState = defaultValue;
     }
 }
 
 async function loadTeams() {
-    try {
-        const response = await fetch('rosters/teams.json');
-        teams = await response.json();
-        console.log('Teams loaded:', teams);
-    } catch (error) {
-        console.error('Error loading teams:', error);
-        // Default teams if file not found
-        teams = {
-            home: { name: 'Home', city: '', record: '' },
-            away: { name: 'Away', city: '', record: '' }
-        };
-    }
+    const defaultValue = {
+        home: { name: 'Home', city: '', record: '' },
+        away: { name: 'Away', city: '', record: '' }
+    };
+    teams = await loadJsonConfig('rosters/teams.json', defaultValue);
+    console.log('Teams loaded:', teams);
 }
 
 async function loadRosters() {
@@ -140,6 +178,12 @@ async function loadRosters() {
             throw new Error(`Failed to load home offense roster: ${homeOffenseResponse.status}`);
         }
         rosters['home-offense'] = await homeOffenseResponse.json();
+        // Initialize stamina to 100.0 if undefined (track to 3 significant digits)
+        rosters['home-offense'].forEach(player => {
+            if (player.stamina === undefined) {
+                player.stamina = 100.0;
+            }
+        });
         console.log(`Loaded ${rosters['home-offense'].length} home offensive players`);
         
         const homeDefenseResponse = await fetch('rosters/home-defense.json');
@@ -147,6 +191,12 @@ async function loadRosters() {
             throw new Error(`Failed to load home defense roster: ${homeDefenseResponse.status}`);
         }
         rosters['home-defense'] = await homeDefenseResponse.json();
+        // Initialize stamina to 100.0 if undefined
+        rosters['home-defense'].forEach(player => {
+            if (player.stamina === undefined) {
+                player.stamina = 100.0;
+            }
+        });
         console.log(`Loaded ${rosters['home-defense'].length} home defensive players`);
         
         const awayOffenseResponse = await fetch('rosters/away-offense.json');
@@ -154,6 +204,12 @@ async function loadRosters() {
             throw new Error(`Failed to load away offense roster: ${awayOffenseResponse.status}`);
         }
         rosters['away-offense'] = await awayOffenseResponse.json();
+        // Initialize stamina to 100.0 if undefined
+        rosters['away-offense'].forEach(player => {
+            if (player.stamina === undefined) {
+                player.stamina = 100.0;
+            }
+        });
         console.log(`Loaded ${rosters['away-offense'].length} away offensive players`);
         
         const awayDefenseResponse = await fetch('rosters/away-defense.json');
@@ -161,6 +217,12 @@ async function loadRosters() {
             throw new Error(`Failed to load away defense roster: ${awayDefenseResponse.status}`);
         }
         rosters['away-defense'] = await awayDefenseResponse.json();
+        // Initialize stamina to 100.0 if undefined
+        rosters['away-defense'].forEach(player => {
+            if (player.stamina === undefined) {
+                player.stamina = 100.0;
+            }
+        });
         console.log(`Loaded ${rosters['away-defense'].length} away defensive players`);
         
         // Render after a short delay to ensure DOM is ready
@@ -193,13 +255,8 @@ function updateRostersForPossession() {
 }
 
 async function loadFieldLocations() {
-    try {
-        const response = await fetch('fieldlocations.json');
-        fieldLocations = await response.json();
-        renderField();
-    } catch (error) {
-        console.error('Error loading field locations:', error);
-    }
+    fieldLocations = await loadJsonConfig('fieldlocations.json', []);
+    renderField();
 }
 
 // Global helper to get location coordinates
@@ -216,12 +273,7 @@ function getLocationCoords(locationName) {
 }
 
 async function loadStateMachine() {
-    try {
-        const response = await fetch('play-state-machine.json');
-        stateMachine = await response.json();
-    } catch (error) {
-        console.error('Error loading state machine:', error);
-    }
+    stateMachine = await loadJsonConfig('play-state-machine.json', {});
 }
 
 // Render functions
@@ -373,7 +425,7 @@ function createPlayerCard(player, side, index) {
     
     card.innerHTML = `
         <div class="player-name">${player.name} #${player.jersey}</div>
-        <div class="player-info">${player.position} | ${effectivePercentile.toFixed(0)}% | Stamina: ${player.stamina || 100}%</div>
+        <div class="player-info">${player.position} | ${effectivePercentile.toFixed(0)}% | Stamina: ${(player.stamina !== undefined ? player.stamina : 100).toFixed(2)}%</div>
         <div class="stamina-bar">
             <div class="stamina-fill" style="width: ${player.stamina || 100}%"></div>
         </div>
@@ -831,7 +883,7 @@ const offensivePlaycalls = {
     },
     'Mesh': {
         'QB': { category: 'Pass', action: '3 step drop' },
-        'RB': { category: 'Route', action: 'Checkdown' },
+        'RB': { category: 'Route', action: '1 Flat' },
         'WR': { category: 'Route', action: 'Slant' },
         'TE': { category: 'Route', action: 'Slant' },
         'OT': { category: 'Pass Block', action: 'Inside priority' },
@@ -855,6 +907,96 @@ const offensivePlaycalls = {
         'OT': { category: 'Pass Block', action: 'Outside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
         'C': { category: 'Pass Block', action: 'Inside priority' }
+    },
+    'QB Sneak': {
+        'QB': { category: 'Run', action: 'Sneak' },
+        'RB': { category: 'Run', action: 'Left A gap' },
+        'OT': { category: 'Run Block', action: 'Zone inside left' },
+        'OG': { category: 'Run Block', action: 'Zone inside left' },
+        'C': { category: 'Run Block', action: 'Zone inside left' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' }
+    },
+    'Toss left': {
+        'QB': { category: 'Run', action: 'Toss left' },
+        'RB': { category: 'Run', action: 'OZR' },
+        'OT': { category: 'Run Block', action: 'Zone outside left' },
+        'OG': { category: 'Run Block', action: 'Zone outside left' },
+        'C': { category: 'Run Block', action: 'Zone outside left' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' }
+    },
+    'Toss right': {
+        'QB': { category: 'Run', action: 'Toss right' },
+        'RB': { category: 'Run', action: 'OZR' },
+        'OT': { category: 'Run Block', action: 'Zone outside right' },
+        'OG': { category: 'Run Block', action: 'Zone outside right' },
+        'C': { category: 'Run Block', action: 'Zone outside right' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' }
+    },
+    'Flea flicker': {
+        'QB': { category: 'Pass', action: 'Play action pass' },
+        'RB': { category: 'Run', action: 'Flea flicker' },
+        'WR': { category: 'Route', action: '9 Go/Fly/Fade' },
+        'TE': { category: 'Route', action: 'Seam/Go' },
+        'OT': { category: 'Pass Block', action: 'Outside priority' },
+        'OG': { category: 'Pass Block', action: 'Inside priority' },
+        'C': { category: 'Pass Block', action: 'Inside priority' }
+    },
+    'Reverse left': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'IZR' },
+        'WR': { category: 'Block', action: 'Jet Motion' },
+        'TE': { category: 'Block', action: 'Block' },
+        'OT': { category: 'Run Block', action: 'Zone outside left' },
+        'OG': { category: 'Run Block', action: 'Zone outside left' },
+        'C': { category: 'Run Block', action: 'Zone outside left' }
+    },
+    'Reverse right': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'IZR' },
+        'WR': { category: 'Block', action: 'Jet Motion' },
+        'TE': { category: 'Block', action: 'Block' },
+        'OT': { category: 'Run Block', action: 'Zone outside right' },
+        'OG': { category: 'Run Block', action: 'Zone outside right' },
+        'C': { category: 'Run Block', action: 'Zone outside right' }
+    },
+    'Speed option left': {
+        'QB': { category: 'Run', action: 'Speed option left' },
+        'RB': { category: 'Run', action: 'OZR' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' },
+        'OT': { category: 'Run Block', action: 'Zone outside left' },
+        'OG': { category: 'Run Block', action: 'Zone outside left' },
+        'C': { category: 'Run Block', action: 'Zone outside left' }
+    },
+    'Speed option right': {
+        'QB': { category: 'Run', action: 'Speed option right' },
+        'RB': { category: 'Run', action: 'OZR' },
+        'WR': { category: 'Block', action: 'Block' },
+        'TE': { category: 'Block', action: 'Block' },
+        'OT': { category: 'Run Block', action: 'Zone outside right' },
+        'OG': { category: 'Run Block', action: 'Zone outside right' },
+        'C': { category: 'Run Block', action: 'Zone outside right' }
+    },
+    'Jet sweep left': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'Sweep' },
+        'WR': { category: 'Block', action: 'Jet Motion' },
+        'TE': { category: 'Block', action: 'Block' },
+        'OT': { category: 'Run Block', action: 'Zone outside left' },
+        'OG': { category: 'Run Block', action: 'Pull' },
+        'C': { category: 'Run Block', action: 'Zone outside left' }
+    },
+    'Jet sweep right': {
+        'QB': { category: 'Run', action: 'Handoff' },
+        'RB': { category: 'Run', action: 'Sweep' },
+        'WR': { category: 'Block', action: 'Jet Motion' },
+        'TE': { category: 'Block', action: 'Block' },
+        'OT': { category: 'Run Block', action: 'Zone outside right' },
+        'OG': { category: 'Run Block', action: 'Pull' },
+        'C': { category: 'Run Block', action: 'Zone outside right' }
     }
 };
 
@@ -929,20 +1071,20 @@ const defensivePlaycalls = {
 const offensiveAssignments = {
     'QB': {
         'Pass': ['Boot right', 'Boot left', 'Play action pass', '3 step drop', '5 step drop', '7 step drop'],
-        'Run': ['QB draw', 'Zone read left', 'Zone read right', 'Handoff']
+        'Run': ['QB draw', 'Zone read left', 'Zone read right', 'Speed option left', 'Speed option right', 'Toss left', 'Toss right', 'Sneak', 'Handoff']
     },
     'RB': {
         'Protect': ['Block left', 'Block right', 'Leak/delay left', 'Leak/delay right'],
-        'Run': ['IZR', 'OZR', 'Left A gap', 'Left B gap', 'Right A gap', 'Right B gap', 'Left C gap', 'Right C gap'],
-        'Route': ['Wheel', 'Tunnel screen', '1 Flat', 'Checkdown']
+        'Run': ['IZR', 'OZR', 'Left A gap', 'Left B gap', 'Right A gap', 'Right B gap', 'Left C gap', 'Right C gap', 'Flea flicker', 'Sweep'],
+        'Route': ['Wheel', 'Tunnel screen', '1 Flat', 'Flat left', 'Flat right', 'Angle']
     },
     'WR': {
         'Block': ['Block', 'Jet Motion', 'Jet motion option'],
-        'Route': ['1 Flat', '2 Slant', '3 Comeback', '4 Curl/Hook', '5 Out', 'Deep out', '6 Shallow dig', '7 Corner', '8 Post', '9 Go/Fly/Fade', 'Deep dig', 'Chip+Delay', 'Screen']
+        'Route': ['1 Flat', '2 Slant', '3 Comeback', '4 Curl/Hook', '5 Out', 'Deep out', '6 Shallow dig', 'Drag', '7 Corner', '8 Post', '9 Go/Fly/Fade', 'Deep dig', 'Chip+Delay', 'Screen']
     },
     'TE': {
         'Block': ['Block', 'Jet Motion', 'Jet motion option'],
-        'Route': ['1 Flat', '2 Slant', '3 Comeback', '4 Curl/Hook', '5 Out', 'Deep out', '6 Shallow dig', '7 Corner', '8 Post', '9 Go/Fly/Fade', 'Deep dig', 'Chip+Delay']
+        'Route': ['1 Flat', '2 Slant', '3 Comeback', '4 Curl/Hook', '5 Out', 'Deep out', '6 Shallow dig', 'Drag', '7 Corner', '8 Post', '9 Go/Fly/Fade', 'Deep dig', 'Chip+Delay']
     },
     'OT': {
         'Pass Block': ['Inside priority', 'Outside priority', 'Slide left', 'Slide right'],
@@ -1280,6 +1422,35 @@ function drawOffensiveAssignmentArrow(ctx, x, y, assignment, color, width, heigh
         } else if (assignment.action.includes('Shallow dig') || assignment.action.includes('Deep dig')) {
             // Dig routes: stem forward, then 90° turn IN toward center
             routeDef = { stemLength: routeLength * 0.4, turnAngle: -90, continueLength: routeLength * 0.5, direction: 'in' };
+        } else if (assignment.action.includes('Drag')) {
+            // Drag: short stem forward, then 90° turn IN toward center (shorter than dig)
+            routeDef = { stemLength: routeLength * 0.25, turnAngle: -90, continueLength: routeLength * 0.6, direction: 'in' };
+        } else if (assignment.action.includes('Angle')) {
+            // Angle route (RB): combo route - stem=0, branch out 45° upfield, then 90° cut the other direction upfield
+            routeDef = { 
+                stemLength: 0, 
+                turnAngle: 45, 
+                continueLength: routeLength * 0.3, 
+                direction: 'out',
+                isCombo: true,
+                secondTurn: { turnAngle: -90, continueLength: routeLength * 0.4, direction: 'in' }
+            };
+        } else if (assignment.action.includes('Post-corner')) {
+            // Post-corner: combo route - stem like post, post break, then 90° cut back after initial break
+            routeDef = { 
+                stemLength: routeLength * 0.4, 
+                turnAngle: -45, 
+                continueLength: routeLength * 0.3, 
+                direction: 'in',
+                isCombo: true,
+                secondTurn: { turnAngle: 90, continueLength: routeLength * 0.4, direction: 'out' }
+            };
+        } else if (assignment.action.includes('Wheel')) {
+            // Wheel: forward stem, then arc out to sideline (curved route)
+            routeDef = { stemLength: routeLength * 0.3, turnAngle: 90, continueLength: routeLength * 0.6, direction: 'out' };
+        } else if (assignment.action.includes('Tunnel screen')) {
+            // Tunnel screen: immediate horizontal in
+            routeDef = { stemLength: 0, turnAngle: 0, continueLength: routeLength * 0.2, direction: 'in' };
         } else if (assignment.action.includes('Corner')) {
             // Corner: stem forward, then 45° turn out to sideline
             routeDef = { stemLength: routeLength * 0.3, turnAngle: 45, continueLength: routeLength * 0.5, direction: 'out' };
@@ -1339,6 +1510,22 @@ function drawOffensiveAssignmentArrow(ctx, x, y, assignment, color, width, heigh
             
             endX = stemEndX + dx;
             endY = stemEndY + dy;
+            
+            // Handle combo routes with second turn
+            if (routeDef.isCombo && routeDef.secondTurn) {
+                const secondTurn = routeDef.secondTurn;
+                const secondAngleRad = (secondTurn.turnAngle * Math.PI) / 180;
+                
+                // Calculate second turn direction (opposite of first turn direction)
+                const secondTurnDir = secondTurn.turnAngle > 0 ? outDir : inDir;
+                
+                // Calculate second turn position
+                const secondDx = secondTurnDir * secondTurn.continueLength * Math.sin(Math.abs(secondAngleRad));
+                const secondDy = -secondTurn.continueLength * Math.cos(Math.abs(secondAngleRad));
+                
+                endX = endX + secondDx;
+                endY = endY + secondDy;
+            }
         } else if (routeDef.turnAngle !== 0 && routeDef.continueLength === 0) {
             // Fade: angle applied during stem
             const angleRad = (routeDef.turnAngle * Math.PI) / 180;
@@ -1361,8 +1548,31 @@ function drawOffensiveAssignmentArrow(ctx, x, y, assignment, color, width, heigh
         if (routeDef.stemLength > 0 && routeDef.turnAngle === 0 && routeDef.continueLength === 0) {
             // Straight route (Go/Seam)
             ctx.lineTo(endX, endY);
-        } else if (routeDef.stemLength === 0) {
-            // Screen (no stem)
+        } else if (routeDef.stemLength === 0 && !routeDef.isCombo) {
+            // Screen (no stem, not combo)
+            ctx.lineTo(endX, endY);
+        } else if (routeDef.isCombo && routeDef.secondTurn) {
+            // Combo route: draw stem -> first turn -> second turn
+            // Draw stem
+            if (routeDef.stemLength > 0) {
+                ctx.lineTo(stemEndX, stemEndY);
+            } else {
+                // No stem, start at current position
+                ctx.moveTo(x, y);
+            }
+            
+            // Calculate first turn end position
+            const firstAngleRad = (routeDef.turnAngle * Math.PI) / 180;
+            const firstTurnDir = routeDef.turnAngle > 0 ? outDir : inDir;
+            const firstDx = firstTurnDir * routeDef.continueLength * Math.sin(Math.abs(firstAngleRad));
+            const firstDy = -routeDef.continueLength * Math.cos(Math.abs(firstAngleRad));
+            const firstTurnEndX = (routeDef.stemLength > 0 ? stemEndX : x) + firstDx;
+            const firstTurnEndY = (routeDef.stemLength > 0 ? stemEndY : y) + firstDy;
+            
+            // Draw first turn
+            ctx.lineTo(firstTurnEndX, firstTurnEndY);
+            
+            // Draw second turn
             ctx.lineTo(endX, endY);
         } else {
             // Route with stem and turn
@@ -4132,7 +4342,7 @@ function renderPlayerMarkers() {
             const staminaContainer = document.createElement('div');
             staminaContainer.style.cssText = 'width: 24px; height: 2px; background: #ddd; border-radius: 1px; overflow: hidden;';
             const staminaFill = document.createElement('div');
-            const staminaPercent = player.stamina || 100;
+            const staminaPercent = player.stamina !== undefined ? player.stamina : 100;
             const staminaColor = staminaPercent > 70 ? '#4CAF50' : staminaPercent > 40 ? '#FFA500' : '#f44336';
             staminaFill.style.cssText = `width: ${staminaPercent}%; height: 100%; background: ${staminaColor}; transition: width 0.3s;`;
             staminaContainer.appendChild(staminaFill);
@@ -4419,6 +4629,24 @@ function renderCoachingPoints() {
     textareaDefense.addEventListener('input', () => {
         countDefense.textContent = textareaDefense.value.length;
     });
+    
+    // Set up clock management checkboxes (mutually exclusive)
+    const hurryUpCheckbox = document.getElementById('hurryUpCheckbox');
+    const milkClockCheckbox = document.getElementById('milkClockCheckbox');
+    
+    if (hurryUpCheckbox && milkClockCheckbox) {
+        hurryUpCheckbox.addEventListener('change', () => {
+            if (hurryUpCheckbox.checked) {
+                milkClockCheckbox.checked = false;
+            }
+        });
+        
+        milkClockCheckbox.addEventListener('change', () => {
+            if (milkClockCheckbox.checked) {
+                hurryUpCheckbox.checked = false;
+            }
+        });
+    }
 }
 
 // Execute play
@@ -4482,7 +4710,7 @@ async function executePlay() {
     updateGameState(result);
     
     // Update fatigue
-    updateFatigue(playData);
+    updateFatigue(playData, result.playType);
     
     // Extract rationale from LLM output (everything before the JSON)
     const lines = llmOutput.split('\n');
@@ -4957,7 +5185,11 @@ async function runStateMachine(evalData, playData) {
         qbAssignment.includes('Play action') ||
         qbAssignment.includes('Pass')
     );
-    const playType = isPass ? 'pass' : 'run';
+    // Flea flicker is a pass play even though RB has a run assignment
+    const rb = playData.offense.find(p => p.position === 'RB');
+    const rbAssignment = rb ? (assignments.offense[rb.name] || '') : '';
+    const isFleaFlicker = rbAssignment && rbAssignment.includes('Flea flicker');
+    const playType = (isPass || isFleaFlicker) ? 'pass' : 'run';
     
     // Step 1: Roll 1-100 to determine basic play outcome (using LLM rates)
     const successRate = evalData['success-rate'] || 45.0;
@@ -5058,6 +5290,8 @@ async function runStateMachine(evalData, playData) {
             // Calculate yards from distribution
             const yardsRoll = Math.floor(Math.random() * 100) + 1;
             yards = calculateYardsFromRoll(yardsRoll, outcomeFile);
+            // Successful pass must have at least 1 yard
+            yards = Math.max(1, yards);
         } else {
             // Incomplete pass - 0 yards
             yards = 0;
@@ -5066,6 +5300,7 @@ async function runStateMachine(evalData, playData) {
         // For runs or non-pass outcomes, calculate yards normally
         const yardsRoll = Math.floor(Math.random() * 100) + 1;
         yards = calculateYardsFromRoll(yardsRoll, outcomeFile);
+        
     }
     
     // Round yards to 1 decimal place for display
@@ -5083,14 +5318,15 @@ async function runStateMachine(evalData, playData) {
     
     return { 
         outcome: outcomeFile.outcome, 
-        outcomeType,
+        outcomeType, // This is the actual outcome type (success/unsuccessful/explosive/havoc)
         yards, 
         turnover,
         turnoverType: outcomeFile['turnover-type'],
         description: description,
         isComplete: isComplete,
         evalData,
-        playType: playType
+        playType: playType,
+        outcomeFileUsed: outcomeFile // Debug: track which file was actually used
     };
 }
 
@@ -5117,19 +5353,29 @@ function calculateYardsFromRoll(roll, outcomeFile) {
     const stdDev = outcomeFile['standard-deviation'] || 1;
     const skewness = outcomeFile['skewness'] || 0;
     
-    // Convert roll (1-100) to percentile (0-1)
-    const percentile = (roll - 1) / 99;
+    // Calculate minimum percentile needed to avoid negative yards
+    // For mean + z*stdDev >= 0, we need z >= -mean/stdDev
+    const minZForNonNegative = -mean / stdDev;
+    let minPercentile = 0.01; // Default to 1st percentile
     
-    // Use inverse normal distribution (Box-Muller transform for normal, adjust for skewness)
-    let z = 0;
-    if (skewness === 0) {
-        // Normal distribution
-        // Convert percentile to z-score using inverse CDF approximation
-        z = inverseNormalCDF(percentile);
-    } else {
-        // Skewed normal distribution
-        // Simplified skew normal approximation
-        z = inverseNormalCDF(percentile);
+    if (minZForNonNegative > -3 && minZForNonNegative < 3) {
+        // Use jstat to find percentile that gives us the minimum z-score
+        // Add small safety margin (0.1 z-score units)
+        const targetZ = minZForNonNegative + 0.1;
+        minPercentile = jStat.normal.cdf(targetZ, 0, 1);
+        // Clamp to reasonable range
+        minPercentile = Math.max(0.01, Math.min(0.05, minPercentile));
+    }
+    
+    // Map roll (1-100) to percentile range [minPercentile, 0.99]
+    // This ensures the worst roll gives z-score that prevents negative yards
+    const percentileRange = 0.99 - minPercentile;
+    const percentile = minPercentile + ((roll - 1) / 99) * percentileRange;
+    
+    // Use inverse normal distribution (adjust for skewness)
+    let z = inverseNormalCDF(percentile);
+    
+    if (skewness !== 0) {
         const skewAdjustment = skewness * (z * z - 1) / 6;
         z = z + skewAdjustment;
     }
@@ -5142,33 +5388,36 @@ function calculateYardsFromRoll(roll, outcomeFile) {
 }
 
 function inverseNormalCDF(p) {
-    // Approximation of inverse cumulative distribution function for standard normal
-    // Using Winitzki's approximation
+    // Use jstat library for accurate inverse normal CDF
+    // jstat.normal.inv(p, mean, std) - for standard normal, mean=0, std=1
     if (p <= 0 || p >= 1) {
         return p <= 0 ? -10 : 10;
     }
-    
-    const a = 8 * (Math.PI - 3) / (3 * Math.PI * (4 - Math.PI));
-    const sign = p < 0.5 ? -1 : 1;
-    const pAdjusted = p < 0.5 ? p : 1 - p;
-    
-    const ln = Math.log(1 / (pAdjusted * pAdjusted));
-    const sqrt = Math.sqrt(ln);
-    
-    return sign * Math.sqrt(-2 * Math.log(pAdjusted)) * 
-           (sqrt - (a * sqrt + 1) / (a * sqrt + 2));
+    return jStat.normal.inv(p, 0, 1);
 }
 
 function calculateClockRunoff(result) {
     // If timeout was called, runoff is fixed at timeout-runoff seconds
     if (gameState.timeoutCalled) {
         gameState.timeoutCalled = false; // Reset flag
-        return timingConfig?.["timeout-incomplete-runoff"] || 6;
+        let baseRunoff = timingConfig?.["timeout-incomplete-runoff"] || 6;
+        // Apply clock management modifiers
+        const hurryUp = document.getElementById('hurryUpCheckbox')?.checked || false;
+        const milkClock = document.getElementById('milkClockCheckbox')?.checked || false;
+        if (hurryUp) baseRunoff -= 10;
+        if (milkClock) baseRunoff += 10;
+        return Math.max(0, baseRunoff); // Ensure non-negative
     }
     
     // Incomplete passes always get 6 second runoff
     if (result.playType === 'pass' && result.isComplete === false) {
-        return timingConfig?.["timeout-incomplete-runoff"] || 6;
+        let baseRunoff = timingConfig?.["timeout-incomplete-runoff"] || 6;
+        // Apply clock management modifiers
+        const hurryUp = document.getElementById('hurryUpCheckbox')?.checked || false;
+        const milkClock = document.getElementById('milkClockCheckbox')?.checked || false;
+        if (hurryUp) baseRunoff -= 10;
+        if (milkClock) baseRunoff += 10;
+        return Math.max(0, baseRunoff); // Ensure non-negative
     }
     
     // Determine if winning or losing team has the ball
@@ -5191,12 +5440,21 @@ function calculateClockRunoff(result) {
         "losing-team": { "run": 36, "pass": 19 }
     };
     
-    // Calculate runoff from timing.json
+    // Calculate base runoff from timing.json
+    let baseRunoff;
     if (useWinningNumbers) {
-        return config["winning-team"][playType] || (playType === 'run' ? 44 : 28);
+        baseRunoff = config["winning-team"][playType] || (playType === 'run' ? 44 : 28);
     } else {
-        return config["losing-team"][playType] || (playType === 'run' ? 36 : 19);
+        baseRunoff = config["losing-team"][playType] || (playType === 'run' ? 36 : 19);
     }
+    
+    // Apply clock management modifiers
+    const hurryUp = document.getElementById('hurryUpCheckbox')?.checked || false;
+    const milkClock = document.getElementById('milkClockCheckbox')?.checked || false;
+    if (hurryUp) baseRunoff -= 10;
+    if (milkClock) baseRunoff += 10;
+    
+    return Math.max(0, baseRunoff); // Ensure non-negative
 }
 
 function applyClockRunoff(seconds) {
@@ -5405,45 +5663,74 @@ function showSpecialTeamsResult(result) {
     document.getElementById('rateComparison').style.display = 'none';
 }
 
-function updateFatigue(playData) {
-    // Get all players who were on the field
+function updateFatigue(playData, playType = 'run') {
+    // Track who was on the field
     const playersOnField = new Set();
     [...playData.offense, ...playData.defense].forEach(player => {
         playersOnField.add(player.name);
     });
     
-    // Update stamina for all players in all rosters
-    Object.keys(rosters).forEach(rosterKey => {
-        if (rosterKey !== 'offense' && rosterKey !== 'defense') {
-            rosters[rosterKey].forEach(player => {
-                if (player.stamina !== undefined) {
-                    if (playersOnField.has(player.name)) {
-                        // Player was on field: reduce stamina by 1-2%
-                        const reduction = Math.floor(Math.random() * 2) + 1;
-                        player.stamina = Math.max(0, player.stamina - reduction);
-                    } else {
-                        // Player was not on field: increase stamina by 3-5%
-                        const recovery = Math.floor(Math.random() * 3) + 3;
-                        player.stamina = Math.min(100, player.stamina + recovery);
-                    }
-                }
-            });
+    // Use config values with fallbacks
+    const config = fatigueConfig || {
+        "baseline-fatigue": 2.5,
+        "baseline-recovery": 2.25,
+        "position-modifiers": {
+            "always": {},
+            "run": {},
+            "pass": {}
         }
+    };
+    
+    const baselineFatigue = config["baseline-fatigue"] || 2.5;
+    const baselineRecovery = config["baseline-recovery"] || 2.25;
+    const modifiers = config["position-modifiers"] || {};
+    
+    // Helper: apply modifiers based on position and play type
+    function fatigueForPlayer(position, onField) {
+        if (!onField) return -baselineRecovery; // negative = recover
+        
+        let fatigue = baselineFatigue;
+        const pos = position || '';
+        
+        // Apply "always" modifiers (e.g., DE/DT)
+        if (modifiers.always && modifiers.always[pos]) {
+            fatigue += modifiers.always[pos];
+        }
+        
+        // Apply play-type-specific modifiers
+        if (playType === 'run' && modifiers.run && modifiers.run[pos]) {
+            fatigue += modifiers.run[pos];
+        } else if (playType === 'pass' && modifiers.pass && modifiers.pass[pos]) {
+            fatigue += modifiers.pass[pos];
+        }
+        
+        return fatigue;
+    }
+    
+    // Update stamina for all rostered players (including inactive rosters)
+    Object.keys(rosters).forEach(rosterKey => {
+        if (rosterKey === 'offense' || rosterKey === 'defense') return;
+        
+        rosters[rosterKey].forEach(player => {
+            if (player.stamina === undefined) return;
+            
+            const onField = playersOnField.has(player.name);
+            const delta = fatigueForPlayer(player.position, onField);
+            player.stamina = Math.max(0, Math.min(100, (player.stamina - delta)));
+            // Track to 3 significant digits for storage
+            player.stamina = Math.round(player.stamina * 1000) / 1000;
+        });
     });
     
-    // Also update active rosters
+    // Update active rosters
     [...rosters.offense, ...rosters.defense].forEach(player => {
-        if (player.stamina !== undefined) {
-            if (playersOnField.has(player.name)) {
-                // Player was on field: reduce stamina by 1-2%
-                const reduction = Math.floor(Math.random() * 2) + 1;
-                player.stamina = Math.max(0, player.stamina - reduction);
-            } else {
-                // Player was not on field: increase stamina by 3-5%
-                const recovery = Math.floor(Math.random() * 3) + 3;
-                player.stamina = Math.min(100, player.stamina + recovery);
-            }
-        }
+        if (player.stamina === undefined) return;
+        
+        const onField = playersOnField.has(player.name);
+        const delta = fatigueForPlayer(player.position, onField);
+        player.stamina = Math.max(0, Math.min(100, (player.stamina - delta)));
+        // Track to 3 significant digits for storage
+        player.stamina = Math.round(player.stamina * 1000) / 1000;
     });
     
     // Save updated rosters
@@ -5451,26 +5738,62 @@ function updateFatigue(playData) {
 }
 
 function calculateEffectivePercentile(player) {
-    if (!player.stamina || !player.percentile) return player.percentile || 50;
+    if (player.stamina === undefined || !player.percentile) return player.percentile || 50;
     
-    // Logarithmic fatigue curve: 85% stamina = 99% effective, drops off after that
-    // Using logarithmic interpolation
+    // Use config values with fallbacks
+    const config = fatigueConfig || {
+        "effectiveness-curve": {
+            "high-stamina-threshold": 85,
+            "high-stamina-multiplier": 0.99,
+            "medium-stamina-threshold": 60,
+            "medium-stamina-multiplier": 0.80,
+            "min-multiplier": 0.20
+        }
+    };
+    
+    const curve = config["effectiveness-curve"] || {};
+    const highThreshold = curve["high-stamina-threshold"] || 85;
+    const highMultiplier = curve["high-stamina-multiplier"] || 0.99;
+    const mediumThreshold = curve["medium-stamina-threshold"] || 60;
+    const mediumMultiplier = curve["medium-stamina-multiplier"] || 0.80;
+    const minMultiplier = curve["min-multiplier"] || 0.20;
+    
+    // Ensure stamina is between 0 and 100
+    const stamina = Math.max(0, Math.min(100, player.stamina));
+    const basePercentile = player.percentile;
+    
+    // Logarithmic fatigue curve using config values
     let multiplier = 1.0;
     
-    if (player.stamina >= 85) {
-        multiplier = 0.99;
-    } else if (player.stamina >= 60) {
-        // Linear interpolation between 85 (0.99) and 60 (0.80)
-        multiplier = 0.99 - ((85 - player.stamina) / 25) * 0.19;
+    if (stamina >= highThreshold) {
+        multiplier = highMultiplier;
+    } else if (stamina >= mediumThreshold) {
+        // Linear interpolation between high threshold and medium threshold
+        const range = highThreshold - mediumThreshold;
+        const diff = highThreshold - stamina;
+        multiplier = highMultiplier - (diff / range) * (highMultiplier - mediumMultiplier);
     } else {
-        // Logarithmic drop-off below 60
+        // Logarithmic drop-off below medium threshold
         // Using log base 10: multiplier = a * log(stamina) + b
-        // At 60: 0.80, at 0: 0.00
-        const a = 0.80 / Math.log10(60);
-        multiplier = a * Math.log10(Math.max(player.stamina, 1));
+        // At mediumThreshold: mediumMultiplier, at 0: 0.00
+        const a = mediumMultiplier / Math.log10(mediumThreshold);
+        multiplier = a * Math.log10(Math.max(stamina, 1));
     }
     
-    return player.percentile * multiplier;
+    // Calculate effective percentile
+    let effectivePercentile = basePercentile * multiplier;
+    
+    // CRITICAL: Preserve player rankings - ensure a 30th percentile player can never
+    // exceed a 70th percentile player, even with extreme fatigue differences.
+    // Cap effective percentile to never exceed base percentile, and ensure minimum
+    // effectiveness maintains relative rankings.
+    const actualMultiplier = Math.max(minMultiplier, multiplier);
+    effectivePercentile = basePercentile * actualMultiplier;
+    
+    // Additional safeguard: ensure effective never exceeds base (fatigue only reduces, never increases)
+    effectivePercentile = Math.min(effectivePercentile, basePercentile);
+    
+    return effectivePercentile;
 }
 
 function updateGameStateDisplay() {
@@ -5541,6 +5864,13 @@ function resetPlay() {
     selectedDefense = [];
     playerPositions = {};
     assignments = { offense: {}, defense: {} };
+    
+    // Reset clock management checkboxes
+    const hurryUpCheckbox = document.getElementById('hurryUpCheckbox');
+    const milkClockCheckbox = document.getElementById('milkClockCheckbox');
+    if (hurryUpCheckbox) hurryUpCheckbox.checked = false;
+    if (milkClockCheckbox) milkClockCheckbox.checked = false;
+    
     // Show step 0 if 4th down, otherwise step 1
     if (gameState.down === 4) {
         renderStep(0);

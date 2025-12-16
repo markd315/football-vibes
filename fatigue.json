@@ -1,0 +1,31 @@
+{
+  "baseline-fatigue": 2.5,
+  "baseline-recovery": 2.25,
+  "position-modifiers": {
+    "always": {
+      "DE": 1.0,
+      "DT": 1.0
+    },
+    "run": {
+      "LB": 1.0,
+      "MLB": 1.0,
+      "RB": 1.0,
+      "OT": 0.5,
+      "OG": 0.5,
+      "C": 0.5
+    },
+    "pass": {
+      "WR": 1.0,
+      "CB": 1.0,
+      "S": 1.0
+    }
+  },
+  "effectiveness-curve": {
+    "high-stamina-threshold": 85,
+    "high-stamina-multiplier": 0.99,
+    "medium-stamina-threshold": 60,
+    "medium-stamina-multiplier": 0.80,
+    "min-multiplier": 0.20
+  }
+}
+

@@ -3,6 +3,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const jStat = require('jstat');
 
 // Load state machine and outcome files
 const stateMachine = JSON.parse(fs.readFileSync('play-state-machine.json', 'utf8'));
@@ -23,16 +24,12 @@ function loadOutcomeFile(filePath) {
 }
 
 function inverseNormalCDF(p) {
+    // Use jstat library for accurate inverse normal CDF
+    // jstat.normal.inv(p, mean, std) - for standard normal, mean=0, std=1
     if (p <= 0 || p >= 1) {
         return p <= 0 ? -10 : 10;
     }
-    const a = 8 * (Math.PI - 3) / (3 * Math.PI * (4 - Math.PI));
-    const sign = p < 0.5 ? -1 : 1;
-    const pAdjusted = p < 0.5 ? p : 1 - p;
-    const ln = Math.log(1 / (pAdjusted * pAdjusted));
-    const sqrt = Math.sqrt(ln);
-    return sign * Math.sqrt(-2 * Math.log(pAdjusted)) * 
-           (sqrt - (a * sqrt + 1) / (a * sqrt + 2));
+    return jStat.normal.inv(p, 0, 1);
 }
 
 function calculateYardsFromRoll(roll, outcomeFile) {
@@ -40,7 +37,25 @@ function calculateYardsFromRoll(roll, outcomeFile) {
     const stdDev = outcomeFile['standard-deviation'] || 1;
     const skewness = outcomeFile['skewness'] || 0;
     
-    const percentile = (roll - 1) / 99;
+    // Calculate minimum percentile needed to avoid negative yards
+    // For mean + z*stdDev >= 0, we need z >= -mean/stdDev
+    const minZForNonNegative = -mean / stdDev;
+    let minPercentile = 0.01; // Default to 1st percentile
+    
+    if (minZForNonNegative > -3 && minZForNonNegative < 3) {
+        // Use jstat to find percentile that gives us the minimum z-score
+        // Add small safety margin (0.1 z-score units)
+        const targetZ = minZForNonNegative + 0.1;
+        minPercentile = jStat.normal.cdf(targetZ, 0, 1);
+        // Clamp to reasonable range
+        minPercentile = Math.max(0.01, Math.min(0.05, minPercentile));
+    }
+    
+    // Map roll (1-100) to percentile range [minPercentile, 0.99]
+    // This ensures the worst roll gives z-score that prevents negative yards
+    const percentileRange = 0.99 - minPercentile;
+    const percentile = minPercentile + ((roll - 1) / 99) * percentileRange;
+    
     let z = inverseNormalCDF(percentile);
     
     if (skewness !== 0) {
@@ -335,6 +350,148 @@ const runSuccess = runOutcomeAverageTest('Run Success Average', baselineRates, '
 const runUnsuccess = runOutcomeAverageTest('Run Unsuccessful Average', baselineRates, 'run', 'unsuccessful');
 const runHavoc = runOutcomeAverageTest('Run Havoc Average', baselineRates, 'run', 'havoc');
 const runExplosive = runOutcomeAverageTest('Run Explosive Average', baselineRates, 'run', 'explosive');
+
+// Test 8: Simulate specific LLM output
+function calculateRatesFromAdvantage(playType, offenseAdvantage, riskLeverage) {
+    // Baseline: 40% success, 12% explosive, 12% havoc = 52% good outcomes
+    const baselineSuccess = 40.0;
+    const baselineExplosive = 12.0;
+    const baselineHavoc = 12.0;
+    
+    // Map offense-advantage to success+explosive total (good outcomes)
+    // +10 = 95% good, 0 = 52% good, -10 = 5% good
+    const goodOutcomesBase = 52.0 + (offenseAdvantage * 4.5); // 4.5% per point
+    const goodOutcomes = Math.max(5, Math.min(95, goodOutcomesBase));
+    
+    // Risk-leverage shifts between success/explosive vs havoc
+    // risk-leverage 0 = mostly success, risk-leverage 10 = more explosive/havoc
+    const riskFactor = riskLeverage / 10.0;
+    
+    // Play type adjustments
+    const passExplosiveBoost = playType === 'pass' ? 3.0 : 0.0;
+    const passHavocBoost = playType === 'pass' ? 1.0 : 0.0;
+    
+    // Calculate base rates
+    // Good outcomes split between success and explosive based on risk
+    const explosiveBase = baselineExplosive + (riskFactor * 8.0) + passExplosiveBoost;
+    const successBase = goodOutcomes - explosiveBase;
+    
+    // Havoc increases with risk and decreases with good outcomes
+    const havocBase = baselineHavoc + (riskFactor * 8.0) - ((goodOutcomes - 52) * 0.3) + passHavocBoost;
+    
+    return {
+        "success-rate": Math.max(3, Math.min(90, successBase)),
+        "explosive-rate": Math.max(2, Math.min(25, explosiveBase)),
+        "havoc-rate": Math.max(3, Math.min(70, havocBase))
+    };
+}
+
+function testLLMOutput(llmOutput, iterations = 100000) {
+    console.log('\n' + '='.repeat(60));
+    console.log('Test: Simulate LLM Output');
+    console.log('='.repeat(60));
+    console.log(`LLM Output: ${JSON.stringify(llmOutput)}`);
+    
+    const playType = llmOutput['play-type'] || 'run';
+    const offenseAdvantage = llmOutput['offense-advantage'] || 0.0;
+    const riskLeverage = llmOutput['risk-leverage'] || 5.0;
+    
+    // Calculate rates from advantage and leverage
+    const evalData = calculateRatesFromAdvantage(playType, offenseAdvantage, riskLeverage);
+    
+    console.log(`\nCalculated Rates:`);
+    console.log(`  Success Rate: ${evalData['success-rate'].toFixed(2)}%`);
+    console.log(`  Explosive Rate: ${evalData['explosive-rate'].toFixed(2)}%`);
+    console.log(`  Havoc Rate: ${evalData['havoc-rate'].toFixed(2)}%`);
+    console.log(`  Unsuccessful Rate: ${(100 - evalData['success-rate'] - evalData['explosive-rate'] - evalData['havoc-rate']).toFixed(2)}%`);
+    
+    // Simulate plays
+    console.log(`\nSimulating ${iterations} plays...`);
+    
+    let outcomeCounts = { success: 0, explosive: 0, havoc: 0, unsuccessful: 0 };
+    let totalYards = 0;
+    let totalPlays = 0;
+    let negativeYardsOnSuccess = 0;
+    let yardsByOutcome = { success: [], explosive: [], havoc: [], unsuccessful: [] };
+    
+    for (let i = 0; i < iterations; i++) {
+        const result = simulatePlay(evalData, playType, null);
+        outcomeCounts[result.outcomeType]++;
+        totalYards += result.yards;
+        totalPlays++;
+        yardsByOutcome[result.outcomeType].push(result.yards);
+        
+        // Check for negative yards on successful plays
+        if (result.outcomeType === 'success' && result.yards < 0) {
+            negativeYardsOnSuccess++;
+        }
+    }
+    
+    // Calculate statistics
+    const avgYards = totalYards / totalPlays;
+    const successRate = (outcomeCounts.success / totalPlays) * 100;
+    const explosiveRate = (outcomeCounts.explosive / totalPlays) * 100;
+    const havocRate = (outcomeCounts.havoc / totalPlays) * 100;
+    const unsuccessfulRate = (outcomeCounts.unsuccessful / totalPlays) * 100;
+    
+    // Calculate average yards by outcome type
+    const avgYardsByOutcome = {};
+    Object.keys(yardsByOutcome).forEach(outcome => {
+        if (yardsByOutcome[outcome].length > 0) {
+            const sum = yardsByOutcome[outcome].reduce((a, b) => a + b, 0);
+            avgYardsByOutcome[outcome] = sum / yardsByOutcome[outcome].length;
+        } else {
+            avgYardsByOutcome[outcome] = 0;
+        }
+    });
+    
+    console.log(`\nResults:`);
+    console.log(`  Outcome Distribution:`);
+    console.log(`    Success: ${successRate.toFixed(2)}% (target: ${evalData['success-rate'].toFixed(2)}%)`);
+    console.log(`    Explosive: ${explosiveRate.toFixed(2)}% (target: ${evalData['explosive-rate'].toFixed(2)}%)`);
+    console.log(`    Havoc: ${havocRate.toFixed(2)}% (target: ${evalData['havoc-rate'].toFixed(2)}%)`);
+    console.log(`    Unsuccessful: ${unsuccessfulRate.toFixed(2)}%`);
+    console.log(`  Average Yards: ${avgYards.toFixed(2)}`);
+    console.log(`  Average Yards by Outcome:`);
+    Object.keys(avgYardsByOutcome).forEach(outcome => {
+        if (outcomeCounts[outcome] > 0) {
+            console.log(`    ${outcome}: ${avgYardsByOutcome[outcome].toFixed(2)} yards`);
+        }
+    });
+    
+    // Assert that negative yards on successful plays are rare (< 2% of successful plays)
+    const negativeYardsRate = outcomeCounts.success > 0 
+        ? (negativeYardsOnSuccess / outcomeCounts.success) * 100 
+        : 0;
+    const maxNegativeYardsRate = 2.0; // Allow up to 2% of successful plays to have negative yards
+    
+    console.log(`\n  Negative Yards on Success: ${negativeYardsOnSuccess} out of ${outcomeCounts.success} (${negativeYardsRate.toFixed(2)}%)`);
+    
+    if (negativeYardsRate > maxNegativeYardsRate) {
+        throw new Error(
+            `FAIL: ${negativeYardsOnSuccess} successful plays (${negativeYardsRate.toFixed(2)}%) resulted in negative yards. ` +
+            `Expected < ${maxNegativeYardsRate}%`
+        );
+    }
+    
+    return {
+        evalData,
+        outcomeCounts,
+        avgYards,
+        avgYardsByOutcome,
+        negativeYardsOnSuccess,
+        negativeYardsRate
+    };
+}
+
+// Test the specific LLM output
+const llmOutput = {
+    "play-type": "pass",
+    "offense-advantage": 2,
+    "risk-leverage": 5
+};
+
+const test8 = testLLMOutput(llmOutput, 100000);
 
 console.log('\n' + '='.repeat(60));
 console.log('Test Summary');
