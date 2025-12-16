@@ -821,7 +821,7 @@ const offensivePlaycalls = {
     'Shallow Cross': {
         'QB': { category: 'Pass', action: '3 step drop' },
         'RB': { category: 'Protect', action: 'Block right' },
-        'WR': { category: 'Route', action: 'Slant' },
+        'WR': { category: 'Route', action: '2 Slant' },
         'TE': { category: 'Route', action: '6 Shallow dig' },
         'OT': { category: 'Pass Block', action: 'Outside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
@@ -831,7 +831,7 @@ const offensivePlaycalls = {
         'QB': { category: 'Pass', action: '5 step drop' },
         'RB': { category: 'Protect', action: 'Block left' },
         'WR': { category: 'Route', action: '6 Shallow dig' },
-        'TE': { category: 'Route', action: 'Post' },
+        'TE': { category: 'Route', action: '8 Post' },
         'OT': { category: 'Pass Block', action: 'Outside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
         'C': { category: 'Pass Block', action: 'Inside priority' }
@@ -839,7 +839,7 @@ const offensivePlaycalls = {
     'Flood': {
         'QB': { category: 'Pass', action: '5 step drop' },
         'RB': { category: 'Protect', action: 'Block right' },
-        'WR': { category: 'Route', action: 'Corner' },
+        'WR': { category: 'Route', action: '7 Corner' },
         'TE': { category: 'Route', action: '1 Flat' },
         'OT': { category: 'Pass Block', action: 'Outside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
@@ -857,8 +857,8 @@ const offensivePlaycalls = {
     'Sail': {
         'QB': { category: 'Pass', action: '5 step drop' },
         'RB': { category: 'Route', action: '1 Flat' },
-        'WR': { category: 'Route', action: 'Corner' },
-        'TE': { category: 'Route', action: 'Out' },
+        'WR': { category: 'Route', action: '7 Corner' },
+        'TE': { category: 'Route', action: '5 Out' },
         'OT': { category: 'Pass Block', action: 'Outside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
         'C': { category: 'Pass Block', action: 'Inside priority' }
@@ -866,8 +866,8 @@ const offensivePlaycalls = {
     'Four Verticals': {
         'QB': { category: 'Pass', action: '7 step drop' },
         'RB': { category: 'Protect', action: 'Block left' },
-        'WR': { category: 'Route', action: 'Seam/Go' },
-        'TE': { category: 'Route', action: 'Seam/Go' },
+        'WR': { category: 'Route', action: '9 Go/Fly/Fade' },
+        'TE': { category: 'Route', action: '9 Go/Fly/Fade' },
         'OT': { category: 'Pass Block', action: 'Outside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
         'C': { category: 'Pass Block', action: 'Inside priority' }
@@ -875,8 +875,8 @@ const offensivePlaycalls = {
     'Curl flats': {
         'QB': { category: 'Pass', action: '3 step drop' },
         'RB': { category: 'Route', action: '1 Flat' },
-        'WR': { category: 'Route', action: 'Curl' },
-        'TE': { category: 'Route', action: 'Curl' },
+        'WR': { category: 'Route', action: '4 Curl/Hook' },
+        'TE': { category: 'Route', action: '4 Curl/Hook' },
         'OT': { category: 'Pass Block', action: 'Inside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
         'C': { category: 'Pass Block', action: 'Inside priority' }
@@ -884,8 +884,8 @@ const offensivePlaycalls = {
     'Mesh': {
         'QB': { category: 'Pass', action: '3 step drop' },
         'RB': { category: 'Route', action: '1 Flat' },
-        'WR': { category: 'Route', action: 'Slant' },
-        'TE': { category: 'Route', action: 'Slant' },
+        'WR': { category: 'Route', action: '2 Slant' },
+        'TE': { category: 'Route', action: '2 Slant' },
         'OT': { category: 'Pass Block', action: 'Inside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
         'C': { category: 'Pass Block', action: 'Inside priority' }
@@ -902,8 +902,8 @@ const offensivePlaycalls = {
     'Ohio': {
         'QB': { category: 'Pass', action: '5 step drop' },
         'RB': { category: 'Route', action: 'Wheel' },
-        'WR': { category: 'Route', action: 'Post' },
-        'TE': { category: 'Route', action: 'Corner' },
+        'WR': { category: 'Route', action: '8 Post' },
+        'TE': { category: 'Route', action: '7 Corner' },
         'OT': { category: 'Pass Block', action: 'Outside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
         'C': { category: 'Pass Block', action: 'Inside priority' }
@@ -939,7 +939,7 @@ const offensivePlaycalls = {
         'QB': { category: 'Pass', action: 'Play action pass' },
         'RB': { category: 'Run', action: 'Flea flicker' },
         'WR': { category: 'Route', action: '9 Go/Fly/Fade' },
-        'TE': { category: 'Route', action: 'Seam/Go' },
+        'TE': { category: 'Route', action: '9 Go/Fly/Fade' },
         'OT': { category: 'Pass Block', action: 'Outside priority' },
         'OG': { category: 'Pass Block', action: 'Inside priority' },
         'C': { category: 'Pass Block', action: 'Inside priority' }
@@ -1052,13 +1052,13 @@ const defensivePlaycalls = {
     'Cover 0 (LB blitz)': {
         'CB': { category: 'Man Coverage', action: 'Outside release man' },
         'S': { category: 'Man Coverage', action: 'Inside release man' },
-        'LB': { category: 'Blitz', action: 'Left A gap' },
-        'MLB': { category: 'Blitz', action: 'Right A gap' },
+        'LB': { category: 'Rush', action: 'Left A gap' },
+        'MLB': { category: 'Rush', action: 'Right A gap' },
         'DE': { category: 'Rush', action: 'Contain' },
         'DT': { category: 'Rush', action: 'Left B gap' }
     },
     'Cover 0 (CB blitz)': {
-        'CB': { category: 'Blitz', action: 'Left C gap' },
+        'CB': { category: 'Rush', action: 'Left C gap' },
         'S': { category: 'Man Coverage', action: 'Inside release man' },
         'LB': { category: 'Man Coverage', action: 'Inside release man' },
         'MLB': { category: 'Man Coverage', action: 'Inside release man' },
@@ -1105,7 +1105,6 @@ const allDefensiveCategories = {
     'Man Coverage': ['Inside release man', 'Outside release man'],
     'Zone Deep': ['Deep middle 1/3', 'Deep left (2)', 'Deep right (2)', 'Deep left (3)', 'Deep right (3)', 'Deep far left (4)', 'Deep far right (4)', 'Deep seam left (4)', 'Deep seam right (4)'],
     'Zone Short': ['Flat', 'Hook', 'Curtain', 'Robber', 'Spy'],
-    'Blitz': ['Left A gap', 'Right A gap', 'Left B gap', 'Right B gap', 'Left C gap', 'Right C gap', 'Contain'],
     'Rush': ['Left A gap', 'Right A gap', 'Left B gap', 'Right B gap', 'Left C gap', 'Right C gap', 'Contain'],
     'Spy': ['Spy']
 };
@@ -1732,7 +1731,7 @@ function drawDefensiveAssignmentArrow(ctx, x, y, assignment, color, isDashed, wi
         } else if (assignment.action.includes('right') || assignment.action.includes('Right')) {
             endX = x + arrowLength;
         } else if (assignment.action.includes('gap')) {
-            // Rush/blitz
+            // Rush
             arrowLength = 15;
             if (assignment.action.includes('A gap')) {
                 endY = y + arrowLength * 0.6;
@@ -1923,10 +1922,10 @@ function renderDefensePlaycallDiagram() {
             } else if (assignment.category === 'Man Coverage' || assignment.action.includes('Man')) {
                 color = '#f44336'; // Red for man coverage
                 isDashed = true;
-            } else if (assignment.category === 'Blitz' || assignment.category === 'Rush' || 
-                      assignment.action.includes('Blitz') || assignment.action.includes('Rush') || 
+            } else if (assignment.category === 'Rush' || 
+                      assignment.action.includes('Rush') || 
                       assignment.action.includes('gap')) {
-                color = '#FF9800'; // Orange for blitz/rush
+                color = '#FF9800'; // Orange for rush
             } else if (assignment.action.includes('Spy')) {
                 color = '#FF9800'; // Orange for spy
             }
@@ -2252,7 +2251,7 @@ function applyDefensivePlaycall(playcallName) {
     // DL always rush (unless specified in playcall)
     const allDL = [...playersByPosition['DE'], ...playersByPosition['DT']];
     allDL.forEach((dl) => {
-        // Check if playcall specifies a blitz/rush for this position
+        // Check if playcall specifies a rush for this position
         const playcall = defensivePlaycalls[playcallName];
         if (playcall && playcall[dl.position]) {
             const assignment = playcall[dl.position];
@@ -2370,7 +2369,7 @@ function createAssignmentItem(player, side, location) {
         
         // For DL players, try to pre-populate gap from technique
         let defaultAction = playerAssignments[defaultCategory][0];
-        if (['DE', 'DT'].includes(player.position) && (defaultCategory === 'Rush' || defaultCategory === 'Blitz')) {
+        if (['DE', 'DT'].includes(player.position) && defaultCategory === 'Rush') {
             const defaultGap = getDefaultGapFromLocation(location, player);
             if (defaultGap && playerAssignments[defaultCategory].includes(defaultGap)) {
                 defaultAction = defaultGap;
@@ -2513,17 +2512,20 @@ function populateActions(select, actions) {
 }
 
 // Map DL techniques to gaps
+// Map DL techniques to gaps
+// Default behavior: DL rush into the gap indicated by their technique
+// 3-tech = B gap, 2/4/6 tech prioritize inside gaps
 function getGapFromTechnique(technique, isLeft) {
-    // Technique mapping: 0=A, 1=A, 2i=B, 2=B, 3=B, 4i=C, 4=C, 5=C, 6=C, 7=C, 9=C
+    // Technique mapping: 0/1=A gap, 2i/2/3=B gap, 4i/4/5/6/6i/7/9=C gap
     const tech = technique.toString().toLowerCase();
     let gap = '';
     
     if (tech === '0' || tech === '1') {
         gap = 'A gap';
     } else if (tech === '2i' || tech === '2' || tech === '3') {
-        gap = 'B gap';
+        gap = 'B gap'; // 3-tech = B gap, 2-tech prioritizes inside (B gap)
     } else if (tech === '4i' || tech === '4' || tech === '5' || tech === '6' || tech === '6i' || tech === '7' || tech === '9') {
-        gap = 'C gap';
+        gap = 'C gap'; // 4/6 tech prioritize inside (C gap)
     }
     
     if (gap && isLeft !== undefined) {
@@ -4525,8 +4527,8 @@ function drawAssignmentArrow(ctx, x, y, action, position, isOffense, canvasWidth
         arrowColor = '#4CAF50'; // Green for blocking
     } else if (action.includes('Route') || action.includes('Cover')) {
         arrowColor = '#2196F3'; // Blue for routes/coverage
-    } else if (action.includes('Blitz') || action.includes('Rush')) {
-        arrowColor = '#f44336'; // Red for blitz/rush
+    } else if (action.includes('Rush')) {
+        arrowColor = '#f44336'; // Red for rush
     } else if (action.includes('Run')) {
         arrowColor = '#FF9800'; // Orange for runs
     }
@@ -4849,6 +4851,8 @@ Blitz w/o backfield protection = less success, more leverage.
 
 Blocking mismatches: inferior vs elite = less success, more leverage.
 
+What is the protection scheme? (6-man, 7-man, any slides. Can it handle the blitzers and what is the level of redundancy to handle lost blocks?)  Insufficient protection = high leverage and lower success
+
 Bear front: hurts zone runs, helps gap runs.
 
 Deep zones on play side = lower leverage; man coverage = higher leverage.
@@ -4944,7 +4948,7 @@ EXAMPLES:
     
     let userMessageContent = `${gameState.down}${getDownSuffix(gameState.down)} & ${gameState.distance} @ ${gameState["opp-yardline"]}yd Q${gameState.quarter} ${gameState.time} ${gameState.score.home}-${gameState.score.away}
 
-This is a professional simulator used in training by world-class coordinators. Evaluate like a coordinator grading a call with film-room brutality, not a scout grading players. Success rate is not guaranteed even with +10 - bungles are handled programmatically. Grade the SCHEME, as execution errors are handled programmatically. Do not hedge, commit to extreme values ruthlessly when warranted. 
+This is a professional simulator used in training by world-class coordinators. Evaluate like a coordinator grading a call with film-room brutality, not a scout grading players. Success rate is not guaranteed even with +10 - bungles are handled programmatically. Grade the SCHEME, as execution errors are handled programmatically. Do not hedge, commit to extreme values ruthlessly when warranted.
 
 Pos,Initials,Align,X (yds),Y (yds),Rating,Assignment${allPlayers.map(p => {
         const coords = p.coords.match(/X:([-\d.]+).*Y:([-\d.]+)/);
@@ -4969,7 +4973,23 @@ Grade purely on scheme potential; commit fully to numeric advantage, ignoring ex
     console.log(userMessageContent);
     console.log('=== END PROMPT ===');
     
-    // If we have API keys, make actual API calls
+    // If we have API keys, make actual API calls (prefer Claude)
+    if (claudeKey) {
+        try {
+            console.log('Calling Claude API...');
+            const claudeResponse = await callClaude(fixedInstructions, userMessageContent, claudeKey);
+            if (claudeResponse) {
+                console.log('=== CLAUDE RESPONSE ===');
+                console.log(claudeResponse);
+                console.log('=== END CLAUDE RESPONSE ===');
+                return claudeResponse;
+            }
+        } catch (error) {
+            console.error('Error calling Claude API:', error);
+            console.log('Falling back to OpenAI or mock output');
+        }
+    }
+    
     if (openaiKey) {
         try {
             console.log('Calling OpenAI API...');
@@ -5030,24 +5050,25 @@ async function callOpenAI(systemPrompt, userPrompt, apiKey) {
     }
 }
 
-async function callClaude(prompt, apiKey) {
+async function callClaude(systemPrompt, userPrompt, apiKey) {
     try {
         const response = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'x-api-key': apiKey,
-                'anthropic-version': '2023-06-01'
+                'anthropic-version': '2023-06-01',
+                'anthropic-dangerous-direct-browser-access': 'true'
             },
             body: JSON.stringify({
-                model: 'claude-3-5-sonnet-20241022',
+                model: 'claude-3-5-haiku-20241022',
                 max_tokens: 4000,
                 temperature: 0.2,
-                system: 'You are a SHARP and OPINIONATED football play analysis engine that KNOWS BALL. Analyze the SCHEME of the play - spatial relationships, blocking assignments, coverage vs routes. Return ONLY NUMERIC VALUES (0-100) in JSON. NO TEXT VALUES. Scheme analysis is 70% of your evaluation. If the scheme is broken (e.g., unblocked defenders, impossible alignments), return extreme numbers. The last line must be JSON: {"success-rate": [NUMBER], "havoc-rate": [NUMBER], "explosive-rate": [NUMBER]}',
+                system: systemPrompt,
                 messages: [
                     {
                         role: 'user',
-                        content: prompt
+                        content: userPrompt
                     }
                 ]
             })
