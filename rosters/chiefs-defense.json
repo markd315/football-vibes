@@ -1,0 +1,386 @@
+[
+  {
+    "name": "George Karlaftis",
+    "position": "DE",
+    "jersey": 56,
+    "height": "6'4",
+    "weight": "275",
+    "stamina": 100,
+    "percentile": 53.9,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 3,
+      "gap-control": 2,
+      "zone-rushing-defense": 1,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Charles Omenihu",
+    "position": "DE",
+    "jersey": 90,
+    "height": "6'5",
+    "weight": "280",
+    "stamina": 100,
+    "percentile": 43.9,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 2,
+      "gap-control": 1,
+      "zone-rushing-defense": 1,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Chris Jones",
+    "position": "DT",
+    "jersey": 95,
+    "height": "6'6",
+    "weight": "298",
+    "stamina": 100,
+    "percentile": 76.9,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 5,
+      "gap-control": 4,
+      "zone-rushing-defense": 2,
+      "man-coverage": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Jerry Tillery",
+    "position": "DT",
+    "jersey": 99,
+    "height": "6'6",
+    "weight": "295",
+    "stamina": 100,
+    "percentile": 26.9,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 1,
+      "gap-control": 1,
+      "zone-rushing-defense": 0,
+      "man-coverage": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Derrick Nnadi",
+    "position": "DT",
+    "jersey": 91,
+    "height": "6'0",
+    "weight": "325",
+    "stamina": 100,
+    "percentile": 36.9,
+    "traits-from-baseline-percentile": {
+      "gap-control": 2,
+      "zone-rushing-defense": 1,
+      "pass-rusher": 0,
+      "man-coverage": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Mike Pennel",
+    "position": "DT",
+    "jersey": 64,
+    "height": "6'4",
+    "weight": "332",
+    "stamina": 100,
+    "percentile": 16.9,
+    "traits-from-baseline-percentile": {
+      "gap-control": 1,
+      "zone-rushing-defense": 0,
+      "pass-rusher": -1,
+      "man-coverage": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Mike Danna",
+    "position": "DE",
+    "jersey": 51,
+    "height": "6'2",
+    "weight": "260",
+    "stamina": 100,
+    "percentile": 46.9,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 2,
+      "gap-control": 1,
+      "zone-rushing-defense": 1,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Ashton Gillotte",
+    "position": "DE",
+    "jersey": 92,
+    "height": "6'3",
+    "weight": "254",
+    "stamina": 100,
+    "percentile": 26.9,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 1,
+      "gap-control": 0,
+      "zone-rushing-defense": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Drue Tranquill",
+    "position": "LB",
+    "jersey": 23,
+    "height": "6'2",
+    "weight": "234",
+    "stamina": 100,
+    "percentile": 43.9,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 2,
+      "gap-control": 1,
+      "man-coverage": 1,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Jeffrey Bassa",
+    "position": "LB",
+    "jersey": 54,
+    "height": "6'1",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 13.899999999999999,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "gap-control": 0,
+      "man-coverage": 0,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Nick Bolton",
+    "position": "MLB",
+    "jersey": 32,
+    "height": "5'11",
+    "weight": "237",
+    "stamina": 100,
+    "percentile": 59.9,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 3,
+      "gap-control": 3,
+      "man-coverage": 1,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Jack Cochrane",
+    "position": "LB",
+    "jersey": 43,
+    "height": "6'2",
+    "weight": "230",
+    "stamina": 100,
+    "percentile": 9.899999999999999,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "gap-control": 0,
+      "man-coverage": -1,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Leo Chenal",
+    "position": "LB",
+    "jersey": 54,
+    "height": "6'2",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 49.9,
+    "traits-from-baseline-percentile": {
+      "gap-control": 3,
+      "zone-rushing-defense": 2,
+      "man-coverage": 0,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Cooper McDonald",
+    "position": "LB",
+    "jersey": 48,
+    "height": "6'1",
+    "weight": "235",
+    "stamina": 100,
+    "percentile": 9.899999999999999,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "gap-control": 0,
+      "man-coverage": -1,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Trent McDuffie",
+    "position": "CB",
+    "jersey": 21,
+    "height": "5'11",
+    "weight": "193",
+    "stamina": 100,
+    "percentile": 69.9,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 4,
+      "zone-rushing-defense": 3,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Nohl Williams",
+    "position": "CB",
+    "jersey": 29,
+    "height": "6'0",
+    "weight": "190",
+    "stamina": 100,
+    "percentile": 23.9,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 1,
+      "zone-rushing-defense": 0,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaylen Watson",
+    "position": "CB",
+    "jersey": 7,
+    "height": "6'2",
+    "weight": "198",
+    "stamina": 100,
+    "percentile": 46.9,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 2,
+      "zone-rushing-defense": 1,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Joshua Williams",
+    "position": "CB",
+    "jersey": 23,
+    "height": "6'3",
+    "weight": "197",
+    "stamina": 100,
+    "percentile": 36.9,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 1,
+      "zone-rushing-defense": 1,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Kristian Fulton",
+    "position": "CB",
+    "jersey": 22,
+    "height": "5'11",
+    "weight": "200",
+    "stamina": 100,
+    "percentile": 33.9,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 1,
+      "zone-rushing-defense": 1,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Mike Edwards",
+    "position": "CB",
+    "jersey": 27,
+    "height": "5'10",
+    "weight": "195",
+    "stamina": 100,
+    "percentile": 39.9,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 2,
+      "zone-rushing-defense": 1,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Chamarri Conner",
+    "position": "S",
+    "jersey": 35,
+    "height": "5'11",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 46.9,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 2,
+      "man-coverage": 2,
+      "gap-control": 1,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaden Hicks",
+    "position": "S",
+    "jersey": 36,
+    "height": "6'2",
+    "weight": "210",
+    "stamina": 100,
+    "percentile": 26.9,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 1,
+      "man-coverage": 0,
+      "gap-control": 0,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Bryan Cook",
+    "position": "S",
+    "jersey": 6,
+    "height": "6'1",
+    "weight": "208",
+    "stamina": 100,
+    "percentile": 43.9,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 2,
+      "man-coverage": 1,
+      "gap-control": 1,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Kevin Knowles",
+    "position": "S",
+    "jersey": 38,
+    "height": "6'0",
+    "weight": "200",
+    "stamina": 100,
+    "percentile": 13.899999999999999,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "man-coverage": 0,
+      "gap-control": -1,
+      "pass-rusher": -3
+    },
+    "health": 100
+  }
+]

@@ -1,0 +1,386 @@
+[
+  {
+    "name": "Jordan Love",
+    "position": "QB",
+    "jersey": 10,
+    "height": "6'4",
+    "weight": "224",
+    "stamina": 100,
+    "percentile": 69.3,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 3,
+      "pocket-presence": 2,
+      "mobility": 2,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Malik Willis",
+    "position": "QB",
+    "jersey": 7,
+    "height": "6'0",
+    "weight": "219",
+    "stamina": 100,
+    "percentile": 33.3,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": -1,
+      "pocket-presence": 0,
+      "mobility": 3,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Josh Jacobs",
+    "position": "RB",
+    "jersey": 8,
+    "height": "5'10",
+    "weight": "220",
+    "stamina": 100,
+    "percentile": 69.3,
+    "traits-from-baseline-percentile": {
+      "power-running": 3,
+      "elusiveness": 2,
+      "pass-catching": 2,
+      "pass-blocking": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Emanuel Wilson",
+    "position": "RB",
+    "jersey": 31,
+    "height": "5'10",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 36.3,
+    "traits-from-baseline-percentile": {
+      "power-running": 1,
+      "elusiveness": 1,
+      "pass-catching": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Chris Brooks",
+    "position": "RB",
+    "jersey": 33,
+    "height": "6'0",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 23.3,
+    "traits-from-baseline-percentile": {
+      "power-running": 1,
+      "elusiveness": 0,
+      "pass-catching": -1,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Christian Watson",
+    "position": "WR",
+    "jersey": 9,
+    "height": "6'4",
+    "weight": "208",
+    "stamina": 100,
+    "percentile": 59.3,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 3,
+      "pass-catching": 2,
+      "route-running": 1,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Matthew Golden",
+    "position": "WR",
+    "jersey": 18,
+    "height": "5'11",
+    "weight": "195",
+    "stamina": 100,
+    "percentile": 33.3,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 1,
+      "route-running": 1,
+      "pass-catching": 0,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Savion Williams",
+    "position": "WR",
+    "jersey": 84,
+    "height": "6'5",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 23.3,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "route-running": 0,
+      "elusiveness": -1,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Romeo Doubs",
+    "position": "WR",
+    "jersey": 87,
+    "height": "6'2",
+    "weight": "204",
+    "stamina": 100,
+    "percentile": 56.3,
+    "traits-from-baseline-percentile": {
+      "route-running": 2,
+      "pass-catching": 2,
+      "elusiveness": 1,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Dontayvion Wicks",
+    "position": "WR",
+    "jersey": 13,
+    "height": "6'1",
+    "weight": "206",
+    "stamina": 100,
+    "percentile": 46.3,
+    "traits-from-baseline-percentile": {
+      "route-running": 1,
+      "pass-catching": 1,
+      "elusiveness": 1,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Jayden Reed",
+    "position": "WR",
+    "jersey": 11,
+    "height": "5'11",
+    "weight": "187",
+    "stamina": 100,
+    "percentile": 66.3,
+    "traits-from-baseline-percentile": {
+      "route-running": 3,
+      "elusiveness": 3,
+      "pass-catching": 2,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Bo Melton",
+    "position": "WR",
+    "jersey": 80,
+    "height": "5'11",
+    "weight": "189",
+    "stamina": 100,
+    "percentile": 29.3,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 1,
+      "route-running": 0,
+      "pass-catching": 0,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Luke Musgrave",
+    "position": "TE",
+    "jersey": 88,
+    "height": "6'6",
+    "weight": "253",
+    "stamina": 100,
+    "percentile": 49.3,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 2,
+      "route-running": 1,
+      "run-blocking": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "John FitzPatrick",
+    "position": "TE",
+    "jersey": 83,
+    "height": "6'6",
+    "weight": "255",
+    "stamina": 100,
+    "percentile": 26.3,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-catching": 0,
+      "route-running": -1,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Josh Whyle",
+    "position": "TE",
+    "jersey": 81,
+    "height": "6'6",
+    "weight": "248",
+    "stamina": 100,
+    "percentile": 23.3,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 0,
+      "route-running": 0,
+      "run-blocking": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Rasheed Walker",
+    "position": "OT",
+    "jersey": 64,
+    "height": "6'6",
+    "weight": "312",
+    "stamina": 100,
+    "percentile": 49.3,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 1,
+      "run-blocking": 1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Anthony Belton",
+    "position": "OT",
+    "jersey": 72,
+    "height": "6'5",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 36.3,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Zach Tom",
+    "position": "OT",
+    "jersey": 50,
+    "height": "6'5",
+    "weight": "304",
+    "stamina": 100,
+    "percentile": 63.3,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 2,
+      "run-blocking": 2,
+      "mobility": 0,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Darian Kinnard",
+    "position": "OT",
+    "jersey": 67,
+    "height": "6'5",
+    "weight": "322",
+    "stamina": 100,
+    "percentile": 23.3,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Aaron Banks",
+    "position": "OG",
+    "jersey": 65,
+    "height": "6'5",
+    "weight": "325",
+    "stamina": 100,
+    "percentile": 53.3,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 2,
+      "pass-blocking": 1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Donovan Jennings",
+    "position": "OG",
+    "jersey": 68,
+    "height": "6'5",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 26.3,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Jordan Morgan",
+    "position": "OG",
+    "jersey": 76,
+    "height": "6'5",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 39.3,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Sean Rhyan",
+    "position": "C",
+    "jersey": 75,
+    "height": "6'5",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 46.3,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 1,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Jacob Monk",
+    "position": "C",
+    "jersey": 60,
+    "height": "6'4",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 19.3,
+    "traits-from-baseline-percentile": {
+      "run-blocking": -1,
+      "pass-blocking": -1,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  }
+]

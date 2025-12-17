@@ -124,7 +124,9 @@ Each outcome file contains statistical properties (average-yards-gained, standar
 
 ## LLM Integration
 
-The application uses OpenAI GPT-5 for play analysis. 
+Prompt caching notes: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+
+The application uses Claude (or OpenAI GPT-5) for play analysis. 
 
 **⚠️ IMPORTANT SECURITY NOTE**: The current implementation uses `config.js` to store API keys, which is served directly to browser users. This is **NOT SECURE** for production. For production deployments, you must implement a separate backend server endpoint to handle API key management and LLM API calls. The frontend should make requests to your backend, which then securely calls the LLM API.
 

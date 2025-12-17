@@ -1,0 +1,498 @@
+[
+  {
+    "name": "Braden Fiske",
+    "position": "DE",
+    "jersey": 90,
+    "height": "6'4",
+    "weight": "292",
+    "stamina": 100,
+    "percentile": 58,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 2,
+      "gap-control": 2,
+      "zone-rushing-defense": 1,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Larrell Murchison",
+    "position": "DE",
+    "jersey": 92,
+    "height": "6'3",
+    "weight": "285",
+    "stamina": 100,
+    "percentile": 41,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 1,
+      "gap-control": 0,
+      "zone-rushing-defense": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Desjuan Johnson",
+    "position": "DE",
+    "jersey": 95,
+    "height": "6'3",
+    "weight": "280",
+    "stamina": 100,
+    "percentile": 30,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 0,
+      "gap-control": -1,
+      "zone-rushing-defense": -1,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Kobie Turner",
+    "position": "DE",
+    "jersey": 91,
+    "height": "6'2",
+    "weight": "288",
+    "stamina": 100,
+    "percentile": 65,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 3,
+      "gap-control": 2,
+      "zone-rushing-defense": 1,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyler Davis",
+    "position": "DE",
+    "jersey": 93,
+    "height": "6'2",
+    "weight": "290",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 1,
+      "gap-control": 0,
+      "zone-rushing-defense": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Jared Verse",
+    "position": "DE",
+    "jersey": 99,
+    "height": "6'4",
+    "weight": "260",
+    "stamina": 100,
+    "percentile": 62,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 3,
+      "gap-control": 1,
+      "zone-rushing-defense": 1,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Byron Young",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'3",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 56,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 2,
+      "zone-rushing-defense": 1,
+      "gap-control": 1,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Josaiah Stewart",
+    "position": "DE",
+    "jersey": 45,
+    "height": "6'1",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 1,
+      "zone-rushing-defense": 0,
+      "gap-control": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Poona Ford",
+    "position": "DT",
+    "jersey": 97,
+    "height": "5'11",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 49,
+    "traits-from-baseline-percentile": {
+      "gap-control": 2,
+      "zone-rushing-defense": 1,
+      "pass-rusher": 0,
+      "man-coverage": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Ty Hamilton",
+    "position": "DT",
+    "jersey": 96,
+    "height": "6'3",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 32,
+    "traits-from-baseline-percentile": {
+      "gap-control": 1,
+      "zone-rushing-defense": 0,
+      "pass-rusher": -1,
+      "man-coverage": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Nate Landman",
+    "position": "MLB",
+    "jersey": 53,
+    "height": "6'3",
+    "weight": "235",
+    "stamina": 100,
+    "percentile": 58,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 2,
+      "gap-control": 2,
+      "man-coverage": 1,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Troy Reeder",
+    "position": "LB",
+    "jersey": 51,
+    "height": "6'3",
+    "weight": "240",
+    "stamina": 100,
+    "percentile": 45,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 1,
+      "gap-control": 1,
+      "man-coverage": 0,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Omar Speights",
+    "position": "LB",
+    "jersey": 54,
+    "height": "6'1",
+    "weight": "230",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 2,
+      "gap-control": 1,
+      "man-coverage": 1,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Shaun Dolac",
+    "position": "LB",
+    "jersey": 52,
+    "height": "6'0",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 30,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "gap-control": 0,
+      "man-coverage": -1,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Ernest Jones",
+    "position": "LB",
+    "jersey": 50,
+    "height": "6'2",
+    "weight": "230",
+    "stamina": 100,
+    "percentile": 41,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 1,
+      "gap-control": 1,
+      "man-coverage": 0,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Jake Hummel",
+    "position": "LB",
+    "jersey": 55,
+    "height": "6'1",
+    "weight": "228",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "gap-control": 0,
+      "man-coverage": -1,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Christian Rozeboom",
+    "position": "LB",
+    "jersey": 56,
+    "height": "6'0",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 19,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": -1,
+      "gap-control": -1,
+      "man-coverage": -2,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Emmanuel Forbes Jr.",
+    "position": "CB",
+    "jersey": 13,
+    "height": "6'1",
+    "weight": "180",
+    "stamina": 100,
+    "percentile": 62,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 3,
+      "zone-rushing-defense": 1,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Derion Kendrick",
+    "position": "CB",
+    "jersey": 1,
+    "height": "6'0",
+    "weight": "190",
+    "stamina": 100,
+    "percentile": 48,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 2,
+      "zone-rushing-defense": 0,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Darious Williams",
+    "position": "CB",
+    "jersey": 31,
+    "height": "5'9",
+    "weight": "187",
+    "stamina": 100,
+    "percentile": 58,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 3,
+      "zone-rushing-defense": 1,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Ahkello Witherspoon",
+    "position": "CB",
+    "jersey": 23,
+    "height": "6'2",
+    "weight": "195",
+    "stamina": 100,
+    "percentile": 41,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 1,
+      "zone-rushing-defense": 0,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Cobie Durant",
+    "position": "CB",
+    "jersey": 14,
+    "height": "5'11",
+    "weight": "180",
+    "stamina": 100,
+    "percentile": 49,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 2,
+      "zone-rushing-defense": 0,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Josh Wallace",
+    "position": "CB",
+    "jersey": 24,
+    "height": "5'11",
+    "weight": "185",
+    "stamina": 100,
+    "percentile": 32,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 1,
+      "zone-rushing-defense": 0,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Tre'Vius Hodges-Tomlinson",
+    "position": "CB",
+    "jersey": 25,
+    "height": "5'9",
+    "weight": "178",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 0,
+      "zone-rushing-defense": 0,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Kam Curl",
+    "position": "S",
+    "jersey": 31,
+    "height": "6'1",
+    "weight": "204",
+    "stamina": 100,
+    "percentile": 65,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 2,
+      "man-coverage": 2,
+      "gap-control": 1,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Chris Smith II",
+    "position": "S",
+    "jersey": 22,
+    "height": "6'0",
+    "weight": "200",
+    "stamina": 100,
+    "percentile": 45,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 1,
+      "man-coverage": 1,
+      "gap-control": 0,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Kamren Kinchens",
+    "position": "S",
+    "jersey": 24,
+    "height": "5'11",
+    "weight": "202",
+    "stamina": 100,
+    "percentile": 62,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 2,
+      "man-coverage": 2,
+      "gap-control": 1,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaylen McCollough",
+    "position": "S",
+    "jersey": 26,
+    "height": "6'0",
+    "weight": "198",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 1,
+      "man-coverage": 1,
+      "gap-control": 0,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Tanner Ingle",
+    "position": "S",
+    "jersey": 28,
+    "height": "5'10",
+    "weight": "195",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "man-coverage": 0,
+      "gap-control": -1,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Russ Yeast",
+    "position": "S",
+    "jersey": 29,
+    "height": "5'11",
+    "weight": "197",
+    "stamina": 100,
+    "percentile": 32,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 1,
+      "man-coverage": 0,
+      "gap-control": 0,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Jason Taylor II",
+    "position": "S",
+    "jersey": 30,
+    "height": "6'0",
+    "weight": "200",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "man-coverage": 0,
+      "gap-control": -1,
+      "pass-rusher": -3
+    },
+    "health": 100
+  }
+]

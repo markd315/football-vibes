@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Football Vibes - Play Designer</title>
+    <title>LLM Scheme Football</title>
     <style>
         * {
             margin: 0;
@@ -105,6 +105,27 @@
         .player-info {
             font-size: 0.9em;
             color: #666;
+        }
+
+        .player-bars {
+            width: 100%;
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .effective-bar {
+            height: 8px;
+            border-radius: 4px;
+            transition: width 0.3s, background 0.3s;
+        }
+
+        .stamina-bar-thin {
+            height: 3px;
+            background: #e74c3c;
+            border-radius: 2px;
+            transition: width 0.3s;
         }
 
         .stamina-bar {
@@ -339,7 +360,49 @@
 </head>
 <body>
     <div class="container">
-        <h1>🏈 Football Vibes - Play Designer</h1>
+        <h1>🏈 LLM Scheme Football</h1>
+        
+        <!-- Team Selection Screen -->
+        <div id="teamSelectionScreen" class="step-content">
+            <h2>Select Teams</h2>
+            <p>Choose the home and away teams for this game.</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px;">
+                <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 3px solid #4CAF50;">
+                    <h3 style="color: #2e7d32; margin-top: 0;">🏠 Home Team</h3>
+                    <select id="homeTeamSelect" style="width: 100%; padding: 12px; font-size: 1.1em; border-radius: 5px; margin-bottom: 15px;">
+                        <option value="">Select home team...</option>
+                    </select>
+                    <div id="homeTeamPreview" style="min-height: 100px;"></div>
+                </div>
+                <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 3px solid #2196F3;">
+                    <h3 style="color: #1565c0; margin-top: 0;">✈️ Away Team</h3>
+                    <select id="awayTeamSelect" style="width: 100%; padding: 12px; font-size: 1.1em; border-radius: 5px; margin-bottom: 15px;">
+                        <option value="">Select away team...</option>
+                    </select>
+                    <div id="awayTeamPreview" style="min-height: 100px;"></div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px; text-align: center;">
+                <label style="display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; color: #000;">
+                    <input type="checkbox" id="enableCacheCheckbox" style="width: 20px; height: 20px; cursor: pointer;">
+                    <span style="font-size: 1.1em;">Enable 5-minute prompt cache (reduces API costs by ~90%)</span>
+                </label>
+                <div style="font-size: 0.85em; color: rgba(0,0,0,0.7); margin-top: 8px;">
+                    Cache the fixed system prompt to speed up subsequent plays. First call writes cache, subsequent calls read from it.
+                </div>
+            </div>
+            
+            <div class="button-group" style="justify-content: center;">
+                <button class="btn-success" onclick="startGame()" id="startGameBtn" disabled style="padding: 20px 50px; font-size: 1.3em;">
+                    Start Game
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Game Container (hidden until team selection) -->
+        <div id="mainGameContainer" class="hidden">
         
         <div id="personnelDisplay" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; color: #fff; font-size: 1.1em;">
             <div style="display: flex; gap: 30px; align-items: center; justify-content: space-between;">
@@ -378,6 +441,14 @@
             <div class="game-state-item">
                 <div class="game-state-label">Time</div>
                 <div class="game-state-value" id="time">15:00</div>
+            </div>
+            <div class="game-state-item">
+                <div class="game-state-label">Play Clock</div>
+                <div class="game-state-value" id="playClock" style="color: #4CAF50; font-size: 1.4em; font-weight: bold;">40</div>
+            </div>
+            <div class="game-state-item" id="cacheTimerContainer" style="display: none;">
+                <div class="game-state-label">Cache TTL</div>
+                <div class="game-state-value" id="cacheTimer" style="color: #4CAF50; font-size: 1.2em;">5:00</div>
             </div>
             <div class="game-state-item" style="grid-column: 1 / -1;">
                 <div class="game-state-label">Possession</div>
@@ -620,9 +691,29 @@
                 </div>
             </div>
             
+            <div style="margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 8px; border: 2px solid #ddd;">
+                <h3 style="margin-top: 0; margin-bottom: 10px;">Manual Override</h3>
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <span>Yards:</span>
+                        <input type="number" id="overrideYards" style="width: 80px; padding: 5px; border-radius: 3px; border: 1px solid #ddd;" placeholder="0">
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" id="overrideTurnover" style="width: 18px; height: 18px;">
+                        <span>Turnover</span>
+                    </label>
+                    <button class="btn-secondary" onclick="executePlayOverride()" style="padding: 8px 15px; font-size: 0.9em;">Execute Override</button>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.85em; color: #666;">
+                    Override bypasses LLM and directly sets yards gained and turnover status.
+                </div>
+            </div>
+            
             <div class="button-group">
                 <button class="btn-secondary" onclick="previousStep()">Previous</button>
                 <button class="btn-success" onclick="executePlay()">Execute Play</button>
+                <button class="btn-secondary" onclick="copyLLMPrompt()" style="margin-left: 10px;">Copy LLM Prompt</button>
+                <button class="btn-secondary" onclick="previewAssignments()" style="margin-left: 10px;">Preview Assignments</button>
             </div>
         </div>
 
@@ -648,6 +739,8 @@
                 <button class="btn-primary" onclick="resetPlay()">Design New Play</button>
             </div>
         </div>
+        
+        </div><!-- End mainGameContainer -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.5/dist/jstat.min.js"></script>

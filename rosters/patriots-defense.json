@@ -1,0 +1,418 @@
+[
+  {
+    "name": "Christian Barmore",
+    "position": "DE",
+    "jersey": 90,
+    "height": "6'4",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 75,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 3,
+      "gap-control": 2,
+      "zone-rushing-defense": 1,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Joshua Farmer",
+    "position": "DE",
+    "jersey": 91,
+    "height": "6'4",
+    "weight": "295",
+    "stamina": 100,
+    "percentile": 32,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 0,
+      "gap-control": 0,
+      "zone-rushing-defense": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Khyiris Tonga",
+    "position": "DT",
+    "jersey": 96,
+    "height": "6'2",
+    "weight": "325",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "gap-control": 1,
+      "zone-rushing-defense": 1,
+      "pass-rusher": -1,
+      "man-coverage": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Eric Gregory",
+    "position": "DT",
+    "jersey": 93,
+    "height": "6'4",
+    "weight": "290",
+    "stamina": 100,
+    "percentile": 29,
+    "traits-from-baseline-percentile": {
+      "gap-control": 0,
+      "zone-rushing-defense": 0,
+      "pass-rusher": 0,
+      "man-coverage": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Cory Durden",
+    "position": "DE",
+    "jersey": 92,
+    "height": "6'5",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 1,
+      "gap-control": 0,
+      "zone-rushing-defense": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Harold Landry III",
+    "position": "DE",
+    "jersey": 55,
+    "height": "6'2",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 69,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 3,
+      "gap-control": 1,
+      "zone-rushing-defense": 1,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Elijah Ponder",
+    "position": "DE",
+    "jersey": 47,
+    "height": "6'3",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 0,
+      "gap-control": -1,
+      "zone-rushing-defense": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "K'Lavon Chaisson",
+    "position": "DE",
+    "jersey": 48,
+    "height": "6'3",
+    "weight": "254",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 1,
+      "gap-control": 0,
+      "zone-rushing-defense": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Anfernee Jennings",
+    "position": "DE",
+    "jersey": 33,
+    "height": "6'2",
+    "weight": "256",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 0,
+      "gap-control": 1,
+      "zone-rushing-defense": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Bradyn Swinson",
+    "position": "DE",
+    "jersey": 52,
+    "height": "6'3",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 29,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 0,
+      "gap-control": 0,
+      "zone-rushing-defense": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Robert Spillane",
+    "position": "MLB",
+    "jersey": 41,
+    "height": "6'1",
+    "weight": "229",
+    "stamina": 100,
+    "percentile": 59,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 2,
+      "gap-control": 2,
+      "man-coverage": 0,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Jack Gibbens",
+    "position": "LB",
+    "jersey": 44,
+    "height": "6'2",
+    "weight": "232",
+    "stamina": 100,
+    "percentile": 32,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "gap-control": 0,
+      "man-coverage": -1,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Marte Mapu",
+    "position": "LB",
+    "jersey": 30,
+    "height": "6'3",
+    "weight": "220",
+    "stamina": 100,
+    "percentile": 45,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 1,
+      "zone-rushing-defense": 1,
+      "gap-control": 0,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Christian Elliss",
+    "position": "LB",
+    "jersey": 45,
+    "height": "6'2",
+    "weight": "235",
+    "stamina": 100,
+    "percentile": 49,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 1,
+      "gap-control": 1,
+      "man-coverage": 0,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Jahlani Tavai",
+    "position": "LB",
+    "jersey": 51,
+    "height": "6'2",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 45,
+    "traits-from-baseline-percentile": {
+      "gap-control": 1,
+      "zone-rushing-defense": 1,
+      "man-coverage": -1,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Chad Muma",
+    "position": "LB",
+    "jersey": 50,
+    "height": "6'3",
+    "weight": "239",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 1,
+      "gap-control": 1,
+      "man-coverage": 0,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Carlton Davis III",
+    "position": "CB",
+    "jersey": 6,
+    "height": "6'1",
+    "weight": "206",
+    "stamina": 100,
+    "percentile": 65,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 2,
+      "zone-rushing-defense": 1,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Charles Woods",
+    "position": "CB",
+    "jersey": 22,
+    "height": "6'0",
+    "weight": "190",
+    "stamina": 100,
+    "percentile": 32,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 0,
+      "zone-rushing-defense": 0,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Miles Battle",
+    "position": "CB",
+    "jersey": 28,
+    "height": "6'1",
+    "weight": "198",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "man-coverage": -1,
+      "zone-rushing-defense": 0,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Christian Gonzalez",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "197",
+    "stamina": 100,
+    "percentile": 79,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 4,
+      "zone-rushing-defense": 2,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Marcus Jones",
+    "position": "CB",
+    "jersey": 25,
+    "height": "5'8",
+    "weight": "185",
+    "stamina": 100,
+    "percentile": 62,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 2,
+      "zone-rushing-defense": 1,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Marcellas Dial Jr.",
+    "position": "CB",
+    "jersey": 27,
+    "height": "5'11",
+    "weight": "192",
+    "stamina": 100,
+    "percentile": 22,
+    "traits-from-baseline-percentile": {
+      "man-coverage": -1,
+      "zone-rushing-defense": 0,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaylinn Hawkins",
+    "position": "S",
+    "jersey": 32,
+    "height": "6'2",
+    "weight": "212",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 1,
+      "man-coverage": 1,
+      "gap-control": 0,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Brenden Schooler",
+    "position": "S",
+    "jersey": 35,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "man-coverage": 0,
+      "gap-control": 0,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Craig Woodson",
+    "position": "S",
+    "jersey": 29,
+    "height": "6'0",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 49,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 1,
+      "man-coverage": 1,
+      "gap-control": 0,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Dell Pettus",
+    "position": "S",
+    "jersey": 31,
+    "height": "6'0",
+    "weight": "200",
+    "stamina": 100,
+    "percentile": 29,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "man-coverage": 0,
+      "gap-control": -1,
+      "pass-rusher": -3
+    },
+    "health": 100
+  }
+]

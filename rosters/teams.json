@@ -1,16 +1,86 @@
 {
-    "home": {
+    "rams": {
         "name": "Rams",
-        "record": "10-3",
+        "record": "11-3",
         "city": "Los Angeles",
-        "roster": "home-offense.json",
-        "defense": "home-defense.json"
+        "roster": "rams-offense.json",
+        "defense": "rams-defense.json"
     },
-    "away": {
+    "jaguars": {
         "name": "Jaguars",
-        "record": "9-4",
+        "record": "10-4",
         "city": "Jacksonville",
-        "roster": "away-offense.json",
-        "defense": "away-defense.json"
+        "roster": "jaguars-offense.json",
+        "defense": "jaguars-defense.json"
+    },
+    "patriots": {
+        "name": "Patriots",
+        "record": "11-3",
+        "city": "New England",
+        "roster": "patriots-offense.json",
+        "defense": "patriots-defense.json"
+    },
+    "broncos": {
+        "name": "Broncos",
+        "record": "12-2",
+        "city": "Denver",
+        "roster": "broncos-offense.json",
+        "defense": "broncos-defense.json"
+    },
+    "bills": {
+        "name": "Bills",
+        "record": "10-4",
+        "city": "Buffalo",
+        "roster": "bills-offense.json",
+        "defense": "bills-defense.json"
+    },
+    "chiefs": {
+        "name": "Chiefs",
+        "record": "6-8",
+        "city": "Kansas City",
+        "roster": "chiefs-offense.json",
+        "defense": "chiefs-defense.json"
+    },
+    "eagles": {
+        "name": "Eagles",
+        "record": "9-5",
+        "city": "Philadelphia",
+        "roster": "eagles-offense.json",
+        "defense": "eagles-defense.json"
+    },
+    "texans": {
+        "name": "Texans",
+        "record": "9-5",
+        "city": "Houston",
+        "roster": "texans-offense.json",
+        "defense": "texans-defense.json"
+    },
+    "lions": {
+        "name": "Lions",
+        "record": "8-6",
+        "city": "Detroit",
+        "roster": "lions-offense.json",
+        "defense": "lions-defense.json"
+    },
+    "packers": {
+        "name": "Packers",
+        "record": "9-4",
+        "city": "Green Bay",
+        "roster": "packers-offense.json",
+        "defense": "packers-defense.json"
+    },
+    "seahawks": {
+        "name": "Seahawks",
+        "record": "11-3",
+        "city": "Seattle",
+        "roster": "seahawks-offense.json",
+        "defense": "seahawks-defense.json"
+    },
+    "steelers": {
+        "name": "Steelers",
+        "record": "8-6",
+        "city": "Pittsburgh",
+        "roster": "steelers-offense.json",
+        "defense": "steelers-defense.json"
     }
 }

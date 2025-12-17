@@ -1,0 +1,402 @@
+[
+  {
+    "name": "Jalen Hurts",
+    "position": "QB",
+    "jersey": 1,
+    "height": "6'1",
+    "weight": "223",
+    "stamina": 100,
+    "percentile": 66.8,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 2,
+      "pocket-presence": 2,
+      "mobility": 4,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Tanner McKee",
+    "position": "QB",
+    "jersey": 7,
+    "height": "6'6",
+    "weight": "230",
+    "stamina": 100,
+    "percentile": 13.8,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 0,
+      "pocket-presence": 0,
+      "mobility": -1,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Sam Howell",
+    "position": "QB",
+    "jersey": 14,
+    "height": "6'1",
+    "weight": "220",
+    "stamina": 100,
+    "percentile": 19.8,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 0,
+      "pocket-presence": -1,
+      "mobility": 1,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Saquon Barkley",
+    "position": "RB",
+    "jersey": 26,
+    "height": "6'0",
+    "weight": "232",
+    "stamina": 100,
+    "percentile": 73.8,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 5,
+      "power-running": 3,
+      "pass-catching": 3,
+      "pass-blocking": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tank Bigsby",
+    "position": "RB",
+    "jersey": 4,
+    "height": "5'11",
+    "weight": "210",
+    "stamina": 100,
+    "percentile": 43.8,
+    "traits-from-baseline-percentile": {
+      "power-running": 2,
+      "elusiveness": 2,
+      "pass-catching": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Will Shipley",
+    "position": "RB",
+    "jersey": 23,
+    "height": "5'11",
+    "weight": "210",
+    "stamina": 100,
+    "percentile": 33.8,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 2,
+      "pass-catching": 1,
+      "power-running": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "AJ Dillon",
+    "position": "RB",
+    "jersey": 28,
+    "height": "6'0",
+    "weight": "247",
+    "stamina": 100,
+    "percentile": 26.8,
+    "traits-from-baseline-percentile": {
+      "power-running": 3,
+      "pass-blocking": 1,
+      "elusiveness": -1,
+      "pass-catching": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "A.J. Brown",
+    "position": "WR",
+    "jersey": 11,
+    "height": "6'1",
+    "weight": "226",
+    "stamina": 100,
+    "percentile": 73.8,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 4,
+      "route-running": 4,
+      "elusiveness": 3,
+      "run-blocking": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Darius Cooper",
+    "position": "WR",
+    "jersey": 17,
+    "height": "6'0",
+    "weight": "190",
+    "stamina": 100,
+    "percentile": 9.8,
+    "traits-from-baseline-percentile": {
+      "route-running": 0,
+      "pass-catching": 0,
+      "elusiveness": 0,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "DeVonta Smith",
+    "position": "WR",
+    "jersey": 6,
+    "height": "6'0",
+    "weight": "170",
+    "stamina": 100,
+    "percentile": 69.8,
+    "traits-from-baseline-percentile": {
+      "route-running": 5,
+      "pass-catching": 4,
+      "elusiveness": 2,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Britain Covey",
+    "position": "WR",
+    "jersey": 18,
+    "height": "5'8",
+    "weight": "173",
+    "stamina": 100,
+    "percentile": 23.8,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 2,
+      "route-running": 1,
+      "pass-catching": 0,
+      "run-blocking": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Jahan Dotson",
+    "position": "WR",
+    "jersey": 5,
+    "height": "5'11",
+    "weight": "182",
+    "stamina": 100,
+    "percentile": 33.8,
+    "traits-from-baseline-percentile": {
+      "route-running": 2,
+      "pass-catching": 1,
+      "elusiveness": 1,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dallas Goedert",
+    "position": "TE",
+    "jersey": 88,
+    "height": "6'5",
+    "weight": "256",
+    "stamina": 100,
+    "percentile": 59.8,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 3,
+      "route-running": 2,
+      "run-blocking": 2,
+      "pass-blocking": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Grant Calcaterra",
+    "position": "TE",
+    "jersey": 83,
+    "height": "6'4",
+    "weight": "240",
+    "stamina": 100,
+    "percentile": 26.8,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "route-running": 1,
+      "run-blocking": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Kylen Granson",
+    "position": "TE",
+    "jersey": 84,
+    "height": "6'2",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 19.8,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "route-running": 0,
+      "run-blocking": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Cameron Latu",
+    "position": "TE",
+    "jersey": 87,
+    "height": "6'5",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 9.8,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-catching": -1,
+      "route-running": -1,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Jordan Mailata",
+    "position": "OT",
+    "jersey": 68,
+    "height": "6'8",
+    "weight": "365",
+    "stamina": 100,
+    "percentile": 66.8,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 4,
+      "run-blocking": 3,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Fred Johnson",
+    "position": "OT",
+    "jersey": 74,
+    "height": "6'7",
+    "weight": "326",
+    "stamina": 100,
+    "percentile": 23.8,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Lane Johnson",
+    "position": "OT",
+    "jersey": 65,
+    "height": "6'6",
+    "weight": "317",
+    "stamina": 100,
+    "percentile": 73.8,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 5,
+      "run-blocking": 4,
+      "mobility": 0,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Landon Dickerson",
+    "position": "OG",
+    "jersey": 69,
+    "height": "6'6",
+    "weight": "333",
+    "stamina": 100,
+    "percentile": 69.8,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 4,
+      "pass-blocking": 3,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Brett Toth",
+    "position": "OG",
+    "jersey": 62,
+    "height": "6'6",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 13.8,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyler Steen",
+    "position": "OG",
+    "jersey": 66,
+    "height": "6'6",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 36.8,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Matt Pryor",
+    "position": "OG",
+    "jersey": 64,
+    "height": "6'7",
+    "weight": "332",
+    "stamina": 100,
+    "percentile": 19.8,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Cam Jurgens",
+    "position": "C",
+    "jersey": 51,
+    "height": "6'3",
+    "weight": "303",
+    "stamina": 100,
+    "percentile": 59.8,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 3,
+      "run-blocking": 3,
+      "mobility": 1,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Drew Kendall",
+    "position": "C",
+    "jersey": 67,
+    "height": "6'5",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 9.8,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": -1,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  }
+]

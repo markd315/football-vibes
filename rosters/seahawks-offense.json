@@ -1,0 +1,418 @@
+[
+  {
+    "name": "Sam Darnold",
+    "position": "QB",
+    "jersey": 14,
+    "height": "6'3",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 63.9,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 2,
+      "pocket-presence": 2,
+      "mobility": 1,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Drew Lock",
+    "position": "QB",
+    "jersey": 2,
+    "height": "6'4",
+    "weight": "228",
+    "stamina": 100,
+    "percentile": 29.9,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 0,
+      "pocket-presence": 0,
+      "mobility": 1,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Jalen Milroe",
+    "position": "QB",
+    "jersey": 4,
+    "height": "6'2",
+    "weight": "220",
+    "stamina": 100,
+    "percentile": 39.9,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 0,
+      "pocket-presence": 0,
+      "mobility": 3,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Kenneth Walker III",
+    "position": "RB",
+    "jersey": 9,
+    "height": "5'9",
+    "weight": "211",
+    "stamina": 100,
+    "percentile": 73.9,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 4,
+      "power-running": 2,
+      "pass-catching": 1,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Zach Charbonnet",
+    "position": "RB",
+    "jersey": 26,
+    "height": "6'1",
+    "weight": "220",
+    "stamina": 100,
+    "percentile": 59.9,
+    "traits-from-baseline-percentile": {
+      "power-running": 3,
+      "elusiveness": 1,
+      "pass-catching": 1,
+      "pass-blocking": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaxon Smith-Njigba",
+    "position": "WR",
+    "jersey": 11,
+    "height": "6'0",
+    "weight": "197",
+    "stamina": 100,
+    "percentile": 69.9,
+    "traits-from-baseline-percentile": {
+      "route-running": 4,
+      "pass-catching": 3,
+      "elusiveness": 2,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Cody White",
+    "position": "WR",
+    "jersey": 17,
+    "height": "6'3",
+    "weight": "217",
+    "stamina": 100,
+    "percentile": 26.9,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 0,
+      "route-running": 0,
+      "elusiveness": 0,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Cooper Kupp",
+    "position": "WR",
+    "jersey": 10,
+    "height": "6'2",
+    "weight": "208",
+    "stamina": 100,
+    "percentile": 76.9,
+    "traits-from-baseline-percentile": {
+      "route-running": 5,
+      "pass-catching": 4,
+      "elusiveness": 2,
+      "run-blocking": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jake Bobo",
+    "position": "WR",
+    "jersey": 19,
+    "height": "6'4",
+    "weight": "210",
+    "stamina": 100,
+    "percentile": 33.9,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "route-running": 0,
+      "elusiveness": 0,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Rashid Shaheed",
+    "position": "WR",
+    "jersey": 89,
+    "height": "6'0",
+    "weight": "180",
+    "stamina": 100,
+    "percentile": 59.9,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 4,
+      "route-running": 1,
+      "pass-catching": 1,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dareke Young",
+    "position": "WR",
+    "jersey": 18,
+    "height": "6'2",
+    "weight": "220",
+    "stamina": 100,
+    "percentile": 23.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-catching": 0,
+      "route-running": -1,
+      "elusiveness": 0
+    },
+    "health": 0
+  },
+  {
+    "name": "AJ Barner",
+    "position": "TE",
+    "jersey": 85,
+    "height": "6'4",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 43.9,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "route-running": 1,
+      "run-blocking": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Eric Saubert",
+    "position": "TE",
+    "jersey": 80,
+    "height": "6'5",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 29.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-catching": 0,
+      "route-running": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Nick Kallerup",
+    "position": "TE",
+    "jersey": 88,
+    "height": "6'4",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 19.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-catching": -1,
+      "route-running": -1,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Robbie Ouzts",
+    "position": "FB",
+    "jersey": 45,
+    "height": "6'2",
+    "weight": "255",
+    "stamina": 100,
+    "percentile": 43.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 2,
+      "pass-blocking": 1,
+      "pass-catching": 0,
+      "power-running": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Brady Russell",
+    "position": "FB",
+    "jersey": 49,
+    "height": "6'4",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 26.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 0,
+      "pass-catching": 0,
+      "power-running": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Charles Cross",
+    "position": "OT",
+    "jersey": 67,
+    "height": "6'5",
+    "weight": "307",
+    "stamina": 100,
+    "percentile": 59.9,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 2,
+      "run-blocking": 2,
+      "mobility": 0,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Mason Richman",
+    "position": "OT",
+    "jersey": 71,
+    "height": "6'6",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 29.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Abraham Lucas",
+    "position": "OT",
+    "jersey": 72,
+    "height": "6'6",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 56.9,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 2,
+      "run-blocking": 1,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Josh Jones",
+    "position": "OT",
+    "jersey": 73,
+    "height": "6'5",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 33.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Grey Zabel",
+    "position": "OG",
+    "jersey": 61,
+    "height": "6'5",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 43.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Christian Haynes",
+    "position": "OG",
+    "jersey": 62,
+    "height": "6'3",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 39.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 0,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Anthony Bradford",
+    "position": "OG",
+    "jersey": 70,
+    "height": "6'5",
+    "weight": "330",
+    "stamina": 100,
+    "percentile": 46.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 2,
+      "pass-blocking": 1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Bryce Cabeldue",
+    "position": "OG",
+    "jersey": 64,
+    "height": "6'4",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 23.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Jalen Sundell",
+    "position": "C",
+    "jersey": 60,
+    "height": "6'4",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 43.9,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 1,
+      "run-blocking": 1,
+      "mobility": 0,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Olu Oluwatimi",
+    "position": "C",
+    "jersey": 65,
+    "height": "6'3",
+    "weight": "309",
+    "stamina": 100,
+    "percentile": 33.9,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 1,
+      "run-blocking": 0,
+      "mobility": 0,
+      "pass-catching": -5
+    },
+    "health": 100
+  }
+]

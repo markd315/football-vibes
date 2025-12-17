@@ -1,0 +1,402 @@
+[
+  {
+    "name": "C.J. Stroud",
+    "position": "QB",
+    "jersey": 7,
+    "height": "6'3",
+    "weight": "218",
+    "stamina": 100,
+    "percentile": 76.4,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 4,
+      "pocket-presence": 3,
+      "mobility": 1,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Davis Mills",
+    "position": "QB",
+    "jersey": 10,
+    "height": "6'4",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 23.4,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 0,
+      "pocket-presence": 0,
+      "mobility": -1,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Graham Mertz",
+    "position": "QB",
+    "jersey": 5,
+    "height": "6'3",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 13.4,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": -1,
+      "pocket-presence": 0,
+      "mobility": -1,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Woody Marks",
+    "position": "RB",
+    "jersey": 24,
+    "height": "5'10",
+    "weight": "220",
+    "stamina": 100,
+    "percentile": 40.4,
+    "traits-from-baseline-percentile": {
+      "power-running": 1,
+      "elusiveness": 1,
+      "pass-catching": 1,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Nick Chubb",
+    "position": "RB",
+    "jersey": 31,
+    "height": "5'11",
+    "weight": "227",
+    "stamina": 100,
+    "percentile": 56.4,
+    "traits-from-baseline-percentile": {
+      "power-running": 4,
+      "elusiveness": 2,
+      "pass-catching": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Jawhar Jordan",
+    "position": "RB",
+    "jersey": 25,
+    "height": "5'9",
+    "weight": "195",
+    "stamina": 100,
+    "percentile": 23.4,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 1,
+      "pass-catching": 1,
+      "power-running": -1,
+      "pass-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dare Ogunbowale",
+    "position": "RB",
+    "jersey": 33,
+    "height": "5'10",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 20.4,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "elusiveness": 0,
+      "power-running": -1,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Nico Collins",
+    "position": "WR",
+    "jersey": 12,
+    "height": "6'4",
+    "weight": "215",
+    "stamina": 100,
+    "percentile": 76.4,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 4,
+      "route-running": 3,
+      "elusiveness": 2,
+      "run-blocking": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Christian Kirk",
+    "position": "WR",
+    "jersey": 13,
+    "height": "5'11",
+    "weight": "200",
+    "stamina": 100,
+    "percentile": 56.4,
+    "traits-from-baseline-percentile": {
+      "route-running": 2,
+      "pass-catching": 2,
+      "elusiveness": 2,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Jayden Higgins",
+    "position": "WR",
+    "jersey": 14,
+    "height": "6'4",
+    "weight": "215",
+    "stamina": 100,
+    "percentile": 36.4,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "route-running": 1,
+      "elusiveness": 0,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaylin Noel",
+    "position": "WR",
+    "jersey": 16,
+    "height": "5'10",
+    "weight": "185",
+    "stamina": 100,
+    "percentile": 26.4,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 1,
+      "route-running": 0,
+      "pass-catching": 0,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Xavier Hutchinson",
+    "position": "WR",
+    "jersey": 89,
+    "height": "6'2",
+    "weight": "203",
+    "stamina": 100,
+    "percentile": 30.4,
+    "traits-from-baseline-percentile": {
+      "route-running": 1,
+      "pass-catching": 1,
+      "elusiveness": 0,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Braxton Berrios",
+    "position": "WR",
+    "jersey": 0,
+    "height": "5'9",
+    "weight": "190",
+    "stamina": 100,
+    "percentile": 23.4,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 1,
+      "route-running": 0,
+      "pass-catching": 0,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dalton Schultz",
+    "position": "TE",
+    "jersey": 86,
+    "height": "6'5",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 56.4,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 2,
+      "route-running": 2,
+      "run-blocking": 1,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Harrison Bryant",
+    "position": "TE",
+    "jersey": 88,
+    "height": "6'5",
+    "weight": "242",
+    "stamina": 100,
+    "percentile": 36.4,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "route-running": 1,
+      "run-blocking": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Cade Stover",
+    "position": "TE",
+    "jersey": 80,
+    "height": "6'4",
+    "weight": "255",
+    "stamina": 100,
+    "percentile": 26.4,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-catching": 0,
+      "route-running": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Aireontae Ersery",
+    "position": "OT",
+    "jersey": 72,
+    "height": "6'6",
+    "weight": "330",
+    "stamina": 100,
+    "percentile": 43.4,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 1,
+      "run-blocking": 1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Trent Brown",
+    "position": "OT",
+    "jersey": 77,
+    "height": "6'8",
+    "weight": "380",
+    "stamina": 100,
+    "percentile": 50.4,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 2,
+      "run-blocking": 2,
+      "mobility": -3,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Jarrett Kingston",
+    "position": "OT",
+    "jersey": 78,
+    "height": "6'5",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 16.4,
+    "traits-from-baseline-percentile": {
+      "run-blocking": -1,
+      "pass-blocking": -1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Blake Fisher",
+    "position": "OT",
+    "jersey": 74,
+    "height": "6'6",
+    "weight": "312",
+    "stamina": 100,
+    "percentile": 23.4,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Tytus Howard",
+    "position": "OG",
+    "jersey": 71,
+    "height": "6'5",
+    "weight": "322",
+    "stamina": 100,
+    "percentile": 53.4,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 2,
+      "run-blocking": 2,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Jarrett Patterson",
+    "position": "OG",
+    "jersey": 60,
+    "height": "6'4",
+    "weight": "306",
+    "stamina": 100,
+    "percentile": 33.4,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 0,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Ed Ingram",
+    "position": "OG",
+    "jersey": 67,
+    "height": "6'3",
+    "weight": "307",
+    "stamina": 100,
+    "percentile": 40.4,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Juice Scruggs",
+    "position": "OG",
+    "jersey": 62,
+    "height": "6'3",
+    "weight": "302",
+    "stamina": 100,
+    "percentile": 26.4,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Jake Andrews",
+    "position": "C",
+    "jersey": 53,
+    "height": "6'4",
+    "weight": "295",
+    "stamina": 100,
+    "percentile": 43.4,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 1,
+      "run-blocking": 1,
+      "mobility": 0,
+      "pass-catching": -5
+    },
+    "health": 100
+  }
+]

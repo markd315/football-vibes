@@ -1,0 +1,402 @@
+[
+  {
+    "name": "Gardner Minshew",
+    "position": "QB",
+    "jersey": 15,
+    "height": "6'1",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 29.9,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 1,
+      "pocket-presence": 0,
+      "mobility": 1,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Patrick Mahomes",
+    "position": "QB",
+    "jersey": 15,
+    "height": "6'2",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 79.9,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 5,
+      "pocket-presence": 4,
+      "mobility": 3,
+      "run-blocking": -5
+    },
+    "health": 0
+  },
+  {
+    "name": "Isiah Pacheco",
+    "position": "RB",
+    "jersey": 10,
+    "height": "5'10",
+    "weight": "215",
+    "stamina": 100,
+    "percentile": 53.9,
+    "traits-from-baseline-percentile": {
+      "power-running": 3,
+      "elusiveness": 2,
+      "pass-catching": 1,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Kareem Hunt",
+    "position": "RB",
+    "jersey": 29,
+    "height": "5'11",
+    "weight": "195",
+    "stamina": 100,
+    "percentile": 43.9,
+    "traits-from-baseline-percentile": {
+      "power-running": 2,
+      "elusiveness": 1,
+      "pass-catching": 1,
+      "pass-blocking": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Brashard Smith",
+    "position": "RB",
+    "jersey": 26,
+    "height": "5'9",
+    "weight": "200",
+    "stamina": 100,
+    "percentile": 16.9,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 1,
+      "pass-catching": 0,
+      "power-running": 0,
+      "pass-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Elijah Mitchell",
+    "position": "RB",
+    "jersey": 25,
+    "height": "5'10",
+    "weight": "200",
+    "stamina": 100,
+    "percentile": 29.9,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 1,
+      "power-running": 1,
+      "pass-catching": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Rashee Rice",
+    "position": "WR",
+    "jersey": 4,
+    "height": "6'1",
+    "weight": "204",
+    "stamina": 100,
+    "percentile": 59.9,
+    "traits-from-baseline-percentile": {
+      "route-running": 3,
+      "pass-catching": 3,
+      "elusiveness": 2,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "JuJu Smith-Schuster",
+    "position": "WR",
+    "jersey": 9,
+    "height": "6'1",
+    "weight": "215",
+    "stamina": 100,
+    "percentile": 36.9,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 2,
+      "route-running": 1,
+      "elusiveness": 0,
+      "run-blocking": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jalen Royals",
+    "position": "WR",
+    "jersey": 18,
+    "height": "5'10",
+    "weight": "185",
+    "stamina": 100,
+    "percentile": 13.899999999999999,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 1,
+      "route-running": 0,
+      "pass-catching": 0,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Xavier Worthy",
+    "position": "WR",
+    "jersey": 1,
+    "height": "5'11",
+    "weight": "165",
+    "stamina": 100,
+    "percentile": 49.9,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 4,
+      "route-running": 2,
+      "pass-catching": 1,
+      "run-blocking": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyquan Thornton",
+    "position": "WR",
+    "jersey": 11,
+    "height": "6'2",
+    "weight": "181",
+    "stamina": 100,
+    "percentile": 19.9,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 2,
+      "route-running": 0,
+      "pass-catching": 0,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Hollywood Brown",
+    "position": "WR",
+    "jersey": 5,
+    "height": "5'9",
+    "weight": "170",
+    "stamina": 100,
+    "percentile": 43.9,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 3,
+      "route-running": 2,
+      "pass-catching": 1,
+      "run-blocking": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Nikko Remigio",
+    "position": "WR",
+    "jersey": 14,
+    "height": "5'10",
+    "weight": "180",
+    "stamina": 100,
+    "percentile": 9.899999999999999,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 1,
+      "route-running": 0,
+      "pass-catching": -1,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Travis Kelce",
+    "position": "TE",
+    "jersey": 87,
+    "height": "6'5",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 73.9,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 5,
+      "route-running": 5,
+      "elusiveness": 2,
+      "run-blocking": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Noah Gray",
+    "position": "TE",
+    "jersey": 83,
+    "height": "6'4",
+    "weight": "240",
+    "stamina": 100,
+    "percentile": 36.9,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "route-running": 1,
+      "run-blocking": 1,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Robert Tonyan",
+    "position": "TE",
+    "jersey": 85,
+    "height": "6'5",
+    "weight": "237",
+    "stamina": 100,
+    "percentile": 23.9,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "route-running": 0,
+      "run-blocking": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Jared Wiley",
+    "position": "TE",
+    "jersey": 89,
+    "height": "6'6",
+    "weight": "260",
+    "stamina": 100,
+    "percentile": 9.899999999999999,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-catching": -1,
+      "route-running": -1,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Esa Pole",
+    "position": "OT",
+    "jersey": 70,
+    "height": "6'7",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 19.9,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 0,
+      "run-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaylon Moore",
+    "position": "OT",
+    "jersey": 71,
+    "height": "6'4",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 16.9,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 0,
+      "run-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Jawaan Taylor",
+    "position": "OT",
+    "jersey": 74,
+    "height": "6'5",
+    "weight": "312",
+    "stamina": 100,
+    "percentile": 39.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 2,
+      "pass-blocking": 1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Kingsley Suamataia",
+    "position": "OG",
+    "jersey": 65,
+    "height": "6'5",
+    "weight": "320",
+    "stamina": 100,
+    "percentile": 29.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Mike Caliendo",
+    "position": "OG",
+    "jersey": 62,
+    "height": "6'4",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 16.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Trey Smith",
+    "position": "OG",
+    "jersey": 65,
+    "height": "6'6",
+    "weight": "320",
+    "stamina": 100,
+    "percentile": 63.9,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 4,
+      "pass-blocking": 3,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Hunter Nourzad",
+    "position": "OG",
+    "jersey": 63,
+    "height": "6'4",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 13.899999999999999,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Creed Humphrey",
+    "position": "C",
+    "jersey": 52,
+    "height": "6'4",
+    "weight": "302",
+    "stamina": 100,
+    "percentile": 73.9,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 4,
+      "run-blocking": 4,
+      "mobility": 1,
+      "pass-catching": -5
+    },
+    "health": 100
+  }
+]

@@ -1,0 +1,370 @@
+[
+  {
+    "name": "Jared Goff",
+    "position": "QB",
+    "jersey": 16,
+    "height": "6'4",
+    "weight": "222",
+    "stamina": 100,
+    "percentile": 68.8,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 4,
+      "pocket-presence": 3,
+      "mobility": -1,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Kyle Allen",
+    "position": "QB",
+    "jersey": 9,
+    "height": "6'3",
+    "weight": "210",
+    "stamina": 100,
+    "percentile": 18.8,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 0,
+      "pocket-presence": 0,
+      "mobility": 0,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Jahmyr Gibbs",
+    "position": "RB",
+    "jersey": 26,
+    "height": "5'9",
+    "weight": "200",
+    "stamina": 100,
+    "percentile": 74.8,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 5,
+      "pass-catching": 3,
+      "power-running": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "David Montgomery",
+    "position": "RB",
+    "jersey": 5,
+    "height": "5'10",
+    "weight": "222",
+    "stamina": 100,
+    "percentile": 58.8,
+    "traits-from-baseline-percentile": {
+      "power-running": 3,
+      "elusiveness": 1,
+      "pass-catching": 1,
+      "pass-blocking": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Sione Vaki",
+    "position": "RB",
+    "jersey": 39,
+    "height": "6'0",
+    "weight": "220",
+    "stamina": 100,
+    "percentile": 21.8,
+    "traits-from-baseline-percentile": {
+      "power-running": 1,
+      "elusiveness": 0,
+      "pass-catching": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Jacob Saylors",
+    "position": "RB",
+    "jersey": 36,
+    "height": "5'10",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 11.8,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 0,
+      "pass-catching": 0,
+      "power-running": -1,
+      "pass-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Amon-Ra St. Brown",
+    "position": "WR",
+    "jersey": 14,
+    "height": "6'0",
+    "weight": "197",
+    "stamina": 100,
+    "percentile": 78.8,
+    "traits-from-baseline-percentile": {
+      "route-running": 5,
+      "pass-catching": 4,
+      "elusiveness": 3,
+      "run-blocking": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kalif Raymond",
+    "position": "WR",
+    "jersey": 11,
+    "height": "5'8",
+    "weight": "182",
+    "stamina": 100,
+    "percentile": 28.8,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 2,
+      "route-running": 0,
+      "pass-catching": 0,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jameson Williams",
+    "position": "WR",
+    "jersey": 9,
+    "height": "6'1",
+    "weight": "179",
+    "stamina": 100,
+    "percentile": 58.8,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 4,
+      "route-running": 2,
+      "pass-catching": 1,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tom Kennedy",
+    "position": "WR",
+    "jersey": 85,
+    "height": "5'11",
+    "weight": "185",
+    "stamina": 100,
+    "percentile": 18.8,
+    "traits-from-baseline-percentile": {
+      "route-running": 0,
+      "pass-catching": 0,
+      "elusiveness": 0,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Isaac TeSlaa",
+    "position": "WR",
+    "jersey": 80,
+    "height": "6'3",
+    "weight": "210",
+    "stamina": 100,
+    "percentile": 24.8,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "route-running": 0,
+      "elusiveness": 0,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Dominic Lovett",
+    "position": "WR",
+    "jersey": 19,
+    "height": "5'9",
+    "weight": "185",
+    "stamina": 100,
+    "percentile": 14.8,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 1,
+      "route-running": 0,
+      "pass-catching": -1,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Shane Zylstra",
+    "position": "TE",
+    "jersey": 84,
+    "height": "6'4",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 28.8,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "route-running": 0,
+      "run-blocking": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Anthony Firkser",
+    "position": "TE",
+    "jersey": 86,
+    "height": "6'2",
+    "weight": "246",
+    "stamina": 100,
+    "percentile": 24.8,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "route-running": 0,
+      "run-blocking": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Taylor Decker",
+    "position": "OT",
+    "jersey": 68,
+    "height": "6'7",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 61.8,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 3,
+      "run-blocking": 2,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Dan Skipper",
+    "position": "OT",
+    "jersey": 70,
+    "height": "6'10",
+    "weight": "320",
+    "stamina": 100,
+    "percentile": 24.8,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -3,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Penei Sewell",
+    "position": "OT",
+    "jersey": 58,
+    "height": "6'5",
+    "weight": "331",
+    "stamina": 100,
+    "percentile": 81.8,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 5,
+      "run-blocking": 5,
+      "mobility": 1,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Colby Sorsdal",
+    "position": "OT",
+    "jersey": 74,
+    "height": "6'6",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 14.8,
+    "traits-from-baseline-percentile": {
+      "run-blocking": -1,
+      "pass-blocking": -1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 0
+  },
+  {
+    "name": "Kayode Awosika",
+    "position": "OG",
+    "jersey": 67,
+    "height": "6'4",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 34.8,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Trystan Colon",
+    "position": "OG",
+    "jersey": 73,
+    "height": "6'4",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 21.8,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Tate Ratledge",
+    "position": "OG",
+    "jersey": 75,
+    "height": "6'6",
+    "weight": "320",
+    "stamina": 100,
+    "percentile": 44.8,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 2,
+      "pass-blocking": 1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Miles Frazier",
+    "position": "OG",
+    "jersey": 64,
+    "height": "6'4",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 18.8,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Graham Glasgow",
+    "position": "C",
+    "jersey": 60,
+    "height": "6'6",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 48.8,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 2,
+      "run-blocking": 2,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  }
+]

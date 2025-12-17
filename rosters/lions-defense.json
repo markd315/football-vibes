@@ -1,0 +1,434 @@
+[
+  {
+    "name": "Aidan Hutchinson",
+    "position": "DE",
+    "jersey": 97,
+    "height": "6'6",
+    "weight": "260",
+    "stamina": 100,
+    "percentile": 78.8,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 5,
+      "gap-control": 3,
+      "zone-rushing-defense": 2,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyrus Wheat",
+    "position": "DE",
+    "jersey": 96,
+    "height": "6'3",
+    "weight": "255",
+    "stamina": 100,
+    "percentile": 21.8,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 0,
+      "gap-control": 0,
+      "zone-rushing-defense": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Alim McNeill",
+    "position": "DT",
+    "jersey": 54,
+    "height": "6'2",
+    "weight": "320",
+    "stamina": 100,
+    "percentile": 61.8,
+    "traits-from-baseline-percentile": {
+      "gap-control": 3,
+      "pass-rusher": 2,
+      "zone-rushing-defense": 2,
+      "man-coverage": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyleik Williams",
+    "position": "DT",
+    "jersey": 95,
+    "height": "6'3",
+    "weight": "327",
+    "stamina": 100,
+    "percentile": 34.8,
+    "traits-from-baseline-percentile": {
+      "gap-control": 1,
+      "zone-rushing-defense": 1,
+      "pass-rusher": 0,
+      "man-coverage": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Mekhi Wingo",
+    "position": "DT",
+    "jersey": 90,
+    "height": "6'1",
+    "weight": "285",
+    "stamina": 100,
+    "percentile": 28.8,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 1,
+      "gap-control": 0,
+      "zone-rushing-defense": 0,
+      "man-coverage": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "DJ Reader",
+    "position": "DT",
+    "jersey": 98,
+    "height": "6'3",
+    "weight": "335",
+    "stamina": 100,
+    "percentile": 58.8,
+    "traits-from-baseline-percentile": {
+      "gap-control": 4,
+      "zone-rushing-defense": 2,
+      "pass-rusher": 0,
+      "man-coverage": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Roy Lopez",
+    "position": "DT",
+    "jersey": 91,
+    "height": "6'2",
+    "weight": "318",
+    "stamina": 100,
+    "percentile": 24.8,
+    "traits-from-baseline-percentile": {
+      "gap-control": 1,
+      "zone-rushing-defense": 0,
+      "pass-rusher": -1,
+      "man-coverage": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Al-Quadin Muhammad",
+    "position": "DE",
+    "jersey": 55,
+    "height": "6'4",
+    "weight": "252",
+    "stamina": 100,
+    "percentile": 38.8,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 1,
+      "gap-control": 1,
+      "zone-rushing-defense": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Marcus Davenport",
+    "position": "DE",
+    "jersey": 93,
+    "height": "6'6",
+    "weight": "265",
+    "stamina": 100,
+    "percentile": 41.8,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 2,
+      "gap-control": 0,
+      "zone-rushing-defense": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyler Lacy",
+    "position": "DE",
+    "jersey": 94,
+    "height": "6'4",
+    "weight": "275",
+    "stamina": 100,
+    "percentile": 18.8,
+    "traits-from-baseline-percentile": {
+      "pass-rusher": 0,
+      "gap-control": 0,
+      "zone-rushing-defense": 0,
+      "man-coverage": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Alex Anzalone",
+    "position": "MLB",
+    "jersey": 34,
+    "height": "6'3",
+    "weight": "235",
+    "stamina": 100,
+    "percentile": 48.8,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 2,
+      "gap-control": 1,
+      "man-coverage": 1,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Malcolm Rodriguez",
+    "position": "LB",
+    "jersey": 44,
+    "height": "5'11",
+    "weight": "230",
+    "stamina": 100,
+    "percentile": 41.8,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 1,
+      "gap-control": 2,
+      "man-coverage": 0,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Trevor Nowaske",
+    "position": "LB",
+    "jersey": 42,
+    "height": "6'2",
+    "weight": "235",
+    "stamina": 100,
+    "percentile": 14.8,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "gap-control": 0,
+      "man-coverage": -1,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Jack Campbell",
+    "position": "LB",
+    "jersey": 45,
+    "height": "6'5",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 54.8,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 2,
+      "gap-control": 2,
+      "man-coverage": 1,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Derrick Barnes",
+    "position": "LB",
+    "jersey": 55,
+    "height": "6'0",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 48.8,
+    "traits-from-baseline-percentile": {
+      "gap-control": 2,
+      "zone-rushing-defense": 1,
+      "man-coverage": 0,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Grant Stuard",
+    "position": "LB",
+    "jersey": 48,
+    "height": "5'11",
+    "weight": "230",
+    "stamina": 100,
+    "percentile": 21.8,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "gap-control": 1,
+      "man-coverage": 0,
+      "pass-rusher": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Rock Ya-Sin",
+    "position": "CB",
+    "jersey": 2,
+    "height": "6'0",
+    "weight": "192",
+    "stamina": 100,
+    "percentile": 44.8,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 2,
+      "zone-rushing-defense": 1,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Nick Whiteside",
+    "position": "CB",
+    "jersey": 28,
+    "height": "6'0",
+    "weight": "190",
+    "stamina": 100,
+    "percentile": 18.8,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 0,
+      "zone-rushing-defense": 0,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "D.J. Reed",
+    "position": "CB",
+    "jersey": 4,
+    "height": "5'9",
+    "weight": "188",
+    "stamina": 100,
+    "percentile": 58.8,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 3,
+      "zone-rushing-defense": 2,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Khalil Dorsey",
+    "position": "CB",
+    "jersey": 30,
+    "height": "5'10",
+    "weight": "180",
+    "stamina": 100,
+    "percentile": 21.8,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 0,
+      "zone-rushing-defense": 0,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Amik Robertson",
+    "position": "CB",
+    "jersey": 21,
+    "height": "5'8",
+    "weight": "183",
+    "stamina": 100,
+    "percentile": 41.8,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 2,
+      "zone-rushing-defense": 1,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Avonte Maddox",
+    "position": "CB",
+    "jersey": 27,
+    "height": "5'9",
+    "weight": "184",
+    "stamina": 100,
+    "percentile": 38.8,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 1,
+      "zone-rushing-defense": 1,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Arthur Maulet",
+    "position": "CB",
+    "jersey": 37,
+    "height": "5'10",
+    "weight": "190",
+    "stamina": 100,
+    "percentile": 28.8,
+    "traits-from-baseline-percentile": {
+      "man-coverage": 1,
+      "zone-rushing-defense": 0,
+      "gap-control": -2,
+      "pass-rusher": -4
+    },
+    "health": 100
+  },
+  {
+    "name": "Daniel Thomas",
+    "position": "S",
+    "jersey": 47,
+    "height": "6'1",
+    "weight": "208",
+    "stamina": 100,
+    "percentile": 44.8,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 2,
+      "man-coverage": 1,
+      "gap-control": 0,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Kerby Joseph",
+    "position": "S",
+    "jersey": 31,
+    "height": "6'1",
+    "weight": "203",
+    "stamina": 100,
+    "percentile": 68.8,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 4,
+      "man-coverage": 2,
+      "gap-control": 1,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Thomas Harper",
+    "position": "S",
+    "jersey": 35,
+    "height": "5'11",
+    "weight": "195",
+    "stamina": 100,
+    "percentile": 24.8,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 0,
+      "man-coverage": 0,
+      "gap-control": 0,
+      "pass-rusher": -3
+    },
+    "health": 100
+  },
+  {
+    "name": "Jalen Mills",
+    "position": "S",
+    "jersey": 22,
+    "height": "6'0",
+    "weight": "191",
+    "stamina": 100,
+    "percentile": 34.8,
+    "traits-from-baseline-percentile": {
+      "zone-rushing-defense": 1,
+      "man-coverage": 1,
+      "gap-control": 0,
+      "pass-rusher": -3
+    },
+    "health": 100
+  }
+]

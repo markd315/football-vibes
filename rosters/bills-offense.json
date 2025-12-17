@@ -1,0 +1,386 @@
+[
+  {
+    "name": "Josh Allen",
+    "position": "QB",
+    "jersey": 17,
+    "height": "6'5",
+    "weight": "237",
+    "stamina": 100,
+    "percentile": 80.7,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 3,
+      "pocket-presence": 3,
+      "mobility": 4,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Mitchell Trubisky",
+    "position": "QB",
+    "jersey": 10,
+    "height": "6'2",
+    "weight": "220",
+    "stamina": 100,
+    "percentile": 27.7,
+    "traits-from-baseline-percentile": {
+      "passing-accuracy": 0,
+      "pocket-presence": 0,
+      "mobility": 1,
+      "run-blocking": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "James Cook III",
+    "position": "RB",
+    "jersey": 4,
+    "height": "5'11",
+    "weight": "199",
+    "stamina": 100,
+    "percentile": 60.7,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 3,
+      "pass-catching": 2,
+      "power-running": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Ray Davis",
+    "position": "RB",
+    "jersey": 22,
+    "height": "5'9",
+    "weight": "211",
+    "stamina": 100,
+    "percentile": 43.7,
+    "traits-from-baseline-percentile": {
+      "power-running": 2,
+      "elusiveness": 1,
+      "pass-catching": 1,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Ty Johnson",
+    "position": "RB",
+    "jersey": 25,
+    "height": "5'10",
+    "weight": "210",
+    "stamina": 100,
+    "percentile": 23.7,
+    "traits-from-baseline-percentile": {
+      "elusiveness": 1,
+      "pass-catching": 0,
+      "power-running": 0,
+      "pass-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Khalil Shakir",
+    "position": "WR",
+    "jersey": 10,
+    "height": "6'0",
+    "weight": "196",
+    "stamina": 100,
+    "percentile": 57.7,
+    "traits-from-baseline-percentile": {
+      "route-running": 3,
+      "pass-catching": 2,
+      "elusiveness": 2,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyrell Shavers",
+    "position": "WR",
+    "jersey": 16,
+    "height": "6'6",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 23.7,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 1,
+      "route-running": 0,
+      "elusiveness": -1,
+      "run-blocking": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Joshua Palmer",
+    "position": "WR",
+    "jersey": 5,
+    "height": "6'1",
+    "weight": "210",
+    "stamina": 100,
+    "percentile": 40.7,
+    "traits-from-baseline-percentile": {
+      "route-running": 1,
+      "pass-catching": 1,
+      "elusiveness": 1,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Brandin Cooks",
+    "position": "WR",
+    "jersey": 14,
+    "height": "5'10",
+    "weight": "183",
+    "stamina": 100,
+    "percentile": 47.7,
+    "traits-from-baseline-percentile": {
+      "route-running": 2,
+      "elusiveness": 2,
+      "pass-catching": 1,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Keon Coleman",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'4",
+    "weight": "213",
+    "stamina": 100,
+    "percentile": 53.7,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 3,
+      "route-running": 1,
+      "elusiveness": 1,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Gabe Davis",
+    "position": "WR",
+    "jersey": 13,
+    "height": "6'2",
+    "weight": "210",
+    "stamina": 100,
+    "percentile": 43.7,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 2,
+      "route-running": 1,
+      "elusiveness": 0,
+      "run-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Dalton Kincaid",
+    "position": "TE",
+    "jersey": 86,
+    "height": "6'4",
+    "weight": "240",
+    "stamina": 100,
+    "percentile": 63.7,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 4,
+      "route-running": 3,
+      "elusiveness": 1,
+      "run-blocking": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dawson Knox",
+    "position": "TE",
+    "jersey": 88,
+    "height": "6'4",
+    "weight": "254",
+    "stamina": 100,
+    "percentile": 47.7,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 2,
+      "run-blocking": 1,
+      "route-running": 1,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Jackson Hawes",
+    "position": "TE",
+    "jersey": 89,
+    "height": "6'4",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 13.7,
+    "traits-from-baseline-percentile": {
+      "pass-catching": 0,
+      "route-running": -1,
+      "run-blocking": 0,
+      "pass-blocking": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Reggie Gilliam",
+    "position": "FB",
+    "jersey": 41,
+    "height": "6'0",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 43.7,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 2,
+      "pass-blocking": 2,
+      "pass-catching": 0,
+      "power-running": 0
+    },
+    "health": 100
+  },
+  {
+    "name": "Dion Dawkins",
+    "position": "OT",
+    "jersey": 73,
+    "height": "6'5",
+    "weight": "320",
+    "stamina": 100,
+    "percentile": 57.7,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 2,
+      "run-blocking": 2,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Ryan Van Demark",
+    "position": "OT",
+    "jersey": 71,
+    "height": "6'6",
+    "weight": "308",
+    "stamina": 100,
+    "percentile": 20.7,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 0,
+      "pass-blocking": 0,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Spencer Brown",
+    "position": "OT",
+    "jersey": 79,
+    "height": "6'8",
+    "weight": "311",
+    "stamina": 100,
+    "percentile": 53.7,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 2,
+      "run-blocking": 2,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Tylan Grable",
+    "position": "OT",
+    "jersey": 74,
+    "height": "6'5",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 13.7,
+    "traits-from-baseline-percentile": {
+      "run-blocking": -1,
+      "pass-blocking": -1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "David Edwards",
+    "position": "OG",
+    "jersey": 66,
+    "height": "6'6",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 47.7,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 2,
+      "run-blocking": 1,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "O'Cyrus Torrence",
+    "position": "OG",
+    "jersey": 64,
+    "height": "6'5",
+    "weight": "347",
+    "stamina": 100,
+    "percentile": 57.7,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 3,
+      "pass-blocking": 2,
+      "mobility": -2,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Sedrick Van Pran-Granger",
+    "position": "OG",
+    "jersey": 61,
+    "height": "6'4",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 30.7,
+    "traits-from-baseline-percentile": {
+      "run-blocking": 1,
+      "pass-blocking": 0,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Connor McGovern",
+    "position": "C",
+    "jersey": 60,
+    "height": "6'4",
+    "weight": "306",
+    "stamina": 100,
+    "percentile": 50.7,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 2,
+      "run-blocking": 1,
+      "mobility": 0,
+      "pass-catching": -5
+    },
+    "health": 100
+  },
+  {
+    "name": "Alec Anderson",
+    "position": "C",
+    "jersey": 68,
+    "height": "6'5",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 20.7,
+    "traits-from-baseline-percentile": {
+      "pass-blocking": 0,
+      "run-blocking": 0,
+      "mobility": -1,
+      "pass-catching": -5
+    },
+    "health": 100
+  }
+]
