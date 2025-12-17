@@ -24,8 +24,6 @@ let availableTeams = []; // Available teams from rosters folder
 let promptCacheEnabled = false; // Whether prompt caching is enabled
 let cacheExpiryTime = null; // When the cache expires (Date object)
 let cacheTimerInterval = null; // Interval for updating cache timer display
-let playClockSeconds = 40; // Play clock countdown
-let playClockInterval = null; // Interval for play clock
 
 // Initialize
 async function init() {
@@ -279,29 +277,21 @@ async function startGame() {
     document.getElementById('teamSelectionScreen').classList.add('hidden');
     document.getElementById('mainGameContainer').classList.remove('hidden');
     
-    // Show/hide cache timer based on setting
-    const cacheTimerContainer = document.getElementById('cacheTimerContainer');
-    if (cacheTimerContainer) {
-        cacheTimerContainer.style.display = promptCacheEnabled ? 'block' : 'none';
-    }
     
     // Initialize personnel for the game
     updateRostersForPossession();
     renderPersonnelSelection();
     updatePersonnelDisplay();
     
-    // Start the play clock
-    startPlayClock(40);
-    
     renderStep(0);
     updateGameStateDisplay();
     console.log('Game started successfully');
 }
 
-// Update cache timer display
+// Update cache timer display (Play Clock)
 function updateCacheTimer() {
     const timerEl = document.getElementById('cacheTimer');
-    if (!timerEl || !promptCacheEnabled) return;
+    if (!timerEl) return;
     
     if (!cacheExpiryTime) {
         timerEl.textContent = '--:--';
@@ -351,42 +341,6 @@ function startCacheTimer() {
 function refreshCacheTimer() {
     cacheExpiryTime = Date.now() + (5 * 60 * 1000); // Reset to 5 minutes
     updateCacheTimer();
-}
-
-// Play clock functions
-function startPlayClock(seconds = 300) {
-    stopPlayClock();
-    playClockSeconds = seconds;
-    updatePlayClockDisplay();
-    playClockInterval = setInterval(() => {
-        playClockSeconds--;
-        updatePlayClockDisplay();
-        if (playClockSeconds <= 0) {
-            stopPlayClock();
-        }
-    }, 1000);
-}
-
-function stopPlayClock() {
-    if (playClockInterval) {
-        clearInterval(playClockInterval);
-        playClockInterval = null;
-    }
-}
-
-function updatePlayClockDisplay() {
-    const el = document.getElementById('playClock');
-    if (!el) return;
-    const minutes = Math.floor(playClockSeconds / 60);
-    const seconds = playClockSeconds % 60;
-    el.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    if (playClockSeconds > 180) {
-        el.style.color = '#4CAF50'; // Green > 3 min
-    } else if (playClockSeconds > 60) {
-        el.style.color = '#FFC107'; // Yellow 1-3 min
-    } else {
-        el.style.color = '#f44336'; // Red < 1 min
-    }
 }
 
 async function loadSelectedRosters(homeTeam, awayTeam) {
@@ -1356,7 +1310,7 @@ const defensivePlaycalls = {
     },
     'Cover 4 (match)': {
         'CB': { category: 'Zone Deep', action: 'Deep seam left (cov4)' },
-        'S': { category: 'Zone Deep', action: 'Deep middle 1/3' },
+        'S': { category: 'Zone Deep', action: 'Deep left/right seam+fit shallow' },
         'LB': { category: 'Zone Short', action: 'Hook' },
         'MLB': { category: 'Zone Short', action: 'Hook' }
     },
@@ -1371,7 +1325,9 @@ const defensivePlaycalls = {
         'S': { category: 'Man Coverage', action: 'Inside release man' },
         'LB': { category: 'Man Coverage', action: 'Inside release man' },
         'MLB': { category: 'Man Coverage', action: 'Inside release man' }
-    }
+    },
+    'Bracket 3x1': 'bracket-3x1',
+    'Bracket 2x2': 'bracket-2x2'
 };
 
 // Assignment categories and actions
@@ -1412,7 +1368,8 @@ const offensiveAssignments = {
     // All defensive assignment options available to all positions
 const allDefensiveCategories = {
     'Man Coverage': ['Inside release man', 'Outside release man', 'Inside match man', 'Outside match man'],
-    'Zone Deep': ['Deep middle 1/3', 'Deep left (cov2)', 'Deep right (cov2)', 'Deep left (cov3)', 'Deep right (cov3)', 'Deep far left (cov4)', 'Deep far right (cov4)', 'Deep seam left (cov4)', 'Deep seam right (cov4)'],
+    'Bracket': ['LOCK+MEG', 'TRAIL+APEX', 'CAP+DEEP', 'CUT+CROSSER'],
+    'Zone Deep': ['Deep middle 1/3', 'Deep left (cov2)', 'Deep right (cov2)', 'Deep left (cov3)', 'Deep right (cov3)', 'Deep far left (cov4)', 'Deep far right (cov4)', 'Deep seam left (cov4)', 'Deep seam right (cov4)', 'Deep left/right seam+fit shallow'],
     'Zone Short': ['Robber', 'Flat/Out L', 'Flat/Out R', 'Curl/Flat L', 'Curl/Flat R', 'Curl/Hook L', 'Curl/Hook R', 'Curl/Hole L', 'Curl/Hole R', 'Flat L', 'Flat R', 'Out L', 'Out R', 'Curl L', 'Curl R', 'Hook L', 'Hook R', 'Hole', 'Deep hole/Tampa', 'Spy'],
     'Rush': ['Left A gap', 'Right A gap', 'Left B gap', 'Right B gap', 'Left C gap', 'Right C gap', 'Contain'],
     'Spy': ['Spy']
@@ -1994,15 +1951,8 @@ function drawOffensiveAssignmentArrow(ctx, x, y, assignment, color, width, heigh
 }
 
 function drawDefensiveAssignmentArrow(ctx, x, y, assignment, color, isDashed, width, height) {
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
-    ctx.lineWidth = 2;
-    
-    if (isDashed) {
-        ctx.setLineDash([3, 3]);
-    } else {
-        ctx.setLineDash([]);
-    }
+    const centerY = height / 2;
+    const topHalfHeight = height / 2;
     
     // Helper to get original location coordinates from fieldLocations
     function getLocationCoordsForManCoverage(locationName) {
@@ -2016,7 +1966,176 @@ function drawDefensiveAssignmentArrow(ctx, x, y, assignment, color, isDashed, wi
         return null;
     }
     
-    // For man coverage, draw line to target offensive player
+    // Helper to draw zone area with transparency
+    function drawZoneArea(zoneColor, zoneX, zoneY, zoneWidth, zoneHeight) {
+        ctx.fillStyle = zoneColor;
+        ctx.fillRect(zoneX - zoneWidth/2, zoneY - zoneHeight/2, zoneWidth, zoneHeight);
+        // Draw line from player to zone center
+        ctx.strokeStyle = zoneColor.replace('0.5)', '1)');
+        ctx.lineWidth = 2;
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(zoneX, zoneY);
+        ctx.stroke();
+    }
+    
+    // Helper to draw arrow
+    function drawArrow(endX, endY, arrowColor, dashed = false) {
+        ctx.strokeStyle = arrowColor;
+        ctx.fillStyle = arrowColor;
+        ctx.lineWidth = 2;
+        ctx.setLineDash(dashed ? [3, 3] : []);
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+        
+        if (endX !== x || endY !== y) {
+            const angle = Math.atan2(endY - y, endX - x);
+            const arrowHeadLength = 5;
+            const arrowHeadAngle = Math.PI / 6;
+            ctx.beginPath();
+            ctx.moveTo(endX, endY);
+            ctx.lineTo(endX - arrowHeadLength * Math.cos(angle - arrowHeadAngle), endY - arrowHeadLength * Math.sin(angle - arrowHeadAngle));
+            ctx.lineTo(endX - arrowHeadLength * Math.cos(angle + arrowHeadAngle), endY - arrowHeadLength * Math.sin(angle + arrowHeadAngle));
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+    
+    // Bracket assignments (green)
+    if (assignment.category === 'Bracket') {
+        const bracketColor = '#4CAF50'; // Green
+        ctx.setLineDash([3, 3]);
+        
+        if (assignment.action === 'LOCK+MEG' || assignment.action === 'TRAIL+APEX') {
+            // Man-like coverage - draw dashed green line toward LOS
+            drawArrow(x, centerY - 5, bracketColor, true);
+        } else if (assignment.action === 'CAP+DEEP') {
+            // Deep zone with flow indicator - green zone area
+            const zoneY = 15; // Near top
+            const zoneX = x < width/2 ? width * 0.25 : width * 0.75;
+            ctx.fillStyle = 'rgba(76, 175, 80, 0.5)';
+            ctx.fillRect(zoneX - 25, 5, 50, 30);
+            drawArrow(zoneX, 20, bracketColor, false);
+            // Small arrow pointing toward center (flow indicator)
+            const flowDir = x < width/2 ? 1 : -1;
+            ctx.beginPath();
+            ctx.moveTo(zoneX, 25);
+            ctx.lineTo(zoneX + flowDir * 12, 30);
+            ctx.stroke();
+        } else if (assignment.action === 'CUT+CROSSER') {
+            // Intermediate zone with flow outside - green zone
+            const zoneY = centerY - 20;
+            ctx.fillStyle = 'rgba(76, 175, 80, 0.5)';
+            ctx.fillRect(x - 20, zoneY - 10, 40, 20);
+            drawArrow(x, zoneY, bracketColor, false);
+            // Arrow flowing outside
+            const flowDir = x < width/2 ? -1 : 1;
+            ctx.beginPath();
+            ctx.moveTo(x, zoneY);
+            ctx.lineTo(x + flowDir * 18, zoneY - 5);
+            ctx.stroke();
+        }
+        ctx.setLineDash([]);
+        return;
+    }
+    
+    // Deep zones (blue with transparency)
+    if (assignment.category === 'Zone Deep' || (assignment.action && assignment.action.includes('Deep') && !assignment.action.includes('Man'))) {
+        const zoneColor = 'rgba(33, 150, 243, 0.5)'; // Blue 50% transparent
+        let zoneX = x, zoneY = 15, zoneWidth = 40, zoneHeight = 25;
+        
+        if (assignment.action.includes('left') || assignment.action.includes('Left')) {
+            if (assignment.action.includes('far')) {
+                zoneX = width * 0.15;
+            } else if (assignment.action.includes('seam')) {
+                zoneX = width * 0.3;
+            } else {
+                zoneX = width * 0.25;
+            }
+        } else if (assignment.action.includes('right') || assignment.action.includes('Right')) {
+            if (assignment.action.includes('far')) {
+                zoneX = width * 0.85;
+            } else if (assignment.action.includes('seam')) {
+                zoneX = width * 0.7;
+            } else {
+                zoneX = width * 0.75;
+            }
+        } else if (assignment.action.includes('middle') || assignment.action.includes('1/3')) {
+            zoneX = width * 0.5;
+            zoneWidth = 50;
+        }
+        
+        // Draw zone area
+        ctx.fillStyle = zoneColor;
+        ctx.fillRect(zoneX - zoneWidth/2, 5, zoneWidth, zoneHeight);
+        // Draw line to zone
+        ctx.strokeStyle = '#2196F3';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(zoneX, zoneY);
+        ctx.stroke();
+        return;
+    }
+    
+    // Short zones (yellow with transparency) - FIXED positions regardless of player location
+    if (assignment.category === 'Zone Short' || (assignment.action && (assignment.action.includes('Hook') || assignment.action.includes('Flat') || assignment.action.includes('Curl') || assignment.action.includes('Hole')))) {
+        const zoneColor = 'rgba(255, 235, 59, 0.5)'; // Yellow 50% transparent
+        let zoneX = width * 0.5, zoneY = centerY - 18, zoneWidth = 30, zoneHeight = 18;
+        
+        // Fixed zone positions based on assignment type
+        if (assignment.action.includes('Flat') || assignment.action.includes('Out')) {
+            zoneY = centerY - 8;
+            zoneWidth = 25;
+            if (assignment.action.includes(' L')) zoneX = width * 0.08;
+            else if (assignment.action.includes(' R')) zoneX = width * 0.92;
+            else zoneX = width * 0.1; // Default left
+        } else if (assignment.action.includes('Curl') && assignment.action.includes('Hook')) {
+            // Curl/Hook zones
+            zoneY = centerY - 20;
+            if (assignment.action.includes(' L')) zoneX = width * 0.28;
+            else if (assignment.action.includes(' R')) zoneX = width * 0.72;
+        } else if (assignment.action.includes('Curl') && assignment.action.includes('Flat')) {
+            // Curl/Flat zones
+            zoneY = centerY - 12;
+            if (assignment.action.includes(' L')) zoneX = width * 0.18;
+            else if (assignment.action.includes(' R')) zoneX = width * 0.82;
+        } else if (assignment.action.includes('Hook')) {
+            // Hook zones (no L/R specified = center hooks)
+            zoneY = centerY - 22;
+            if (assignment.action.includes(' L')) zoneX = width * 0.35;
+            else if (assignment.action.includes(' R')) zoneX = width * 0.65;
+            else zoneX = width * 0.5; // Center hook
+        } else if (assignment.action.includes('Hole') || assignment.action.includes('Tampa')) {
+            zoneX = width * 0.5;
+            zoneY = 20;
+            zoneWidth = 45;
+            zoneHeight = 22;
+        } else if (assignment.action.includes('Robber') || assignment.action.includes('Spy')) {
+            zoneX = width * 0.5;
+            zoneY = centerY - 25;
+            zoneWidth = 35;
+        }
+        
+        // Draw zone area
+        ctx.fillStyle = zoneColor;
+        ctx.fillRect(zoneX - zoneWidth/2, zoneY - zoneHeight/2, zoneWidth, zoneHeight);
+        // Draw line from player to zone boundary
+        ctx.strokeStyle = '#FFEB3B';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(zoneX, zoneY);
+        ctx.stroke();
+        return;
+    }
+    
+    // Man coverage - draw line to target
     if (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) {
         let targetPos = null;
         const bottomHalfStart = height / 2;
@@ -2030,10 +2149,9 @@ function drawDefensiveAssignmentArrow(ctx, x, y, assignment, color, isDashed, wi
                     const locCoords = getLocationCoordsForManCoverage(pos.location);
                     if (locCoords) {
                         const targetX = ((locCoords.x + 25) / 50) * width;
-                        // Convert Y: Offense goes in bottom half
-                        const offenseMinY = -15; // Deepest
-                        const offenseMaxY = -3;  // LOS
-                        const offenseYRange = offenseMaxY - offenseMinY; // 12
+                        const offenseMinY = -15;
+                        const offenseMaxY = -3;
+                        const offenseYRange = offenseMaxY - offenseMinY;
                         const normalizedY = (locCoords.y - offenseMinY) / offenseYRange;
                         const targetY = bottomHalfStart + (bottomHalfHeight * (1 - normalizedY));
                         targetPos = { x: targetX, y: targetY };
@@ -2043,74 +2161,37 @@ function drawDefensiveAssignmentArrow(ctx, x, y, assignment, color, isDashed, wi
         });
         
         if (targetPos) {
+            ctx.strokeStyle = '#f44336';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([3, 3]);
             ctx.beginPath();
             ctx.moveTo(x, y);
             ctx.lineTo(targetPos.x, targetPos.y);
             ctx.stroke();
         }
-    } else {
-        // Draw arrow based on assignment
-        let arrowLength = 18; // Base length
-        let endX = x, endY = y;
-        
-        if (assignment.action.includes('deep') || assignment.action.includes('Deep')) {
-            // Deep zones go down (toward offense)
-            arrowLength = 22;
-            endY = y + arrowLength;
-            if (assignment.action.includes('left') || assignment.action.includes('Left')) {
-                endX = x - arrowLength * 0.4;
-            } else if (assignment.action.includes('right') || assignment.action.includes('Right')) {
-                endX = x + arrowLength * 0.4;
-            }
-        } else if (assignment.action.includes('flat') || assignment.action.includes('Flat') || assignment.action.includes('Hook') || assignment.action.includes('Curtain')) {
-            // Short zones
-            arrowLength = 15;
-            endY = y - arrowLength * 0.5;
-            if (assignment.action.includes('left') || assignment.action.includes('Left')) {
-                endX = x - arrowLength * 0.7;
-            } else if (assignment.action.includes('right') || assignment.action.includes('Right')) {
-                endX = x + arrowLength * 0.7;
-            }
-        } else if (assignment.action.includes('left') || assignment.action.includes('Left')) {
-            endX = x - arrowLength;
-        } else if (assignment.action.includes('right') || assignment.action.includes('Right')) {
-            endX = x + arrowLength;
-        } else if (assignment.action.includes('gap')) {
-            // Rush
-            arrowLength = 15;
-            if (assignment.action.includes('A gap')) {
-                endY = y + arrowLength * 0.6;
-            } else if (assignment.action.includes('B gap') || assignment.action.includes('C gap')) {
-                endY = y + arrowLength * 0.4;
-            }
-        }
-        
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.lineTo(endX, endY);
-        ctx.stroke();
-        
-        // Draw arrowhead (always draw if there's any movement)
-        if (endX !== x || endY !== y) {
-            const angle = Math.atan2(endY - y, endX - x);
-            const arrowHeadLength = 5;
-            const arrowHeadAngle = Math.PI / 6;
-            
-            ctx.beginPath();
-            ctx.moveTo(endX, endY);
-            ctx.lineTo(
-                endX - arrowHeadLength * Math.cos(angle - arrowHeadAngle),
-                endY - arrowHeadLength * Math.sin(angle - arrowHeadAngle)
-            );
-            ctx.lineTo(
-                endX - arrowHeadLength * Math.cos(angle + arrowHeadAngle),
-                endY - arrowHeadLength * Math.sin(angle + arrowHeadAngle)
-            );
-            ctx.closePath();
-            ctx.fill();
-        }
+        ctx.setLineDash([]);
+        return;
     }
     
+    // Rush/gap assignments (orange arrow toward LOS)
+    if (assignment.category === 'Rush' || (assignment.action && assignment.action.includes('gap'))) {
+        ctx.strokeStyle = '#FF9800';
+        ctx.fillStyle = '#FF9800';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([]);
+        
+        let endX = x, endY = centerY - 3;
+        if (assignment.action.includes('Left')) {
+            endX = x - 8;
+        } else if (assignment.action.includes('Right')) {
+            endX = x + 8;
+        }
+        
+        drawArrow(endX, endY, '#FF9800', false);
+        return;
+    }
+    
+    // Default fallback
     ctx.setLineDash([]);
 }
 
@@ -2259,10 +2340,13 @@ function renderDefensePlaycallDiagram() {
         let color = '#757575'; // Grey default
         let isDashed = false;
         if (assignment && assignment.action) {
-            if (assignment.category === 'Zone Deep' || (assignment.action.includes('Deep') && !assignment.action.includes('Man'))) {
+            if (assignment.category === 'Bracket') {
+                color = '#4CAF50'; // Green for bracket
+                isDashed = true;
+            } else if (assignment.category === 'Zone Deep' || (assignment.action.includes('Deep') && !assignment.action.includes('Man'))) {
                 color = '#2196F3'; // Blue for deep zones
             } else if (assignment.category === 'Zone Short' || 
-                      (assignment.action.includes('Hook') || assignment.action.includes('Curtain'))) {
+                      (assignment.action.includes('Hook') || assignment.action.includes('Curtain') || assignment.action.includes('Flat') || assignment.action.includes('Curl'))) {
                 color = '#FFEB3B'; // Yellow for short zones
             } else if (assignment.category === 'Man Coverage' || assignment.action.includes('Man')) {
                 color = '#f44336'; // Red for man coverage
@@ -2422,6 +2506,12 @@ function applyDefensivePlaycall(playcallName) {
         coverNumber = 4;
     }
     
+    // Handle Bracket playcalls specially
+    if (playcallName.includes('Bracket')) {
+        applyBracketPlaycall(playcallName);
+        return;
+    }
+    
     if (coverNumber === null) {
         // Fallback to old system for non-cover playcalls
         const playcall = defensivePlaycalls[playcallName];
@@ -2432,8 +2522,15 @@ function applyDefensivePlaycall(playcallName) {
             if (!player) return;
             
             const assignment = playcall[player.position];
-            if (assignment) {
+            if (assignment && typeof assignment === 'object') {
                 updateAssignment(player, 'defense', assignment.category, assignment.action);
+            } else if (player.position === 'DE' || player.position === 'DT') {
+                // DL always rush - get gap from technique alignment
+                const location = playerPositions[playerId]?.location || '';
+                const defaultGap = getDefaultGapFromLocation(location, player);
+                if (defaultGap) {
+                    updateAssignment(player, 'defense', 'Rush', defaultGap);
+                }
             }
         });
         updateDefensivePlaycallUI();
@@ -2960,6 +3057,219 @@ function applyDefensivePlaycall(playcallName) {
             }
         }
     }
+    
+    updateDefensivePlaycallUI();
+    renderDefensePlaycallDiagram();
+    renderField();
+    renderPlayerMarkers();
+}
+
+function applyBracketPlaycall(playcallName) {
+    const is3x1 = playcallName.includes('3x1');
+    
+    // Get all defensive players with their X positions and Y depth
+    const playersWithPos = [];
+    selectedDefense.forEach((playerId) => {
+        const player = getPlayerById(playerId);
+        if (!player) return;
+        const pos = playerPositions[playerId];
+        if (!pos) return;
+        
+        // Get coordinates from location
+        let xCoord = 0, yCoord = 0;
+        for (const section of fieldLocations) {
+            for (const loc of section.Locations) {
+                if (loc.Name === pos.location && loc.Y > 0) {
+                    xCoord = loc.X;
+                    yCoord = loc.Y;
+                    break;
+                }
+            }
+        }
+        
+        playersWithPos.push({ player, playerId, xCoord, yCoord, pos });
+    });
+    
+    // Separate by side of field (left = negative X, right = positive X)
+    const leftSide = playersWithPos.filter(p => p.xCoord < 0);
+    const rightSide = playersWithPos.filter(p => p.xCoord >= 0);
+    
+    // Assign D-line first
+    playersWithPos.forEach(({ player, playerId }) => {
+        if (player.position === 'DE' || player.position === 'DT') {
+            const location = playerPositions[playerId]?.location || '';
+            const defaultGap = getDefaultGapFromLocation(location, player);
+            if (defaultGap) {
+                updateAssignment(player, 'defense', 'Rush', defaultGap);
+            }
+        }
+    });
+    
+    // Helper to assign 3-over-2 bracket to a side
+    // Uses exactly: 1 CAP (deepest), 1 MEG (widest), 1 TRAIL (innermost nickel/LB)
+    function assignBracket3over2(sidePlayers) {
+        const coveragePlayers = sidePlayers.filter(p => 
+            ['CB', 'S', 'LB', 'MLB'].includes(p.player.position)
+        );
+        
+        if (coveragePlayers.length < 2) return [];
+        
+        const assigned = [];
+        
+        // Sort by depth (Y coordinate - higher = deeper)
+        const byDepth = [...coveragePlayers].sort((a, b) => b.yCoord - a.yCoord);
+        
+        // CAP = deepest player (usually safety)
+        const capPlayer = byDepth[0];
+        updateAssignment(capPlayer.player, 'defense', 'Bracket', 'CAP+DEEP');
+        assigned.push(capPlayer);
+        
+        // Remaining for MEG and TRAIL
+        const remaining = coveragePlayers.filter(p => p !== capPlayer);
+        
+        // Sort by width (absolute X, descending = widest first)
+        const byWidth = [...remaining].sort((a, b) => Math.abs(b.xCoord) - Math.abs(a.xCoord));
+        
+        // MEG = widest (usually outside CB)
+        const megPlayer = byWidth[0];
+        updateAssignment(megPlayer.player, 'defense', 'Bracket', 'LOCK+MEG');
+        assigned.push(megPlayer);
+        
+        // TRAIL = innermost, prioritize nickel CBs then LBs - only if we have a 3rd player
+        const trailCandidates = remaining.filter(p => p !== megPlayer);
+        if (trailCandidates.length > 0) {
+            trailCandidates.sort((a, b) => {
+                if (a.player.position === 'CB' && b.player.position !== 'CB') return -1;
+                if (b.player.position === 'CB' && a.player.position !== 'CB') return 1;
+                return Math.abs(a.xCoord) - Math.abs(b.xCoord);
+            });
+            const trailPlayer = trailCandidates[0];
+            updateAssignment(trailPlayer.player, 'defense', 'Bracket', 'TRAIL+APEX');
+            assigned.push(trailPlayer);
+        }
+        
+        return assigned;
+    }
+    
+    // Helper to assign 4-over-3 bracket (3x1 strong side)
+    // Uses: 1 CAP, 1 MEG, 1 TRAIL, 1 CUT+CROSSER
+    function assignBracket4over3(sidePlayers, allPlayers) {
+        const coveragePlayers = sidePlayers.filter(p => 
+            ['CB', 'S', 'LB', 'MLB'].includes(p.player.position)
+        );
+        
+        const assigned = [];
+        
+        // Sort by depth
+        const byDepth = [...coveragePlayers].sort((a, b) => b.yCoord - a.yCoord);
+        
+        // CAP = deepest
+        if (byDepth.length > 0) {
+            const capPlayer = byDepth[0];
+            updateAssignment(capPlayer.player, 'defense', 'Bracket', 'CAP+DEEP');
+            assigned.push(capPlayer);
+        }
+        
+        const remaining = coveragePlayers.filter(p => !assigned.includes(p));
+        const byWidth = [...remaining].sort((a, b) => Math.abs(b.xCoord) - Math.abs(a.xCoord));
+        
+        // MEG = widest
+        if (byWidth.length > 0) {
+            const megPlayer = byWidth[0];
+            updateAssignment(megPlayer.player, 'defense', 'Bracket', 'LOCK+MEG');
+            assigned.push(megPlayer);
+        }
+        
+        // TRAIL = next innermost CB/nickel
+        const trailCandidates = remaining.filter(p => !assigned.includes(p));
+        trailCandidates.sort((a, b) => {
+            if (a.player.position === 'CB' && b.player.position !== 'CB') return -1;
+            if (b.player.position === 'CB' && a.player.position !== 'CB') return 1;
+            return Math.abs(a.xCoord) - Math.abs(b.xCoord);
+        });
+        
+        if (trailCandidates.length > 0) {
+            const trailPlayer = trailCandidates[0];
+            updateAssignment(trailPlayer.player, 'defense', 'Bracket', 'TRAIL+APEX');
+            assigned.push(trailPlayer);
+        }
+        
+        // CUT+CROSSER = find an LB from this side that's not yet assigned
+        const cutCandidates = coveragePlayers.filter(p => 
+            !assigned.includes(p) && 
+            (p.player.position === 'LB' || p.player.position === 'MLB')
+        );
+        
+        if (cutCandidates.length > 0) {
+            cutCandidates.sort((a, b) => Math.abs(a.xCoord) - Math.abs(b.xCoord));
+            updateAssignment(cutCandidates[0].player, 'defense', 'Bracket', 'CUT+CROSSER');
+            assigned.push(cutCandidates[0]);
+        }
+        
+        return assigned;
+    }
+    
+    // Helper for weak side in 3x1 - just 2 defenders (CAP + MEG, no TRAIL needed)
+    function assignWeakSide2over1(sidePlayers) {
+        const coveragePlayers = sidePlayers.filter(p => 
+            ['CB', 'S'].includes(p.player.position) // Only DBs on weak side
+        );
+        
+        const assigned = [];
+        
+        // Sort by depth
+        const byDepth = [...coveragePlayers].sort((a, b) => b.yCoord - a.yCoord);
+        
+        // CAP = deepest (safety)
+        if (byDepth.length > 0) {
+            const capPlayer = byDepth[0];
+            updateAssignment(capPlayer.player, 'defense', 'Bracket', 'CAP+DEEP');
+            assigned.push(capPlayer);
+        }
+        
+        // MEG = the CB
+        const remaining = coveragePlayers.filter(p => !assigned.includes(p));
+        if (remaining.length > 0) {
+            const megPlayer = remaining[0];
+            updateAssignment(megPlayer.player, 'defense', 'Bracket', 'LOCK+MEG');
+            assigned.push(megPlayer);
+        }
+        
+        return assigned;
+    }
+    
+    let allAssigned = [];
+    
+    if (is3x1) {
+        // 3x1: Strong side (assume right for now) gets 4-over-3, weak side gets 2-over-1
+        // TODO: detect which side has more receivers
+        const strongAssigned = assignBracket4over3(rightSide, playersWithPos);
+        const weakAssigned = assignWeakSide2over1(leftSide);
+        allAssigned = [...strongAssigned, ...weakAssigned];
+    } else {
+        // 2x2: Both sides get 3-over-2
+        const leftAssigned = assignBracket3over2(leftSide);
+        const rightAssigned = assignBracket3over2(rightSide);
+        allAssigned = [...leftAssigned, ...rightAssigned];
+    }
+    
+    // Remaining LB gets blitz assignment (loose backer)
+    const allAssignedNames = new Set(allAssigned.map(p => p.player.name));
+    playersWithPos.forEach(({ player, playerId }) => {
+        if (!allAssignedNames.has(player.name) && 
+            (player.position === 'LB' || player.position === 'MLB')) {
+            // Loose backer blitzes
+            const location = playerPositions[playerId]?.location || '';
+            const defaultGap = getDefaultGapFromLocation(location, player);
+            if (defaultGap) {
+                updateAssignment(player, 'defense', 'Rush', defaultGap);
+            } else {
+                // Default to A gap blitz
+                const side = playersWithPos.find(p => p.player.name === player.name)?.xCoord < 0 ? 'Left' : 'Right';
+                updateAssignment(player, 'defense', 'Rush', `${side} A gap`);
+            }
+        }
+    });
     
     updateDefensivePlaycallUI();
     renderDefensePlaycallDiagram();
@@ -5811,9 +6121,6 @@ async function executePlay() {
     // Update game state
     updateGameState(result);
     
-    // Stop the play clock
-    stopPlayClock();
-    
     // Update fatigue
     updateFatigue(playData, result.playType);
     
@@ -6184,6 +6491,9 @@ async function callOpenAI(systemPrompt, userPrompt, apiKey) {
 }
 
 async function callClaude(systemPrompt, userPrompt, apiKey) {
+    // Start the play clock immediately when request begins
+    startCacheTimer();
+    
     try {
         // Build request body based on caching setting
         let requestBody;
@@ -7103,9 +7413,6 @@ function resetPlay() {
     const milkClockCheckbox = document.getElementById('milkClockCheckbox');
     if (hurryUpCheckbox) hurryUpCheckbox.checked = false;
     if (milkClockCheckbox) milkClockCheckbox.checked = false;
-    
-    // Start the play clock
-    startPlayClock(40);
     
     // Show step 0 if 4th down, otherwise step 1
     if (gameState.down === 4) {

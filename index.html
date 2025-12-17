@@ -444,11 +444,7 @@
             </div>
             <div class="game-state-item">
                 <div class="game-state-label">Play Clock</div>
-                <div class="game-state-value" id="playClock" style="color: #4CAF50; font-size: 1.4em; font-weight: bold;">40</div>
-            </div>
-            <div class="game-state-item" id="cacheTimerContainer" style="display: none;">
-                <div class="game-state-label">Cache TTL</div>
-                <div class="game-state-value" id="cacheTimer" style="color: #4CAF50; font-size: 1.2em;">5:00</div>
+                <div class="game-state-value" id="cacheTimer" style="color: #888; font-size: 1.4em; font-weight: bold;">--:--</div>
             </div>
             <div class="game-state-item" style="grid-column: 1 / -1;">
                 <div class="game-state-label">Possession</div>
@@ -737,6 +733,7 @@
             </div>
             <div class="button-group">
                 <button class="btn-primary" onclick="resetPlay()">Design New Play</button>
+                <button class="btn-secondary" onclick="copyLLMPrompt()">Export Call</button>
             </div>
         </div>
         
