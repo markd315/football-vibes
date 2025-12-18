@@ -24,6 +24,7 @@ let availableTeams = []; // Available teams from rosters folder
 let promptCacheEnabled = false; // Whether prompt caching is enabled
 let cacheExpiryTime = null; // When the cache expires (Date object)
 let cacheTimerInterval = null; // Interval for updating cache timer display
+let traitAdjustments = []; // Trait adjustments applied in the current play
 
 // Initialize
 async function init() {
@@ -722,7 +723,8 @@ function createPlayerCard(player, side, index) {
     card.dataset.index = index;
     card.draggable = true;
     
-    const effectivePercentile = calculateEffectivePercentile(player);
+    const percentileResult = calculateEffectivePercentile(player);
+    const effectivePercentile = typeof percentileResult === 'object' ? percentileResult.effectivePercentile : percentileResult;
     const basePercentile = player.percentile || 50;
     const playerId = `${side}-${index}`;
     const isSelected = side === 'offense' ? selectedPlayers.includes(playerId) : selectedDefense.includes(playerId);
@@ -1424,10 +1426,10 @@ const defensivePlaycalls = {
         'Nickel': { category: 'Zone Short', action: 'Curl/Hook L' }
     },
     'Cover 2 man': {
-        'CB': { category: 'Man Coverage', action: 'Outside release man' },
+        'CB': { category: 'Man Coverage', action: 'Inside technique man' },
         'S': { category: 'Zone Deep', action: 'Deep left (cov2)' },
-        'LB': { category: 'Man Coverage', action: 'Inside release man' },
-        'MLB': { category: 'Man Coverage', action: 'Inside release man' }
+        'LB': { category: 'Man Coverage', action: 'Inside technique man' },
+        'MLB': { category: 'Man Coverage', action: 'Inside technique man' }
     },
     'Tampa 2': {
         'CB': { category: 'Zone Short', action: 'Flat L' },
@@ -1436,16 +1438,22 @@ const defensivePlaycalls = {
         'MLB': { category: 'Zone Short', action: 'Deep hole/Tampa' }
     },
     'Cover 1 (man)': {
-        'CB': { category: 'Man Coverage', action: 'Outside release man' },
+        'CB': { category: 'Man Coverage', action: 'Inside technique man' },
         'S': { category: 'Zone Deep', action: 'Deep middle 1/3' },
-        'LB': { category: 'Man Coverage', action: 'Inside release man' },
-        'MLB': { category: 'Man Coverage', action: 'Inside release man' }
+        'LB': { category: 'Man Coverage', action: 'Inside technique man' },
+        'MLB': { category: 'Man Coverage', action: 'Inside technique man' }
+    },
+    'Cover 1 (force)': {
+        'CB': { category: 'Man Coverage', action: 'Outside technique man' },
+        'S': { category: 'Zone Deep', action: 'Deep middle 1/3' },
+        'LB': { category: 'Man Coverage', action: 'Inside technique man' },
+        'MLB': { category: 'Man Coverage', action: 'Inside technique man' }
     },
     'Cover 1 robber': {
-        'CB': { category: 'Man Coverage', action: 'Outside release man' },
+        'CB': { category: 'Man Coverage', action: 'Inside technique man' },
         'S': { category: 'Zone Short', action: 'Robber' },
-        'LB': { category: 'Man Coverage', action: 'Inside release man' },
-        'MLB': { category: 'Man Coverage', action: 'Inside release man' }
+        'LB': { category: 'Man Coverage', action: 'Inside technique man' },
+        'MLB': { category: 'Man Coverage', action: 'Inside technique man' }
     },
     'Cover 3': {
         'CB': { category: 'Zone Deep', action: 'Deep left (cov3)' },
@@ -1459,23 +1467,17 @@ const defensivePlaycalls = {
         'LB': { category: 'Zone Short', action: 'Hook L' },
         'MLB': { category: 'Zone Short', action: 'Hook R' }
     },
-    'Cover 4 (match)': {
-        'CB': { category: 'Zone Deep', action: 'Deep seam left (cov4)' },
-        'S': { category: 'Zone Deep', action: 'Deep left/right seam+fit shallow' },
-        'LB': { category: 'Zone Short', action: 'Hook' },
-        'MLB': { category: 'Zone Short', action: 'Hook' }
-    },
     'Cover 0 (LB blitz)': {
-        'CB': { category: 'Man Coverage', action: 'Outside release man' },
-        'S': { category: 'Man Coverage', action: 'Inside release man' },
+        'CB': { category: 'Man Coverage', action: 'Inside technique man' },
+        'S': { category: 'Man Coverage', action: 'Inside technique man' },
         'LB': { category: 'Rush', action: 'Left A gap' },
         'MLB': { category: 'Rush', action: 'Right A gap' }
     },
     'Cover 0 (CB blitz)': {
         'CB': { category: 'Rush', action: 'Left C gap' },
-        'S': { category: 'Man Coverage', action: 'Inside release man' },
-        'LB': { category: 'Man Coverage', action: 'Inside release man' },
-        'MLB': { category: 'Man Coverage', action: 'Inside release man' }
+        'S': { category: 'Man Coverage', action: 'Inside technique man' },
+        'LB': { category: 'Man Coverage', action: 'Inside technique man' },
+        'MLB': { category: 'Man Coverage', action: 'Inside technique man' }
     },
     'Quarters Match 3x1': 'bracket-3x1',
     'Quarters Match 2x2': 'bracket-2x2'
@@ -1518,8 +1520,8 @@ const offensiveAssignments = {
 
     // All defensive assignment options available to all positions
 const allDefensiveCategories = {
-    'Man Coverage': ['Deep technique man', 'Inside technique man', 'Outside technique man', 'Trail technique man', 'Inside release man', 'Outside release man', 'Inside match man', 'Outside match man'],
-    'Bracket': ['LOCK+MEG', 'TRAIL+APEX', 'CAP+DEEP', 'CUT+CROSSER'],
+    'Man Coverage': ['Inside technique man', 'Deep technique man', 'Outside technique man', 'Trail technique man', 'Inside match man', 'Outside match man'],
+    'Quarters Match': ['LOCK+MEG', 'TRAIL+APEX', 'CAP+DEEP', 'CUT+CROSSER'],
     'Zone Deep': ['Deep middle 1/3', 'Deep left (cov2)', 'Deep right (cov2)', 'Deep left (cov3)', 'Deep right (cov3)', 'Deep far left (cov4)', 'Deep far right (cov4)', 'Deep seam left (cov4)', 'Deep seam right (cov4)', 'Deep left/right seam+fit shallow'],
     'Zone Short': ['Robber', 'Flat/Out L', 'Flat/Out R', 'Curl/Flat L', 'Curl/Flat R', 'Curl/Hook L', 'Curl/Hook R', 'Curl/Hole L', 'Curl/Hole R', 'Flat L', 'Flat R', 'Out L', 'Out R', 'Curl L', 'Curl R', 'Hook L', 'Hook R', 'Hole', 'Deep hole/Tampa', 'Spy'],
     'Rush': ['Left A gap', 'Right A gap', 'Left B gap', 'Right B gap', 'Left C gap', 'Right C gap', 'Contain'],
@@ -2155,8 +2157,8 @@ function drawDefensiveAssignmentArrow(ctx, x, y, assignment, color, isDashed, wi
         }
     }
     
-    // Bracket assignments (green)
-    if (assignment.category === 'Bracket') {
+    // Quarters Match assignments (green)
+    if (assignment.category === 'Quarters Match') {
         const bracketColor = '#4CAF50'; // Green
         ctx.setLineDash([3, 3]);
         
@@ -2540,8 +2542,8 @@ function renderDefensePlaycallDiagram() {
         let color = '#757575'; // Grey default
         let isDashed = false;
         if (assignment && assignment.action) {
-            if (assignment.category === 'Bracket') {
-                color = '#4CAF50'; // Green for bracket
+            if (assignment.category === 'Quarters Match') {
+                color = '#4CAF50'; // Green for Quarters Match
                 isDashed = true;
             } else if (assignment.category === 'Zone Deep' || (assignment.action.includes('Deep') && !assignment.action.includes('Man'))) {
                 color = '#2196F3'; // Blue for deep zones
@@ -2819,7 +2821,7 @@ function applyDefensivePlaycall(playcallName) {
     }
     
     // Helper function to assign man coverage to nearest target
-    function assignManCoverage(defender, eligibleOffense, action = 'Outside release man') {
+    function assignManCoverage(defender, eligibleOffense, action = 'Inside technique man') {
         const defenderId = selectedDefense.find(id => {
             const p = getPlayerById(id);
             return p && p.name === defender.name;
@@ -2895,7 +2897,7 @@ function applyDefensivePlaycall(playcallName) {
             // First, assign CBs to man coverage (prioritize CBs, need 3-5)
             for (const cb of cbs) {
                 if (manCoverageCount >= targetManCount) break;
-                if (assignManCoverage(cb, eligibleOffense, 'Outside release man')) {
+                if (assignManCoverage(cb, eligibleOffense, 'Inside technique man')) {
                     manCoveragePlayers.push(cb);
                     manCoverageCount++;
                 }
@@ -2905,7 +2907,7 @@ function applyDefensivePlaycall(playcallName) {
             // Actually, for Cover 0, safeties typically also play man, so assign them
             for (const s of safeties) {
                 if (manCoverageCount >= targetManCount) break;
-                if (assignManCoverage(s, eligibleOffense, 'Inside release man')) {
+                if (assignManCoverage(s, eligibleOffense, 'Inside technique man')) {
                     manCoveragePlayers.push(s);
                     manCoverageCount++;
                 }
@@ -2916,7 +2918,7 @@ function applyDefensivePlaycall(playcallName) {
             const availableLBsForMan = allLBs.length - 2; // Reserve 2 for blitz
             for (const lb of allLBs) {
                 if (manCoverageCount >= targetManCount || lbManCount >= Math.min(maxLBManCount, availableLBsForMan)) break;
-                if (assignManCoverage(lb, eligibleOffense, 'Inside release man')) {
+                if (assignManCoverage(lb, eligibleOffense, 'Inside technique man')) {
                     manCoveragePlayers.push(lb);
                     manCoverageCount++;
                     lbManCount++;
@@ -2928,7 +2930,7 @@ function applyDefensivePlaycall(playcallName) {
                 for (const lb of allLBs) {
                     if (manCoverageCount >= targetManCount) break;
                     if (manCoveragePlayers.includes(lb)) continue; // Skip already assigned
-                    if (assignManCoverage(lb, eligibleOffense, 'Inside release man')) {
+                    if (assignManCoverage(lb, eligibleOffense, 'Inside technique man')) {
                         manCoveragePlayers.push(lb);
                         manCoverageCount++;
                         lbManCount++;
@@ -2938,12 +2940,12 @@ function applyDefensivePlaycall(playcallName) {
         } else if (isCover2Man) {
             // Cover 2 man: 2 safeties already have deep zones, assign remaining DBs (CBs) to man coverage
             remainingDBs.forEach((db) => {
-                assignManCoverage(db, eligibleOffense, 'Outside release man');
+                assignManCoverage(db, eligibleOffense, 'Inside technique man');
             });
         } else {
             // Cover 1: Assign all remaining DBs to man coverage
             remainingDBs.forEach((db) => {
-                assignManCoverage(db, eligibleOffense, 'Outside release man');
+                assignManCoverage(db, eligibleOffense, 'Inside technique man');
             });
         }
     } else {
@@ -3072,7 +3074,7 @@ function applyDefensivePlaycall(playcallName) {
         
         // Assign LBs to man coverage
         allLBs.forEach((lb) => {
-            assignManCoverage(lb, eligibleOffense, 'Inside release man');
+            assignManCoverage(lb, eligibleOffense, 'Inside technique man');
         });
     } else if (coverNumber === 2) {
         // For Cover 2: LBs/nickels get Curl/Hook, MLB gets Hole
@@ -3164,7 +3166,7 @@ function applyDefensivePlaycall(playcallName) {
                 if (!assignments.defense[lb.name]) assignments.defense[lb.name] = {};
                 assignments.defense[lb.name].manCoverageTarget = nearestTarget.player.name;
                 // Now update assignment (which will preserve the manCoverageTarget)
-                updateAssignment(lb, 'defense', 'Man Coverage', 'Inside release man');
+                updateAssignment(lb, 'defense', 'Man Coverage', 'Inside technique man');
                 nearestTarget.covered = true; // Mark as covered
             } else {
                 // No uncovered eligible players, assign zone
@@ -3344,7 +3346,7 @@ function applyBracketPlaycall(playcallName) {
         
         // CAP = deepest player (usually safety)
         const capPlayer = byDepth[0];
-        updateAssignment(capPlayer.player, 'defense', 'Bracket', 'CAP+DEEP');
+        updateAssignment(capPlayer.player, 'defense', 'Quarters Match', 'CAP+DEEP');
         assigned.push(capPlayer);
         
         // Remaining for MEG and TRAIL
@@ -3355,7 +3357,7 @@ function applyBracketPlaycall(playcallName) {
         
         // MEG = widest (usually outside CB)
         const megPlayer = byWidth[0];
-        updateAssignment(megPlayer.player, 'defense', 'Bracket', 'LOCK+MEG');
+        updateAssignment(megPlayer.player, 'defense', 'Quarters Match', 'LOCK+MEG');
         assigned.push(megPlayer);
         
         // TRAIL = innermost, prioritize nickel CBs then LBs - only if we have a 3rd player
@@ -3367,7 +3369,7 @@ function applyBracketPlaycall(playcallName) {
                 return Math.abs(a.xCoord) - Math.abs(b.xCoord);
             });
             const trailPlayer = trailCandidates[0];
-            updateAssignment(trailPlayer.player, 'defense', 'Bracket', 'TRAIL+APEX');
+            updateAssignment(trailPlayer.player, 'defense', 'Quarters Match', 'TRAIL+APEX');
             assigned.push(trailPlayer);
         }
         
@@ -3389,7 +3391,7 @@ function applyBracketPlaycall(playcallName) {
         // CAP = deepest
         if (byDepth.length > 0) {
             const capPlayer = byDepth[0];
-            updateAssignment(capPlayer.player, 'defense', 'Bracket', 'CAP+DEEP');
+            updateAssignment(capPlayer.player, 'defense', 'Quarters Match', 'CAP+DEEP');
             assigned.push(capPlayer);
         }
         
@@ -3399,7 +3401,7 @@ function applyBracketPlaycall(playcallName) {
         // MEG = widest
         if (byWidth.length > 0) {
             const megPlayer = byWidth[0];
-            updateAssignment(megPlayer.player, 'defense', 'Bracket', 'LOCK+MEG');
+            updateAssignment(megPlayer.player, 'defense', 'Quarters Match', 'LOCK+MEG');
             assigned.push(megPlayer);
         }
         
@@ -3413,7 +3415,7 @@ function applyBracketPlaycall(playcallName) {
         
         if (trailCandidates.length > 0) {
             const trailPlayer = trailCandidates[0];
-            updateAssignment(trailPlayer.player, 'defense', 'Bracket', 'TRAIL+APEX');
+            updateAssignment(trailPlayer.player, 'defense', 'Quarters Match', 'TRAIL+APEX');
             assigned.push(trailPlayer);
         }
         
@@ -3425,7 +3427,7 @@ function applyBracketPlaycall(playcallName) {
         
         if (cutCandidates.length > 0) {
             cutCandidates.sort((a, b) => Math.abs(a.xCoord) - Math.abs(b.xCoord));
-            updateAssignment(cutCandidates[0].player, 'defense', 'Bracket', 'CUT+CROSSER');
+            updateAssignment(cutCandidates[0].player, 'defense', 'Quarters Match', 'CUT+CROSSER');
             assigned.push(cutCandidates[0]);
         }
         
@@ -3446,7 +3448,7 @@ function applyBracketPlaycall(playcallName) {
         // CAP = deepest (safety)
         if (byDepth.length > 0) {
             const capPlayer = byDepth[0];
-            updateAssignment(capPlayer.player, 'defense', 'Bracket', 'CAP+DEEP');
+            updateAssignment(capPlayer.player, 'defense', 'Quarters Match', 'CAP+DEEP');
             assigned.push(capPlayer);
         }
         
@@ -3454,7 +3456,7 @@ function applyBracketPlaycall(playcallName) {
         const remaining = coveragePlayers.filter(p => !assigned.includes(p));
         if (remaining.length > 0) {
             const megPlayer = remaining[0];
-            updateAssignment(megPlayer.player, 'defense', 'Bracket', 'LOCK+MEG');
+            updateAssignment(megPlayer.player, 'defense', 'Quarters Match', 'LOCK+MEG');
             assigned.push(megPlayer);
         }
         
@@ -3674,7 +3676,7 @@ function createAssignmentItem(player, side, location) {
                 // Create assignment if it doesn't exist
                 assignments[side][player.name] = {
                     category: 'Man Coverage',
-                    action: 'Inside release man',
+                    action: 'Inside technique man',
                     manCoverageTarget: e.target.value
                 };
             }
@@ -3698,7 +3700,7 @@ function updateManCoverageSelector(item, player, side, category, action) {
     
     // Show selector only for defensive players in man coverage
     if (side === 'defense' && category === 'Man Coverage' && 
-        (action === 'Inside release man' || action === 'Outside release man' || action === 'Inside match man' || action === 'Outside match man')) {
+        (action === 'Inside technique man' || action === 'Outside technique man' || action === 'Inside match man' || action === 'Outside match man')) {
         manCoverageSelect.style.display = 'block';
         
         // Update options if needed (do this first so we can set the value)
@@ -5803,7 +5805,8 @@ function renderPlayerMarkers() {
         const player = getPlayerById(playerId);
         
         if (player && pos) {
-            const effectivePercentile = calculateEffectivePercentile(player);
+            const percentileResult = calculateEffectivePercentile(player);
+            const effectivePercentile = typeof percentileResult === 'object' ? percentileResult.effectivePercentile : percentileResult;
             const positionColor = getPositionColor(player.position);
             const isOffsides = pos.isOffsides;
             
@@ -6334,7 +6337,10 @@ EXAMPLES:
             location: pos.location,
             coords: locCoords,
             assignmentText: assignmentText,
-            effectivePercentile: calculateEffectivePercentile(player),
+            effectivePercentile: (() => {
+                const result = calculateEffectivePercentile(player);
+                return typeof result === 'object' ? result.effectivePercentile : result;
+            })(),
             warning: warning
         });
     });
@@ -6362,7 +6368,10 @@ EXAMPLES:
             location: pos.location,
             coords: locCoords,
             assignmentText: assignmentText + manTarget,
-            effectivePercentile: calculateEffectivePercentile(player),
+            effectivePercentile: (() => {
+                const result = calculateEffectivePercentile(player);
+                return typeof result === 'object' ? result.effectivePercentile : result;
+            })(),
             warning: warning
         });
     });
@@ -6707,6 +6716,27 @@ async function executePlay() {
     document.getElementById('outcomeText').textContent = outcomeText;
     document.getElementById('yardsGained').textContent = `Yards: ${result.yards > 0 ? '+' : ''}${result.yards}`;
     
+    // Display trait adjustments
+    const traitAdjustmentsEl = document.getElementById('traitAdjustments');
+    const traitAdjustmentsBody = document.getElementById('traitAdjustmentsBody');
+    if (traitAdjustmentsEl && traitAdjustmentsBody && traitAdjustments && traitAdjustments.length > 0) {
+        traitAdjustmentsEl.style.display = 'block';
+        traitAdjustmentsBody.innerHTML = '';
+        traitAdjustments.forEach(adj => {
+            const row = document.createElement('tr');
+            const valueColor = adj.value > 0 ? '#4caf50' : adj.value < 0 ? '#f44336' : '#666';
+            row.innerHTML = `
+                <td style="padding: 8px; border: 1px solid #ddd;">${adj.playerName}</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${adj.position}</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">${adj.description}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; text-align: right; color: ${valueColor}; font-weight: bold;">${adj.value > 0 ? '+' : ''}${adj.value}</td>
+            `;
+            traitAdjustmentsBody.appendChild(row);
+        });
+    } else if (traitAdjustmentsEl) {
+        traitAdjustmentsEl.style.display = 'none';
+    }
+    
     // Display rate comparison
     const rateDetailsEl = document.getElementById('rateDetails');
     if (rateDetailsEl && result.evalData && baselineRates) {
@@ -6764,8 +6794,26 @@ async function callLLM(playData) {
         // Fall through to mock output
     }
     
-    // Build prompt with fixed instructions first (for caching), then data, then output format
-    const fixedInstructions = `Analyze SCHEME: spatial (X/Y), blocking vs assignments, coverage vs routes.
+    // Reset trait adjustments for this play
+    traitAdjustments = [];
+    
+    // Use the new prompt generator
+    let fixedInstructions, userMessageContent;
+    if (typeof generateFullPrompt === 'function') {
+        const promptData = generateFullPrompt(playData);
+        fixedInstructions = promptData.systemPrompt;
+        userMessageContent = promptData.userMessage;
+        
+        // Collect trait adjustments from all players
+        const allPlayers = buildPlayersForCSV(playData);
+        allPlayers.forEach(p => {
+            if (p.traitAdjustment) {
+                traitAdjustments.push(p.traitAdjustment);
+            }
+        });
+    } else {
+        // Fallback - use FIXED_INSTRUCTIONS constant if available
+        fixedInstructions = typeof FIXED_INSTRUCTIONS !== 'undefined' ? FIXED_INSTRUCTIONS : `Analyze SCHEME: spatial (X/Y), blocking vs assignments, coverage vs routes.
 
 SPATIAL: X left-/right+, Y off-/def+. Count blockers vs defenders at POA.
 
@@ -6802,135 +6850,22 @@ EXAMPLES:
 -4 to 0: neutral/good scheme, even matchups.
 
 +2 to +5: wrong coverage/commit exploited.`;
-
-    // Variable data (user message content)
-    // Combine all players and sort by X coordinate (left to right)
-    const allPlayers = [];
-    
-    // Add offensive players
-    playData.offense.forEach(p => {
-        let playerId = null;
-        let actualPlayer = null;
-        for (const id of selectedPlayers) {
-            const player = getPlayerById(id);
-            if (player && player.name === p.name) {
-                playerId = id;
-                actualPlayer = player;
-                break;
-            }
+        
+        // Build user message using old method - simplified fallback
+        if (typeof generateUserMessage === 'function' && typeof generatePlayerCSV === 'function' && typeof buildPlayersForCSV === 'function') {
+            userMessageContent = generateUserMessage(playData, generatePlayerCSV(playData, buildPlayersForCSV(playData)));
+        } else {
+            // Ultimate fallback - build manually (this should rarely happen)
+            userMessageContent = `${gameState.down}${getDownSuffix(gameState.down)} & ${gameState.distance} @ ${gameState["opp-yardline"]}yd Q${gameState.quarter} ${gameState.time} ${gameState.score.home}-${gameState.score.away}\n\n[Player data would go here]`;
         }
-        const pos = playerId ? (playerPositions[playerId] || {}) : {};
-        const locCoords = pos.location ? getLocationCoords(pos.location) : null;
-        const x = locCoords ? locCoords.x : 0;
-        const effectivePercentile = calculateEffectivePercentile(p);
-        const assignment = assignments.offense[p.name] || {};
-        const assignmentText = assignment.action || assignment.category || 'None';
-        const manTarget = (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) ? ` (Man coverage on: ${assignment.manCoverageTarget})` : '';
-        const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
-        allPlayers.push({
-            side: 'OFFENSE',
-            x: x,
-            name: p.name,
-            position: actualPlayer ? actualPlayer.position : (p.position || 'Unknown'),
-            location: pos.location || 'Not placed',
-            coords: coords,
-            effectivePercentile: effectivePercentile,
-            assignmentText: assignmentText,
-            manTarget: manTarget,
-            warning: ''
-        });
-    });
+    }
     
-    // Add defensive players
-    playData.defense.forEach(p => {
-        let playerId = null;
-        let actualPlayer = null;
-        for (const id of selectedDefense) {
-            const player = getPlayerById(id);
-            if (player && player.name === p.name) {
-                playerId = id;
-                actualPlayer = player;
-                break;
-            }
-        }
-        const pos = playerId ? (playerPositions[playerId] || {}) : {};
-        const locCoords = pos.location ? getLocationCoords(pos.location) : null;
-        const x = locCoords ? locCoords.x : 0;
-        const effectivePercentile = calculateEffectivePercentile(p);
-        const assignment = assignments.defense[p.name] || {};
-        const assignmentText = assignment.action || assignment.category || 'None';
-        const manTarget = (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) ? ` (Man coverage on: ${assignment.manCoverageTarget})` : '';
-        const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
-        // Check if defensive lineman is in an offensive skill position (actual offsides/misalignment)
-        const actualPosition = actualPlayer ? actualPlayer.position : (p.position || 'Unknown');
-        const isDLInOffensivePosition = (actualPosition === 'DE' || actualPosition === 'DT') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Flanker') || pos.location.includes('Trips') || pos.location.includes('Max split'));
-        const warning = isDLInOffensivePosition ? ' ⚠️ DEFENSIVE LINEMAN IN OFFENSIVE SKILL POSITION!' : '';
-        allPlayers.push({
-            side: 'DEFENSE',
-            x: x,
-            name: p.name,
-            position: actualPosition,
-            location: pos.location || 'Not placed',
-            coords: coords,
-            effectivePercentile: effectivePercentile,
-            assignmentText: assignmentText,
-            manTarget: manTarget,
-            warning: warning
-        });
-    });
-    
-    // Sort by X coordinate (left to right: negative to positive)
-    allPlayers.sort((a, b) => a.x - b.x);
-    
-    let userMessageContent = `${gameState.down}${getDownSuffix(gameState.down)} & ${gameState.distance} @ ${gameState["opp-yardline"]}yd Q${gameState.quarter} ${gameState.time} ${gameState.score.home}-${gameState.score.away}
-
-This is a professional simulator used in training by world-class coordinators. Evaluate like a coordinator grading a call with film-room brutality, not a scout grading players. Success rate is not guaranteed even with +10 - bungles are handled programmatically. Grade the SCHEME, as execution errors are handled programmatically. Do not hedge, commit to extreme values ruthlessly when warranted.
-
-Pos,Initials,Align,X (yds),Y (yds),Rating,Assignment${allPlayers.map(p => {
-        const coords = p.coords.match(/X:([-\d.]+).*Y:([-\d.]+)/);
-        // Compress box X coords (OL, TE inline, DL, LB in gaps) by 0.375x for realistic spacing
-        const isBoxPosition = ['OT', 'OG', 'C', 'DE', 'DT'].includes(p.position) || 
-            (p.location && (p.location.includes('technique') || p.location.includes('gap') || 
-             p.location.includes('Tight') || p.location.includes('Wing')));
-        const xMultiplier = isBoxPosition ? 0.375 : 1.37;
-        const x = coords ? (parseFloat(coords[1]) * xMultiplier).toFixed(2) : '0.00';
-        // Compress Y based on position/location for realistic depths
-        let y = '0.00';
-        if (coords) {
-            const rawY = parseFloat(coords[2]);
-            const loc = p.location || '';
-            const pos = p.position;
-            if (['OT', 'OG', 'C'].includes(pos)) {
-                y = '0.00';
-            } else if (['DE', 'DT'].includes(pos) || loc.includes('technique')) {
-                y = '1.00';
-            } else if (['QB', 'RB'].includes(pos)) {
-                y = (Math.max(rawY, -5) * 0.5).toFixed(2);
-            } else if (['LB', 'MLB'].includes(pos) || loc.includes('gap')) {
-                y = loc.includes('deep') ? '6.00' : '3.00';
-            } else if (['S'].includes(pos) && rawY > 10) {
-                y = Math.min(rawY * 0.9, 18).toFixed(2);
-            } else if (loc.includes('press')) {
-                y = '1.00';
-            } else if (loc.includes('cushion')) {
-                y = '11.00';
-            } else if (['CB', 'S'].includes(pos) && rawY > 0 && rawY <= 10) {
-                y = '6.00';
-            } else {
-                y = (rawY * 1.37).toFixed(2);
-            }
-        }
-        const assignment = `${p.assignmentText}${p.manTarget}`.replace(/[,\n]/g, ' ').trim();
-        // Convert name to initials (e.g., "Cooper Kupp" -> "CK")
-        const initials = p.name.split(' ').map(n => n[0]).join('').toUpperCase();
-        return `\n${p.position},${initials},${p.location},${x},${y},${p.effectivePercentile.toFixed(0)},${assignment}${p.warning}`;
-    }).join('')}${playData.coachingPointOffense ? `\nOff: ${playData.coachingPointOffense.player.name} - "${playData.coachingPointOffense.point}"` : ''}${playData.coachingPointDefense ? `\nDef: ${playData.coachingPointDefense.player.name} - "${playData.coachingPointDefense.point}"` : ''}
-
-OUTPUT: Brief rationale (POA, 1-3 matchups). JSON only:
-
-{"play-type":"pass"|"run"|"RPO","offense-advantage":[-10 to 10],"risk-leverage":[0 to 10]}
-
-Grade purely on scheme potential; commit fully to numeric advantage, ignoring execution variance. Near-automatic scoring or unblocked advantage = max/min values.`;
+    // OLD METHOD CODE REMOVED - using new modules instead
+    // If we reach here without userMessageContent, something went wrong
+    if (!userMessageContent) {
+        console.error('Failed to generate user message content');
+        userMessageContent = `${gameState.down}${getDownSuffix(gameState.down)} & ${gameState.distance} @ ${gameState["opp-yardline"]}yd Q${gameState.quarter} ${gameState.time} ${gameState.score.home}-${gameState.score.away}\n\nError generating prompt.`;
+    }
     
     // Log the intended LLM output
     console.log('=== SYSTEM PROMPT ===');
@@ -7803,8 +7738,10 @@ function updateFatigue(playData, playType = 'run') {
     saveRosters();
 }
 
-function calculateEffectivePercentile(player) {
-    if (player.stamina === undefined || !player.percentile) return player.percentile || 50;
+function calculateEffectivePercentile(player, assignment = null, playContext = null) {
+    if (player.stamina === undefined || !player.percentile) {
+        return { effectivePercentile: player.percentile || 50, traitAdjustment: null };
+    }
     
     // Use config values with fallbacks
     const config = fatigueConfig || {
@@ -7826,7 +7763,25 @@ function calculateEffectivePercentile(player) {
     
     // Ensure stamina is between 0 and 100
     const stamina = Math.max(0, Math.min(100, player.stamina));
-    const basePercentile = player.percentile;
+    let basePercentile = player.percentile;
+    
+    // Detect and apply trait adjustment BEFORE fatigue
+    let traitAdjustment = null;
+    if (assignment && typeof detectPlayerTrait === 'function') {
+        // Get player location for context
+        const playerId = Object.keys(playerPositions || {}).find(id => {
+            const p = getPlayerById(id);
+            return p && p.name === player.name;
+        });
+        const location = playerId ? (playerPositions[playerId]?.location || '') : '';
+        const context = { ...playContext, location };
+        
+        traitAdjustment = detectPlayerTrait(player, assignment, context);
+        if (traitAdjustment && traitAdjustment.value !== 0) {
+            // Apply trait adjustment to base percentile (0-12 range)
+            basePercentile = Math.max(0, Math.min(100, basePercentile + traitAdjustment.value));
+        }
+    }
     
     // Logarithmic fatigue curve using config values
     let multiplier = 1.0;
@@ -7857,9 +7812,20 @@ function calculateEffectivePercentile(player) {
     effectivePercentile = basePercentile * actualMultiplier;
     
     // Additional safeguard: ensure effective never exceeds base (fatigue only reduces, never increases)
-    effectivePercentile = Math.min(effectivePercentile, basePercentile);
+    // BUT: trait adjustments can increase it above original base, so we need to track the adjusted base
+    const adjustedBase = traitAdjustment ? basePercentile : player.percentile;
+    effectivePercentile = Math.min(effectivePercentile, adjustedBase);
     
-    return effectivePercentile;
+    return { 
+        effectivePercentile, 
+        traitAdjustment: traitAdjustment ? {
+            trait: traitAdjustment.trait,
+            description: traitAdjustment.description,
+            value: traitAdjustment.value,
+            playerName: player.name,
+            position: player.position
+        } : null
+    };
 }
 
 function updateGameStateDisplay() {
@@ -8028,6 +7994,20 @@ function toggleDefenseCoaching() {
     const coachingDiv = document.getElementById('coachingPlayerDefense').parentElement;
     if (coachingDiv) {
         coachingDiv.style.display = hide ? 'none' : '';
+    }
+}
+
+function toggleTraitAdjustments() {
+    const content = document.getElementById('traitAdjustmentsContent');
+    const toggle = document.getElementById('traitAdjustmentsToggle');
+    if (content && toggle) {
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            toggle.textContent = '▲';
+        } else {
+            content.style.display = 'none';
+            toggle.textContent = '▼';
+        }
     }
 }
 

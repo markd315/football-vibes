@@ -726,6 +726,25 @@
                 <p id="outcomeType" style="font-weight: bold; font-size: 1.1em; margin-bottom: 10px;"></p>
                 <p id="outcomeText"></p>
                 <p id="yardsGained"></p>
+                <div id="traitAdjustments" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd; display: none;">
+                    <h4 style="margin-top: 0; cursor: pointer; user-select: none;" onclick="toggleTraitAdjustments()">
+                        <span id="traitAdjustmentsToggle">▼</span> Trait Adjustments
+                    </h4>
+                    <div id="traitAdjustmentsContent" style="display: none;">
+                        <table id="traitAdjustmentsTable" style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                            <thead>
+                                <tr style="background: #e0e0e0;">
+                                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Player</th>
+                                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Position</th>
+                                    <th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Trait</th>
+                                    <th style="padding: 8px; text-align: right; border: 1px solid #ddd;">Adjustment</th>
+                                </tr>
+                            </thead>
+                            <tbody id="traitAdjustmentsBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <div id="rateComparison" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
                     <h4 style="margin-top: 0;">Probability Analysis</h4>
                     <p id="rateDetails" style="font-size: 0.9em; line-height: 1.6;"></p>
@@ -742,6 +761,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.5/dist/jstat.min.js"></script>
     <script src="config.js"></script>
+    <script src="js/trait-detector.js"></script>
+    <script src="js/csv-generator.js"></script>
+    <script src="js/prompt-generator.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

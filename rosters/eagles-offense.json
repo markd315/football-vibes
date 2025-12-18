@@ -8,10 +8,8 @@
     "stamina": 100,
     "percentile": 66.8,
     "traits-from-baseline-percentile": {
-      "passing-accuracy": 2,
-      "pocket-presence": 2,
-      "mobility": 4,
-      "run-blocking": -5
+      "pocket-passer": 2,
+      "escape-artist": 4
     },
     "health": 100
   },
@@ -24,10 +22,7 @@
     "stamina": 100,
     "percentile": 13.8,
     "traits-from-baseline-percentile": {
-      "passing-accuracy": 0,
-      "pocket-presence": 0,
-      "mobility": -1,
-      "run-blocking": -5
+      "escape-artist": -1
     },
     "health": 100
   },
@@ -40,10 +35,8 @@
     "stamina": 100,
     "percentile": 19.8,
     "traits-from-baseline-percentile": {
-      "passing-accuracy": 0,
-      "pocket-presence": -1,
-      "mobility": 1,
-      "run-blocking": -5
+      "pocket-passer": -1,
+      "escape-artist": 1
     },
     "health": 100
   },
@@ -56,10 +49,10 @@
     "stamina": 100,
     "percentile": 73.8,
     "traits-from-baseline-percentile": {
-      "elusiveness": 5,
-      "power-running": 3,
-      "pass-catching": 3,
-      "pass-blocking": 1
+      "speed-back": 5,
+      "power-back": 3,
+      "route-runner": 3,
+      "blocker": 1
     },
     "health": 100
   },
@@ -72,10 +65,8 @@
     "stamina": 100,
     "percentile": 43.8,
     "traits-from-baseline-percentile": {
-      "power-running": 2,
-      "elusiveness": 2,
-      "pass-catching": 0,
-      "pass-blocking": 0
+      "speed-back": 2,
+      "power-back": 2
     },
     "health": 100
   },
@@ -88,10 +79,8 @@
     "stamina": 100,
     "percentile": 33.8,
     "traits-from-baseline-percentile": {
-      "elusiveness": 2,
-      "pass-catching": 1,
-      "power-running": 0,
-      "pass-blocking": 0
+      "speed-back": 2,
+      "route-runner": 1
     },
     "health": 100
   },
@@ -104,10 +93,10 @@
     "stamina": 100,
     "percentile": 26.8,
     "traits-from-baseline-percentile": {
-      "power-running": 3,
-      "pass-blocking": 1,
-      "elusiveness": -1,
-      "pass-catching": -1
+      "speed-back": -1,
+      "power-back": 3,
+      "route-runner": -1,
+      "blocker": 1
     },
     "health": 100
   },
@@ -120,10 +109,8 @@
     "stamina": 100,
     "percentile": 73.8,
     "traits-from-baseline-percentile": {
-      "pass-catching": 4,
-      "route-running": 4,
-      "elusiveness": 3,
-      "run-blocking": 1
+      "quick-game": 4,
+      "blocker": 1
     },
     "health": 100
   },
@@ -136,10 +123,7 @@
     "stamina": 100,
     "percentile": 9.8,
     "traits-from-baseline-percentile": {
-      "route-running": 0,
-      "pass-catching": 0,
-      "elusiveness": 0,
-      "run-blocking": -1
+      "blocker": -1
     },
     "health": 100
   },
@@ -152,10 +136,8 @@
     "stamina": 100,
     "percentile": 69.8,
     "traits-from-baseline-percentile": {
-      "route-running": 5,
-      "pass-catching": 4,
-      "elusiveness": 2,
-      "run-blocking": -1
+      "quick-game": 5,
+      "blocker": -1
     },
     "health": 100
   },
@@ -168,10 +150,8 @@
     "stamina": 100,
     "percentile": 23.8,
     "traits-from-baseline-percentile": {
-      "elusiveness": 2,
-      "route-running": 1,
-      "pass-catching": 0,
-      "run-blocking": -2
+      "quick-game": 1,
+      "blocker": -2
     },
     "health": 100
   },
@@ -184,10 +164,8 @@
     "stamina": 100,
     "percentile": 33.8,
     "traits-from-baseline-percentile": {
-      "route-running": 2,
-      "pass-catching": 1,
-      "elusiveness": 1,
-      "run-blocking": -1
+      "quick-game": 2,
+      "blocker": -1
     },
     "health": 100
   },
@@ -200,10 +178,9 @@
     "stamina": 100,
     "percentile": 59.8,
     "traits-from-baseline-percentile": {
-      "pass-catching": 3,
-      "route-running": 2,
-      "run-blocking": 2,
-      "pass-blocking": 1
+      "pass-catcher": 2,
+      "run-blocker": 2,
+      "protection": 1
     },
     "health": 100
   },
@@ -216,10 +193,7 @@
     "stamina": 100,
     "percentile": 26.8,
     "traits-from-baseline-percentile": {
-      "pass-catching": 1,
-      "route-running": 1,
-      "run-blocking": 0,
-      "pass-blocking": 0
+      "pass-catcher": 1
     },
     "health": 100
   },
@@ -232,10 +206,7 @@
     "stamina": 100,
     "percentile": 19.8,
     "traits-from-baseline-percentile": {
-      "pass-catching": 1,
-      "route-running": 0,
-      "run-blocking": 0,
-      "pass-blocking": 0
+      "pass-catcher": 1
     },
     "health": 100
   },
@@ -248,10 +219,7 @@
     "stamina": 100,
     "percentile": 9.8,
     "traits-from-baseline-percentile": {
-      "run-blocking": 0,
-      "pass-catching": -1,
-      "route-running": -1,
-      "pass-blocking": 0
+      "pass-catcher": -1
     },
     "health": 100
   },
@@ -264,10 +232,8 @@
     "stamina": 100,
     "percentile": 66.8,
     "traits-from-baseline-percentile": {
-      "pass-blocking": 4,
-      "run-blocking": 3,
-      "mobility": -2,
-      "pass-catching": -5
+      "pass-protection": 4,
+      "zone-blocker": 3
     },
     "health": 100
   },
@@ -280,10 +246,7 @@
     "stamina": 100,
     "percentile": 23.8,
     "traits-from-baseline-percentile": {
-      "run-blocking": 1,
-      "pass-blocking": 0,
-      "mobility": -2,
-      "pass-catching": -5
+      "zone-blocker": 1
     },
     "health": 100
   },
@@ -296,10 +259,8 @@
     "stamina": 100,
     "percentile": 73.8,
     "traits-from-baseline-percentile": {
-      "pass-blocking": 5,
-      "run-blocking": 4,
-      "mobility": 0,
-      "pass-catching": -5
+      "pass-protection": 5,
+      "zone-blocker": 4
     },
     "health": 100
   },
@@ -312,10 +273,8 @@
     "stamina": 100,
     "percentile": 69.8,
     "traits-from-baseline-percentile": {
-      "run-blocking": 4,
-      "pass-blocking": 3,
-      "mobility": -1,
-      "pass-catching": -5
+      "pass-protection": 3,
+      "zone-blocker": 4
     },
     "health": 100
   },
@@ -327,12 +286,7 @@
     "weight": "305",
     "stamina": 100,
     "percentile": 13.8,
-    "traits-from-baseline-percentile": {
-      "run-blocking": 0,
-      "pass-blocking": 0,
-      "mobility": -2,
-      "pass-catching": -5
-    },
+    "traits-from-baseline-percentile": {},
     "health": 100
   },
   {
@@ -344,10 +298,8 @@
     "stamina": 100,
     "percentile": 36.8,
     "traits-from-baseline-percentile": {
-      "run-blocking": 1,
-      "pass-blocking": 1,
-      "mobility": -2,
-      "pass-catching": -5
+      "pass-protection": 1,
+      "zone-blocker": 1
     },
     "health": 100
   },
@@ -359,12 +311,7 @@
     "weight": "332",
     "stamina": 100,
     "percentile": 19.8,
-    "traits-from-baseline-percentile": {
-      "run-blocking": 0,
-      "pass-blocking": 0,
-      "mobility": -2,
-      "pass-catching": -5
-    },
+    "traits-from-baseline-percentile": {},
     "health": 100
   },
   {
@@ -376,10 +323,8 @@
     "stamina": 100,
     "percentile": 59.8,
     "traits-from-baseline-percentile": {
-      "pass-blocking": 3,
-      "run-blocking": 3,
-      "mobility": 1,
-      "pass-catching": -5
+      "pass-protection": 3,
+      "zone-blocker": 3
     },
     "health": 100
   },
@@ -392,10 +337,7 @@
     "stamina": 100,
     "percentile": 9.8,
     "traits-from-baseline-percentile": {
-      "run-blocking": 0,
-      "pass-blocking": -1,
-      "mobility": -1,
-      "pass-catching": -5
+      "pass-protection": -1
     },
     "health": 100
   }

@@ -1,386 +1,346 @@
 [
-    {
-        "name": "Joe Burrow",
-        "position": "QB",
-        "jersey": 9,
-        "height": "6'4",
-        "weight": "215",
-        "stamina": 94,
-        "percentile": 94,
-        "traits-from-baseline-percentile": {
-            "passing-accuracy": 4,
-            "pocket-presence": 3,
-            "mobility": 2,
-            "run-blocking": -5
-        },
-        "health": 100.0
+  {
+    "name": "Joe Burrow",
+    "position": "QB",
+    "jersey": 9,
+    "height": "6'4",
+    "weight": "215",
+    "stamina": 94,
+    "percentile": 94,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 3,
+      "escape-artist": 2
     },
-    {
-        "name": "Patrick Mahomes",
-        "position": "QB",
-        "jersey": 15,
-        "height": "6'3",
-        "weight": "230",
-        "stamina": 91,
-        "percentile": 98,
-        "traits-from-baseline-percentile": {
-            "passing-accuracy": 5,
-            "mobility": 4,
-            "pocket-presence": 3,
-            "run-blocking": -5
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Patrick Mahomes",
+    "position": "QB",
+    "jersey": 15,
+    "height": "6'3",
+    "weight": "230",
+    "stamina": 91,
+    "percentile": 98,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 3,
+      "escape-artist": 4
     },
-    {
-        "name": "Derrick Henry",
-        "position": "RB",
-        "jersey": 22,
-        "height": "6'3",
-        "weight": "247",
-        "stamina": 78,
-        "percentile": 91,
-        "traits-from-baseline-percentile": {
-            "power-running": 5,
-            "elusiveness": 2,
-            "pass-catching": 1,
-            "pass-blocking": -2
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Derrick Henry",
+    "position": "RB",
+    "jersey": 22,
+    "height": "6'3",
+    "weight": "247",
+    "stamina": 78,
+    "percentile": 91,
+    "traits-from-baseline-percentile": {
+      "speed-back": 2,
+      "power-back": 5,
+      "route-runner": 1,
+      "blocker": -2
     },
-    {
-        "name": "Christian McCaffrey",
-        "position": "RB",
-        "jersey": 23,
-        "height": "5'11",
-        "weight": "205",
-        "stamina": 88,
-        "percentile": 95,
-        "traits-from-baseline-percentile": {
-            "elusiveness": 4,
-            "pass-catching": 5,
-            "power-running": 2,
-            "pass-blocking": 1
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Christian McCaffrey",
+    "position": "RB",
+    "jersey": 23,
+    "height": "5'11",
+    "weight": "205",
+    "stamina": 88,
+    "percentile": 95,
+    "traits-from-baseline-percentile": {
+      "speed-back": 4,
+      "power-back": 2,
+      "route-runner": 5,
+      "blocker": 1
     },
-    {
-        "name": "Nick Chubb",
-        "position": "RB",
-        "jersey": 24,
-        "height": "5'11",
-        "weight": "227",
-        "stamina": 82,
-        "percentile": 90,
-        "traits-from-baseline-percentile": {
-            "power-running": 4,
-            "elusiveness": 3,
-            "pass-catching": 0,
-            "pass-blocking": -1
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Nick Chubb",
+    "position": "RB",
+    "jersey": 24,
+    "height": "5'11",
+    "weight": "227",
+    "stamina": 82,
+    "percentile": 90,
+    "traits-from-baseline-percentile": {
+      "speed-back": 3,
+      "power-back": 4,
+      "blocker": -1
     },
-    {
-        "name": "Austin Ekeler",
-        "position": "RB",
-        "jersey": 30,
-        "height": "5'10",
-        "weight": "200",
-        "stamina": 85,
-        "percentile": 87,
-        "traits-from-baseline-percentile": {
-            "elusiveness": 4,
-            "pass-catching": 4,
-            "power-running": 1,
-            "pass-blocking": 0
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Austin Ekeler",
+    "position": "RB",
+    "jersey": 30,
+    "height": "5'10",
+    "weight": "200",
+    "stamina": 85,
+    "percentile": 87,
+    "traits-from-baseline-percentile": {
+      "speed-back": 4,
+      "power-back": 1,
+      "route-runner": 4
     },
-    {
-        "name": "Travis Kelce",
-        "position": "TE",
-        "jersey": 87,
-        "height": "6'5",
-        "weight": "260",
-        "stamina": 81,
-        "percentile": 96,
-        "traits-from-baseline-percentile": {
-            "pass-catching": 5,
-            "run-blocking": 2,
-            "route-running": 4,
-            "pass-blocking": 1
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Travis Kelce",
+    "position": "TE",
+    "jersey": 87,
+    "height": "6'5",
+    "weight": "260",
+    "stamina": 81,
+    "percentile": 96,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": 4,
+      "run-blocker": 2,
+      "protection": 1
     },
-    {
-        "name": "George Kittle",
-        "position": "TE",
-        "jersey": 85,
-        "height": "6'4",
-        "weight": "250",
-        "stamina": 86,
-        "percentile": 94,
-        "traits-from-baseline-percentile": {
-            "run-blocking": 5,
-            "pass-catching": 4,
-            "route-running": 3,
-            "pass-blocking": 2
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "George Kittle",
+    "position": "TE",
+    "jersey": 85,
+    "height": "6'4",
+    "weight": "250",
+    "stamina": 86,
+    "percentile": 94,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": 3,
+      "run-blocker": 5,
+      "protection": 2
     },
-    {
-        "name": "Mark Andrews",
-        "position": "TE",
-        "jersey": 89,
-        "height": "6'5",
-        "weight": "256",
-        "stamina": 79,
-        "percentile": 89,
-        "traits-from-baseline-percentile": {
-            "pass-catching": 4,
-            "route-running": 3,
-            "run-blocking": 1,
-            "pass-blocking": 0
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Mark Andrews",
+    "position": "TE",
+    "jersey": 89,
+    "height": "6'5",
+    "weight": "256",
+    "stamina": 79,
+    "percentile": 89,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": 3,
+      "run-blocker": 1
     },
-    {
-        "name": "Tyreek Hill",
-        "position": "WR",
-        "jersey": 10,
-        "height": "5'10",
-        "weight": "185",
-        "stamina": 92,
-        "percentile": 97,
-        "traits-from-baseline-percentile": {
-            "route-running": 5,
-            "pass-catching": 4,
-            "elusiveness": 5,
-            "run-blocking": -3
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Tyreek Hill",
+    "position": "WR",
+    "jersey": 10,
+    "height": "5'10",
+    "weight": "185",
+    "stamina": 92,
+    "percentile": 97,
+    "traits-from-baseline-percentile": {
+      "quick-game": 5,
+      "blocker": -3
     },
-    {
-        "name": "Davante Adams",
-        "position": "WR",
-        "jersey": 17,
-        "height": "6'1",
-        "weight": "215",
-        "stamina": 87,
-        "percentile": 95,
-        "traits-from-baseline-percentile": {
-            "route-running": 5,
-            "pass-catching": 5,
-            "run-blocking": 1,
-            "elusiveness": 2
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Davante Adams",
+    "position": "WR",
+    "jersey": 17,
+    "height": "6'1",
+    "weight": "215",
+    "stamina": 87,
+    "percentile": 95,
+    "traits-from-baseline-percentile": {
+      "quick-game": 5,
+      "blocker": 1
     },
-    {
-        "name": "Cooper Kupp",
-        "position": "WR",
-        "jersey": 10,
-        "height": "6'2",
-        "weight": "208",
-        "stamina": 89,
-        "percentile": 93,
-        "traits-from-baseline-percentile": {
-            "route-running": 5,
-            "pass-catching": 4,
-            "elusiveness": 3,
-            "run-blocking": 0
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Cooper Kupp",
+    "position": "WR",
+    "jersey": 10,
+    "height": "6'2",
+    "weight": "208",
+    "stamina": 89,
+    "percentile": 93,
+    "traits-from-baseline-percentile": {
+      "quick-game": 5
     },
-    {
-        "name": "Stefon Diggs",
-        "position": "WR",
-        "jersey": 14,
-        "height": "6'0",
-        "weight": "191",
-        "stamina": 84,
-        "percentile": 92,
-        "traits-from-baseline-percentile": {
-            "route-running": 4,
-            "pass-catching": 4,
-            "elusiveness": 3,
-            "run-blocking": -1
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Stefon Diggs",
+    "position": "WR",
+    "jersey": 14,
+    "height": "6'0",
+    "weight": "191",
+    "stamina": 84,
+    "percentile": 92,
+    "traits-from-baseline-percentile": {
+      "quick-game": 4,
+      "blocker": -1
     },
-    {
-        "name": "CeeDee Lamb",
-        "position": "WR",
-        "jersey": 88,
-        "height": "6'2",
-        "weight": "200",
-        "stamina": 90,
-        "percentile": 91,
-        "traits-from-baseline-percentile": {
-            "route-running": 4,
-            "pass-catching": 4,
-            "elusiveness": 4,
-            "run-blocking": -1
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "CeeDee Lamb",
+    "position": "WR",
+    "jersey": 88,
+    "height": "6'2",
+    "weight": "200",
+    "stamina": 90,
+    "percentile": 91,
+    "traits-from-baseline-percentile": {
+      "quick-game": 4,
+      "blocker": -1
     },
-    {
-        "name": "Trent Williams",
-        "position": "OT",
-        "jersey": 71,
-        "height": "6'5",
-        "weight": "320",
-        "stamina": 76,
-        "percentile": 96,
-        "traits-from-baseline-percentile": {
-            "pass-blocking": 5,
-            "run-blocking": 4,
-            "mobility": 2,
-            "pass-catching": -5
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Trent Williams",
+    "position": "OT",
+    "jersey": 71,
+    "height": "6'5",
+    "weight": "320",
+    "stamina": 76,
+    "percentile": 96,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 5,
+      "zone-blocker": 4
     },
-    {
-        "name": "Lane Johnson",
-        "position": "OT",
-        "jersey": 65,
-        "height": "6'6",
-        "weight": "325",
-        "stamina": 77,
-        "percentile": 94,
-        "traits-from-baseline-percentile": {
-            "pass-blocking": 4,
-            "run-blocking": 4,
-            "mobility": 1,
-            "pass-catching": -5
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Lane Johnson",
+    "position": "OT",
+    "jersey": 65,
+    "height": "6'6",
+    "weight": "325",
+    "stamina": 77,
+    "percentile": 94,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 4,
+      "zone-blocker": 4
     },
-    {
-        "name": "David Bakhtiari",
-        "position": "OT",
-        "jersey": 69,
-        "height": "6'4",
-        "weight": "310",
-        "stamina": 73,
-        "percentile": 88,
-        "traits-from-baseline-percentile": {
-            "pass-blocking": 4,
-            "run-blocking": 3,
-            "mobility": 1,
-            "pass-catching": -5
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "David Bakhtiari",
+    "position": "OT",
+    "jersey": 69,
+    "height": "6'4",
+    "weight": "310",
+    "stamina": 73,
+    "percentile": 88,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 4,
+      "zone-blocker": 3
     },
-    {
-        "name": "Zack Martin",
-        "position": "OG",
-        "jersey": 70,
-        "height": "6'4",
-        "weight": "315",
-        "stamina": 80,
-        "percentile": 95,
-        "traits-from-baseline-percentile": {
-            "run-blocking": 5,
-            "pass-blocking": 4,
-            "mobility": 1,
-            "pass-catching": -5
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Zack Martin",
+    "position": "OG",
+    "jersey": 70,
+    "height": "6'4",
+    "weight": "315",
+    "stamina": 80,
+    "percentile": 95,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 4,
+      "zone-blocker": 5
     },
-    {
-        "name": "Quenton Nelson",
-        "position": "OG",
-        "jersey": 56,
-        "height": "6'5",
-        "weight": "330",
-        "stamina": 74,
-        "percentile": 93,
-        "traits-from-baseline-percentile": {
-            "run-blocking": 5,
-            "pass-blocking": 3,
-            "mobility": 0,
-            "pass-catching": -5
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Quenton Nelson",
+    "position": "OG",
+    "jersey": 56,
+    "height": "6'5",
+    "weight": "330",
+    "stamina": 74,
+    "percentile": 93,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 3,
+      "zone-blocker": 5
     },
-    {
-        "name": "Joel Bitonio",
-        "position": "OG",
-        "jersey": 75,
-        "height": "6'4",
-        "weight": "320",
-        "stamina": 78,
-        "percentile": 90,
-        "traits-from-baseline-percentile": {
-            "run-blocking": 4,
-            "pass-blocking": 4,
-            "mobility": 1,
-            "pass-catching": -5
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Joel Bitonio",
+    "position": "OG",
+    "jersey": 75,
+    "height": "6'4",
+    "weight": "320",
+    "stamina": 78,
+    "percentile": 90,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 4,
+      "zone-blocker": 4
     },
-    {
-        "name": "Jason Kelce",
-        "position": "C",
-        "jersey": 62,
-        "height": "6'3",
-        "weight": "295",
-        "stamina": 83,
-        "percentile": 92,
-        "traits-from-baseline-percentile": {
-            "run-blocking": 4,
-            "pass-blocking": 4,
-            "mobility": 2,
-            "pass-catching": -5
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Jason Kelce",
+    "position": "C",
+    "jersey": 62,
+    "height": "6'3",
+    "weight": "295",
+    "stamina": 83,
+    "percentile": 92,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 4,
+      "zone-blocker": 4
     },
-    {
-        "name": "Josh Allen",
-        "position": "QB",
-        "jersey": 17,
-        "height": "6'5",
-        "weight": "237",
-        "stamina": 86,
-        "percentile": 93,
-        "traits-from-baseline-percentile": {
-            "mobility": 5,
-            "passing-accuracy": 3,
-            "pocket-presence": 2,
-            "run-blocking": -3
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Josh Allen",
+    "position": "QB",
+    "jersey": 17,
+    "height": "6'5",
+    "weight": "237",
+    "stamina": 86,
+    "percentile": 93,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 2,
+      "escape-artist": 5
     },
-    {
-        "name": "Saquon Barkley",
-        "position": "RB",
-        "jersey": 26,
-        "height": "6'0",
-        "weight": "232",
-        "stamina": 83,
-        "percentile": 89,
-        "traits-from-baseline-percentile": {
-            "elusiveness": 4,
-            "power-running": 3,
-            "pass-catching": 3,
-            "pass-blocking": 0
-        },
-        "health": 100.0
+    "health": 100
+  },
+  {
+    "name": "Saquon Barkley",
+    "position": "RB",
+    "jersey": 26,
+    "height": "6'0",
+    "weight": "232",
+    "stamina": 83,
+    "percentile": 89,
+    "traits-from-baseline-percentile": {
+      "speed-back": 4,
+      "power-back": 3,
+      "route-runner": 3
     },
-    {
-        "name": "Justin Jefferson",
-        "position": "WR",
-        "jersey": 18,
-        "height": "6'1",
-        "weight": "195",
-        "stamina": 91,
-        "percentile": 96,
-        "traits-from-baseline-percentile": {
-            "route-running": 5,
-            "pass-catching": 5,
-            "elusiveness": 4,
-            "run-blocking": -1
-        },
-        "health": 100.0
-    }
+    "health": 100
+  },
+  {
+    "name": "Justin Jefferson",
+    "position": "WR",
+    "jersey": 18,
+    "height": "6'1",
+    "weight": "195",
+    "stamina": 91,
+    "percentile": 96,
+    "traits-from-baseline-percentile": {
+      "quick-game": 5,
+      "blocker": -1
+    },
+    "health": 100
+  }
 ]

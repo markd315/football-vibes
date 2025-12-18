@@ -8,10 +8,8 @@
     "stamina": 100,
     "percentile": 76.4,
     "traits-from-baseline-percentile": {
-      "pass-rusher": 5,
-      "gap-control": 2,
-      "zone-rushing-defense": 1,
-      "man-coverage": -3
+      "qb-predator": 5,
+      "gap-stuffer": 2
     },
     "health": 100
   },
@@ -24,10 +22,8 @@
     "stamina": 100,
     "percentile": 50.4,
     "traits-from-baseline-percentile": {
-      "pass-rusher": 2,
-      "gap-control": 1,
-      "zone-rushing-defense": 1,
-      "man-coverage": -3
+      "qb-predator": 2,
+      "gap-stuffer": 1
     },
     "health": 100
   },
@@ -39,12 +35,7 @@
     "weight": "250",
     "stamina": 100,
     "percentile": 26.4,
-    "traits-from-baseline-percentile": {
-      "pass-rusher": 0,
-      "gap-control": 0,
-      "zone-rushing-defense": 0,
-      "man-coverage": -3
-    },
+    "traits-from-baseline-percentile": {},
     "health": 100
   },
   {
@@ -56,10 +47,7 @@
     "stamina": 100,
     "percentile": 36.4,
     "traits-from-baseline-percentile": {
-      "gap-control": 1,
-      "zone-rushing-defense": 1,
-      "pass-rusher": 0,
-      "man-coverage": -4
+      "gap-stuffer": 1
     },
     "health": 100
   },
@@ -72,10 +60,8 @@
     "stamina": 100,
     "percentile": 46.4,
     "traits-from-baseline-percentile": {
-      "pass-rusher": 2,
-      "gap-control": 1,
-      "zone-rushing-defense": 1,
-      "man-coverage": -4
+      "qb-predator": 2,
+      "gap-stuffer": 1
     },
     "health": 100
   },
@@ -88,10 +74,7 @@
     "stamina": 100,
     "percentile": 30.4,
     "traits-from-baseline-percentile": {
-      "gap-control": 1,
-      "zone-rushing-defense": 0,
-      "pass-rusher": 0,
-      "man-coverage": -4
+      "gap-stuffer": 1
     },
     "health": 100
   },
@@ -104,10 +87,8 @@
     "stamina": 100,
     "percentile": 70.4,
     "traits-from-baseline-percentile": {
-      "pass-rusher": 4,
-      "gap-control": 2,
-      "zone-rushing-defense": 1,
-      "man-coverage": -3
+      "qb-predator": 4,
+      "gap-stuffer": 2
     },
     "health": 100
   },
@@ -120,10 +101,8 @@
     "stamina": 100,
     "percentile": 40.4,
     "traits-from-baseline-percentile": {
-      "pass-rusher": 1,
-      "gap-control": 1,
-      "zone-rushing-defense": 0,
-      "man-coverage": -3
+      "qb-predator": 1,
+      "gap-stuffer": 1
     },
     "health": 100
   },
@@ -135,12 +114,7 @@
     "weight": "255",
     "stamina": 100,
     "percentile": 23.4,
-    "traits-from-baseline-percentile": {
-      "pass-rusher": 0,
-      "gap-control": 0,
-      "zone-rushing-defense": 0,
-      "man-coverage": -3
-    },
+    "traits-from-baseline-percentile": {},
     "health": 100
   },
   {
@@ -152,10 +126,10 @@
     "stamina": 100,
     "percentile": 46.4,
     "traits-from-baseline-percentile": {
-      "zone-rushing-defense": 2,
-      "gap-control": 1,
-      "man-coverage": 1,
-      "pass-rusher": -2
+      "blitz-threat": -2,
+      "gap-stuffer": 1,
+      "zone-coverage": 2,
+      "man-coverage": 1
     },
     "health": 100
   },
@@ -168,10 +142,7 @@
     "stamina": 100,
     "percentile": 23.4,
     "traits-from-baseline-percentile": {
-      "zone-rushing-defense": 0,
-      "gap-control": 0,
-      "man-coverage": 0,
-      "pass-rusher": -2
+      "blitz-threat": -2
     },
     "health": 100
   },
@@ -184,10 +155,10 @@
     "stamina": 100,
     "percentile": 60.4,
     "traits-from-baseline-percentile": {
-      "zone-rushing-defense": 3,
-      "gap-control": 2,
-      "man-coverage": 1,
-      "pass-rusher": -2
+      "blitz-threat": -2,
+      "gap-stuffer": 2,
+      "zone-coverage": 3,
+      "man-coverage": 1
     },
     "health": 100
   },
@@ -200,10 +171,10 @@
     "stamina": 100,
     "percentile": 43.4,
     "traits-from-baseline-percentile": {
-      "zone-rushing-defense": 1,
-      "gap-control": 1,
-      "man-coverage": 1,
-      "pass-rusher": -2
+      "blitz-threat": -2,
+      "gap-stuffer": 1,
+      "zone-coverage": 1,
+      "man-coverage": 1
     },
     "health": 100
   },
@@ -216,10 +187,10 @@
     "stamina": 100,
     "percentile": 40.4,
     "traits-from-baseline-percentile": {
-      "zone-rushing-defense": 1,
-      "gap-control": 1,
-      "man-coverage": 1,
-      "pass-rusher": -2
+      "blitz-threat": -2,
+      "gap-stuffer": 1,
+      "zone-coverage": 1,
+      "man-coverage": 1
     },
     "health": 100
   },
@@ -232,10 +203,7 @@
     "stamina": 100,
     "percentile": 20.4,
     "traits-from-baseline-percentile": {
-      "zone-rushing-defense": 0,
-      "gap-control": 0,
-      "man-coverage": 0,
-      "pass-rusher": -2
+      "blitz-threat": -2
     },
     "health": 100
   },
@@ -248,10 +216,9 @@
     "stamina": 100,
     "percentile": 33.4,
     "traits-from-baseline-percentile": {
-      "zone-rushing-defense": 1,
-      "gap-control": 1,
-      "man-coverage": 0,
-      "pass-rusher": -2
+      "blitz-threat": -2,
+      "gap-stuffer": 1,
+      "zone-coverage": 1
     },
     "health": 100
   },
@@ -265,9 +232,7 @@
     "percentile": 76.4,
     "traits-from-baseline-percentile": {
       "man-coverage": 5,
-      "zone-rushing-defense": 2,
-      "gap-control": -2,
-      "pass-rusher": -4
+      "zone-coverage": 2
     },
     "health": 100
   },
@@ -279,12 +244,7 @@
     "weight": "188",
     "stamina": 100,
     "percentile": 26.4,
-    "traits-from-baseline-percentile": {
-      "man-coverage": 0,
-      "zone-rushing-defense": 0,
-      "gap-control": -2,
-      "pass-rusher": -4
-    },
+    "traits-from-baseline-percentile": {},
     "health": 100
   },
   {
@@ -297,9 +257,7 @@
     "percentile": 56.4,
     "traits-from-baseline-percentile": {
       "man-coverage": 2,
-      "zone-rushing-defense": 2,
-      "gap-control": -2,
-      "pass-rusher": -4
+      "zone-coverage": 2
     },
     "health": 100
   },
@@ -311,12 +269,7 @@
     "weight": "190",
     "stamina": 100,
     "percentile": 23.4,
-    "traits-from-baseline-percentile": {
-      "man-coverage": 0,
-      "zone-rushing-defense": 0,
-      "gap-control": -2,
-      "pass-rusher": -4
-    },
+    "traits-from-baseline-percentile": {},
     "health": 100
   },
   {
@@ -327,12 +280,7 @@
     "weight": "211",
     "stamina": 100,
     "percentile": 20.4,
-    "traits-from-baseline-percentile": {
-      "man-coverage": 0,
-      "zone-rushing-defense": 0,
-      "gap-control": -2,
-      "pass-rusher": -4
-    },
+    "traits-from-baseline-percentile": {},
     "health": 100
   },
   {
@@ -344,10 +292,7 @@
     "stamina": 100,
     "percentile": 30.4,
     "traits-from-baseline-percentile": {
-      "man-coverage": 1,
-      "zone-rushing-defense": 0,
-      "gap-control": -2,
-      "pass-rusher": -4
+      "man-coverage": 1
     },
     "health": 100
   },
@@ -360,10 +305,8 @@
     "stamina": 100,
     "percentile": 56.4,
     "traits-from-baseline-percentile": {
-      "zone-rushing-defense": 3,
       "man-coverage": 2,
-      "gap-control": 0,
-      "pass-rusher": -3
+      "zone-coverage": 3
     },
     "health": 100
   },
@@ -376,10 +319,8 @@
     "stamina": 100,
     "percentile": 63.4,
     "traits-from-baseline-percentile": {
-      "zone-rushing-defense": 3,
       "man-coverage": 2,
-      "gap-control": 1,
-      "pass-rusher": -3
+      "zone-coverage": 3
     },
     "health": 100
   },
@@ -392,10 +333,8 @@
     "stamina": 100,
     "percentile": 43.4,
     "traits-from-baseline-percentile": {
-      "zone-rushing-defense": 1,
       "man-coverage": 1,
-      "gap-control": 0,
-      "pass-rusher": -3
+      "zone-coverage": 1
     },
     "health": 100
   }
