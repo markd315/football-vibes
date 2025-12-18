@@ -903,6 +903,28 @@ function detectDefensivePersonnel() {
     }
 }
 
+// Helper function to check if a location is a "box location"
+// Box locations: tight to tight (X: -5.5 to 5.5), all gaps, all defensive line techniques
+function isBoxLocation(location, sectionName) {
+    // All defensive line techniques (all techs) - entire section
+    if (sectionName === "Defensive line of scrimmage") {
+        return true;
+    }
+    
+    // All gap locations (A, B, or C gap) - in defensive backfield or box safety sections
+    if (location.Name && location.Name.toLowerCase().includes("gap")) {
+        return true;
+    }
+    
+    // Tight to tight: X coordinates from -5.5 to 5.5 on offensive line of scrimmage
+    // This includes: Tight left, Tight right, and all offensive line positions in that X range
+    if (sectionName === "Offensive line of scrimmage" && location.X >= -5.5 && location.X <= 5.5) {
+        return true;
+    }
+    
+    return false;
+}
+
 function renderField() {
     const canvas = document.getElementById('fieldCanvas');
     if (!canvas) return;
@@ -964,11 +986,20 @@ function renderField() {
                 const y = centerY - (location.Y * 15);
                 
                 if (x >= 0 && x <= canvasWidth && y >= 0 && y <= canvasHeight) {
-                    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                    // Check if this is a box location (tight to tight, gaps, techs)
+                    const isBox = isBoxLocation(location, section.Section);
+                    if (isBox) {
+                        // Dark red for box locations
+                        ctx.fillStyle = 'rgba(139,0,0,0.3)'; // Dark red with transparency
+                        ctx.strokeStyle = 'rgba(139,0,0,0.8)'; // Dark red stroke
+                    } else {
+                        // Grey for non-box locations
+                        ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                        ctx.strokeStyle = '#fff';
+                    }
                     ctx.beginPath();
                     ctx.arc(x, y, 20, 0, Math.PI * 2);
                     ctx.fill();
-                    ctx.strokeStyle = '#fff';
                     ctx.lineWidth = 2;
                     ctx.stroke();
                 }
@@ -2523,7 +2554,30 @@ function applyDefensivePlaycall(playcallName) {
             
             const assignment = playcall[player.position];
             if (assignment && typeof assignment === 'object') {
-                updateAssignment(player, 'defense', assignment.category, assignment.action);
+                let action = assignment.action;
+                // Adjust L/R zone assignments based on player field position
+                if (assignment.category === 'Zone Short' || assignment.category === 'Zone Deep') {
+                    const pos = playerPositions[playerId];
+                    if (pos && pos.location) {
+                        const coords = getLocationCoords(pos.location);
+                        if (coords) {
+                            const isLeft = coords.x < 0;
+                            // Replace L/R in zone name based on actual position
+                            if (action.includes(' L') && !isLeft) {
+                                action = action.replace(' L', ' R');
+                            } else if (action.includes(' R') && isLeft) {
+                                action = action.replace(' R', ' L');
+                            }
+                            // Handle (cov2), (cov3), (cov4) variants
+                            if (action.includes('left') && !isLeft) {
+                                action = action.replace('left', 'right');
+                            } else if (action.includes('right') && isLeft) {
+                                action = action.replace('right', 'left');
+                            }
+                        }
+                    }
+                }
+                updateAssignment(player, 'defense', assignment.category, action);
             } else if (player.position === 'DE' || player.position === 'DT') {
                 // DL always rush - get gap from technique alignment
                 const location = playerPositions[playerId]?.location || '';
@@ -5304,11 +5358,20 @@ function renderPlayerMarkers() {
                 const y = centerY - (location.Y * 15);
                 
                 if (x >= 0 && x <= canvasWidth && y >= 0 && y <= canvasHeight) {
-                    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+                    // Check if this is a box location (tight to tight, gaps, techs)
+                    const isBox = isBoxLocation(location, section.Section);
+                    if (isBox) {
+                        // Dark red for box locations
+                        ctx.fillStyle = 'rgba(139,0,0,0.2)'; // Dark red with transparency
+                        ctx.strokeStyle = 'rgba(139,0,0,0.6)'; // Dark red stroke
+                    } else {
+                        // Grey for non-box locations
+                        ctx.fillStyle = 'rgba(255,255,255,0.1)';
+                        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                    }
                     ctx.beginPath();
                     ctx.arc(x, y, 25, 0, Math.PI * 2);
                     ctx.fill();
-                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
                     ctx.lineWidth = 1;
                     ctx.stroke();
                 }

@@ -32,83 +32,175 @@ An interactive NFL play design and simulation game where you (and an optional sp
 - **Special Teams**: Punt and field goal execution with simplified outcomes
 - **Possession System**: Tracks which team has the ball and uses appropriate rosters
 
-## Running the Application
+## Game Flow
 
-This is a **frontend-only application** that must be run through a local web server due to CORS restrictions when loading JSON files.
+Football Vibes is a **split-screen multiplayer game** designed for two players on a single device. One player acts as the offensive coordinator, the other as the defensive coordinator. Players can use checkboxes to hide their assignments and coaching points from their opponent, while personnel and formation information is visible to both sides for realistic playcalling.
 
-### Quick Start
+### Initial Setup
 
-1. **Navigate to the project directory** in your terminal
-2. **Start the Python HTTP server**:
-   ```bash
-   python -m http.server 8000
+When you first load the game, you'll select teams for both the home and away sides. Each team has separate offensive and defensive rosters with 24 players each.
+
+![Team Selection](public/media/teamsel.png)
+![Team Selection 2](public/media/teamsel2.png)
+
+### Play Design Phases
+
+Each play follows a structured 5-step workflow (plus an optional special teams decision on 4th down):
+
+#### Phase 0: Special Teams Decision (4th Down Only)
+
+On 4th down, the offensive coordinator must decide whether to:
+- **Run a normal play** (go for it)
+- **Punt** the ball
+- **Kick a field goal**
+
+This decision is only presented on 4th down. On other downs, the game proceeds directly to Phase 1.
+
+#### Phase 1: Personnel Selection
+
+Both coordinators select 11 players from their game-day rosters. The interface shows available players with their ratings, stamina, and injuries. Default personnel packages are available:
+- **Offense**: 11 personnel (1 QB, 1 RB, 1 TE, 3 WR, 5 OL)
+- **Defense**: Nickel defense (2 DE, 2 DT, 2 LB, 3 CB, 2 S)
+
+![Personnel Selection](public/media/phase1.png)
+
+Players have percentile ratings (15th-92nd percentile range) that affect their performance. Stamina is displayed and affects player effectiveness based on the logarithmic fatigue system.
+
+#### Phase 2: Formation Building
+
+Players are positioned on the field using drag-and-drop. The offensive line (T/G/C/G/T) is pre-populated, and both coordinators can use formation dropdowns to quickly load standard formations. The visual field shows player markers with name, position, rating, and stamina.
+
+![Formation Building](public/media/phase2.png)
+
+Formations are visible to both players, allowing the defense to respond to offensive alignment for realistic playcalling.
+
+#### Phase 3: Motions and Shifts
+
+This phase is skipped in the MVP version.
+
+#### Phase 4: Assignments
+
+This is where the strategic battle happens. Both coordinators assign responsibilities to their players:
+
+**Offensive Assignments:**
+- Routes (dig, go, seam, out, shallow crosser, etc.)
+- Blocking schemes (5-man protection, zone blocking, gap schemes)
+- Running back aimpoints and protections
+- QB actions (eyes direction, protection reads)
+
+**Defensive Assignments:**
+- Coverage zones (deep thirds, intermediate zones, underneath coverage)
+- Man coverage assignments
+- Blitzes and rushes
+- Gap responsibilities
+
+Players can use playcall dropdowns to quickly set default assignments for the entire team, or assign individual responsibilities. Visual playcall diagrams show routes and coverage patterns.
+
+![Pass vs Bracket Coverage](public/media/phase4passvbracket.png)
+![Run vs Zone Defense](public/media/phase4runvzone.png)
+![Strong Toss vs Zone](public/media/phase4strongtossvszone.png)
+
+**Privacy Feature**: Each coordinator can check a box to hide their assignments from their opponent, adding strategic depth to the game. Personnel and formation information remains visible to both sides.
+
+#### Phase 5: Coaching Points
+
+Each coordinator can add one coaching point (max 50 characters) to emphasize a specific instruction to a player. This affects the LLM's evaluation of the play.
+
+![Coaching Points](public/media/phase5.png)
+
+**Privacy Feature**: Each coordinator can check a box to hide their coaching point from their opponent.
+
+### Play Execution and Evaluation
+
+Once both coordinators complete all phases, the play is executed:
+
+1. **LLM Analysis**: The game builds a detailed prompt (see `context/prompt-pass-schematic-success` for format) that includes:
+   - All player positions (X/Y coordinates)
+   - Player ratings, stamina, and injuries
+   - All assignments (routes, blocks, coverage, blitzes)
+   - Coaching points
+   - Game situation (down, distance, score, time)
+
+2. **LLM Evaluation**: The LLM (Claude or OpenAI) analyzes the schematic matchup and returns rates in the format specified by `context/eval-format.json`:
+   ```json
+   {
+       "success-rate": 40.0,
+       "havoc-rate": 12.0,
+       "explosive-rate": 12.0
+   }
    ```
-3. **Open your browser** and navigate to:
-   ```
-   http://localhost:8000
-   ```
-4. The application will load and you can start designing plays!
 
-### Alternative Server Options
+   The LLM evaluates:
+   - **Spatial relationships** (70% weight): Blocking schemes vs defensive alignments, route combinations vs coverage zones, gaps and leverage
+   - **Positional matchups** (20% weight): Player ratings adjusted for stamina and injuries
+   - **Personnel quality** (10% weight): Overall team strength
 
-If you don't have Python installed, you can use:
+3. **State Machine Processing**: The game uses `play-state-machine.json` to determine the outcome:
+   - Roll 1-100 to determine outcome type (havoc/explosive/success/unsuccessful) based on LLM rates
+   - For passes: Roll for completion percentage first
+   - Roll for specific havoc outcomes (sack, turnover, TFL, incompletion bonus)
+   - Calculate yards gained using statistical distributions from outcome files
+   - Check for turnovers based on outcome probabilities
 
-- **Node.js**: `npx serve` or `npx http-server`
-- **VS Code**: Install "Live Server" extension, right-click `index.html`, select "Open with Live Server"
-- **Any other static file server** that serves files on `localhost`
-
-**Note**: Opening `index.html` directly in a browser will cause CORS errors when loading JSON files. Always use a web server.
-
-## File Structure
-
-```
-football-vibes-2/
-├── index.html              # Main HTML interface
-├── app.js                  # Application logic (5500+ lines)
-├── config.js               # API keys (gitignored, load from .env)
-├── gamestate.json          # Current game state
-├── play-state-machine.json # State machine configuration
-├── fieldlocations.json     # Field position coordinates (X/Y)
-├── rosters/
-│   ├── home-offense.json   # Home team offensive roster (24 players)
-│   ├── home-defense.json   # Home team defensive roster (24 players)
-│   ├── away-offense.json   # Away team offensive roster (24 players)
-│   ├── away-defense.json   # Away team defensive roster (24 players)
-│   └── allstar/            # Original all-star rosters
-├── outcomes/               # Statistical outcome definitions
-│   ├── successful-run.json
-│   ├── successful-pass.json
-│   ├── unsuccessful-run.json
-│   ├── unsuccessful-pass.json
-│   ├── explosive-run.json
-│   ├── havoc-sack.json
-│   ├── havoc-fumble.json
-│   ├── havoc-interception.json
-│   ├── havoc-tackle-for-loss.json
-│   ├── yac-catch.json
-│   ├── punt.json
-│   ├── field-goal-success.json
-│   └── field-goal-miss.json
-└── context/
-    └── eval-format.json    # LLM output format specification
-```
-
-## Usage
-
-1. **Start the server**: `python -m http.server 8000`
-2. **Open browser**: Navigate to `http://localhost:8000`
-3. **Design a play**:
-   - Step 0: Choose play type (normal/punt/field goal)
-   - Step 1: Select 11 offensive and 11 defensive players
-   - Step 2: Drag players to positions on the field (or use formation dropdowns)
-   - Step 3: (Skipped)
-   - Step 4: Assign blocking/coverage responsibilities (or use playcall dropdowns)
-   - Step 5: Add coaching points (optional)
-4. **Execute the play** to see:
+4. **Results Display**: The game shows:
    - LLM analysis and rationale
    - Play outcome type (havoc/explosive/success/unsuccessful/incomplete)
    - Yards gained
    - Updated game state (down, distance, yardline, score, time)
+
+![Results Evaluation](public/media/results-eval.png)
+![Results Override](public/media/results-override.png)
+
+5. **Game State Update**: The game updates `gamestate.json` with:
+   - New down and distance
+   - Updated yardline
+   - Score changes (if touchdown or field goal)
+   - Time runoff (based on play type and score differential)
+   - Player fatigue adjustments
+   - Possession changes (if applicable)
+
+### Game Loop
+
+As described in `context/context-gameloop`, the game follows this loop:
+
+1. **Fixed Input**: Rosters with stats, stamina, injuries, and schematic skills (percentile-based)
+2. **Variable Input**: Personnel, formations, motions, and playcalls configured by coordinators
+3. **LLM Prompt Generation**: Template-based prompt creation using the fixed and variable inputs
+4. **LLM API Call**: Using API key from environment, returns evaluation rates
+5. **State Machine Execution**: Rolls through `play-state-machine.json` to determine yardage
+6. **Game State Update**: Updates `gamestate.json` following standard NFL rules
+7. **4th Down Decision**: On 4th down, OC chooses to punt, kick, or run another play
+8. **Special Teams**: Simple table-based 1-100 solutions for kickoffs, punts, and field goals
+
+The game continues until the end of regulation, with both coordinators alternating play design based on possession.
+
+## Setup
+
+This is a **frontend-only application** that must be run through a local web server due to CORS restrictions when loading JSON files.
+
+1. **Start the server**:
+   ```bash
+   python -m http.server 8000
+   ```
+2. **Open your browser** and visit:
+   ```
+   http://localhost:8000
+   ```
+
+**Note**: Opening `index.html` directly in a browser will cause CORS errors. Always use a web server.
+
+## Quick Reference
+
+After starting the server and opening `http://localhost:8000`, follow the 5-step play design workflow:
+
+1. **Step 0**: Choose play type (normal/punt/field goal) - only on 4th down
+2. **Step 1**: Select 11 offensive and 11 defensive players
+3. **Step 2**: Drag players to positions on the field (or use formation dropdowns)
+4. **Step 3**: (Skipped in MVP)
+5. **Step 4**: Assign blocking/coverage responsibilities (or use playcall dropdowns)
+6. **Step 5**: Add coaching points (optional)
+
+Execute the play to see LLM analysis, outcome type, yards gained, and updated game state.
 
 ## State Machine Flow
 
