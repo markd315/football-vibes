@@ -505,6 +505,83 @@ function getLocationCoords(locationName) {
     return null;
 }
 
+// Helper to resolve location name to full position object (name, x, y, section)
+// Does a global sweep to find all matches, then filters by side of Y=0 and section type
+function resolveLocationName(locationName, preferDefensive = false, preferredSection = null) {
+    if (!fieldLocations || !locationName) return null;
+    
+    // First, do a global sweep to find ALL matching location names
+    const allMatches = [];
+    for (const section of fieldLocations) {
+        for (const loc of section.Locations) {
+            if (loc.Name === locationName) {
+                allMatches.push({
+                    name: loc.Name,
+                    x: loc.X,
+                    y: loc.Y,
+                    section: section.Section
+                });
+            }
+        }
+    }
+    
+    if (allMatches.length === 0) return null;
+    if (allMatches.length === 1) return allMatches[0];
+    
+    // Multiple matches found - filter by criteria
+    let filtered = allMatches;
+    
+    // Filter by section if specified
+    if (preferredSection) {
+        const sectionFiltered = filtered.filter(m => 
+            m.section.toLowerCase().includes(preferredSection.toLowerCase())
+        );
+        if (sectionFiltered.length > 0) {
+            filtered = sectionFiltered;
+        }
+    }
+    
+    // Filter by side of Y=0 line (defensive = Y > 0, offensive = Y < 0)
+    if (preferDefensive) {
+        // Prefer defensive positions (Y > 0)
+        const defensiveMatches = filtered.filter(m => m.y > 0);
+        if (defensiveMatches.length > 0) {
+            filtered = defensiveMatches;
+        }
+    } else {
+        // Prefer offensive positions (Y < 0)
+        const offensiveMatches = filtered.filter(m => m.y < 0);
+        if (offensiveMatches.length > 0) {
+            filtered = offensiveMatches;
+        }
+    }
+    
+    // If still multiple matches, prefer positions closer to Y=0 (line of scrimmage)
+    if (filtered.length > 1) {
+        filtered.sort((a, b) => Math.abs(a.y) - Math.abs(b.y));
+    }
+    
+    return filtered[0];
+}
+
+// Helper to resolve formation position (handles both old format with x/y and new format with just name)
+function resolveFormationPosition(pos, preferDefensive = false, preferredSection = null) {
+    // If it's already a resolved position with x, y, return as-is
+    if (pos.x !== undefined && pos.y !== undefined) {
+        return pos;
+    }
+    // If it's just a string (location name), resolve it
+    if (typeof pos === 'string') {
+        return resolveLocationName(pos, preferDefensive, preferredSection);
+    }
+    // If it's an object with just a name, resolve it
+    if (pos.name && pos.x === undefined) {
+        const resolved = resolveLocationName(pos.name, preferDefensive, preferredSection);
+        return resolved ? { ...resolved, ...pos } : pos;
+    }
+    return pos;
+}
+
 async function loadStateMachine() {
     stateMachine = await loadJsonConfig('play-state-machine.json', {});
 }
@@ -817,6 +894,11 @@ function updatePersonnelDisplay() {
             </div>
         </div>
     `;
+    
+    // Refresh formation dropdowns if we're on step 2 (formation building)
+    if (currentStep === 2) {
+        renderFormationDropdowns();
+    }
 }
 
 function detectOffensivePersonnel() {
@@ -904,21 +986,59 @@ function detectDefensivePersonnel() {
 }
 
 // Helper function to check if a location is a "box location"
-// Box locations: tight to tight (X: -5.5 to 5.5), all gaps, all defensive line techniques
+// Box locations: tight to tight (X: -5.5 to 5.5), all gaps, all defensive line techniques, QB/RB backfield, Over Center
 function isBoxLocation(location, sectionName) {
-    // All defensive line techniques (all techs) - entire section
+    // All defensive line techniques (all techs) - entire section (includes 9 tech, 8 tech, etc.)
     if (sectionName === "Defensive line of scrimmage") {
         return true;
     }
     
-    // All gap locations (A, B, or C gap) - in defensive backfield or box safety sections
+    // All gap locations (A, B, C, or D gap) - in defensive backfield or box safety sections
     if (location.Name && location.Name.toLowerCase().includes("gap")) {
         return true;
     }
     
-    // Tight to tight: X coordinates from -5.5 to 5.5 on offensive line of scrimmage
-    // This includes: Tight left, Tight right, and all offensive line positions in that X range
-    if (sectionName === "Offensive line of scrimmage" && location.X >= -5.5 && location.X <= 5.5) {
+    // Over Center positions (shallow and deep)
+    if (location.Name && location.Name.toLowerCase().includes("over center")) {
+        return true;
+    }
+    
+    // All QB and RB backfield positions (but NOT trips positions - those are coverage, not box)
+    if (sectionName === "Offensive backfield") {
+        // Exclude trips positions - they are coverage positions, not box positions
+        if (location.Name && location.Name.toLowerCase().includes("trips")) {
+            return false;
+        }
+        return true;
+    }
+    
+    // Tight and Wing positions on offensive line of scrimmage (box positions, red, scaled)
+    if (sectionName === "Offensive line of scrimmage") {
+        // Tight positions: check by name (X = -6/6)
+        if (location.Name && location.Name.toLowerCase().includes("tight")) {
+            return true;
+        }
+        // Wing positions: check by name (X = -8/8)
+        if (location.Name && location.Name.toLowerCase().includes("wing")) {
+            return true;
+        }
+        // All OL positions (Center, Guards, Tackles) are also box positions
+        if (location.Name && (
+            location.Name.toLowerCase().includes("center") ||
+            location.Name.toLowerCase().includes("guard") ||
+            location.Name.toLowerCase().includes("tackle")
+        )) {
+            return true;
+        }
+    }
+    
+    // Wing positions in defensive sections (press, second level, cushion) are also box positions
+    if (location.Name && location.Name.toLowerCase().includes("wing")) {
+        return true;
+    }
+    
+    // Behind tight end positions (aligned with tight end at X = -6/6)
+    if (location.Name && location.Name.toLowerCase().includes("behind tight end")) {
         return true;
     }
     
@@ -1333,7 +1453,7 @@ const defensivePlaycalls = {
         'LB': { category: 'Zone Short', action: 'Hook L' },
         'MLB': { category: 'Zone Short', action: 'Hook R' }
     },
-    'Cover 4 (prevent)': {
+    'Cover 4 (spot drop)': {
         'CB': { category: 'Zone Deep', action: 'Deep far left (cov4)' },
         'S': { category: 'Zone Deep', action: 'Deep middle 1/3' },
         'LB': { category: 'Zone Short', action: 'Hook L' },
@@ -1357,8 +1477,8 @@ const defensivePlaycalls = {
         'LB': { category: 'Man Coverage', action: 'Inside release man' },
         'MLB': { category: 'Man Coverage', action: 'Inside release man' }
     },
-    'Bracket 3x1': 'bracket-3x1',
-    'Bracket 2x2': 'bracket-2x2'
+    'Quarters Match 3x1': 'bracket-3x1',
+    'Quarters Match 2x2': 'bracket-2x2'
 };
 
 // Assignment categories and actions
@@ -1398,7 +1518,7 @@ const offensiveAssignments = {
 
     // All defensive assignment options available to all positions
 const allDefensiveCategories = {
-    'Man Coverage': ['Inside release man', 'Outside release man', 'Inside match man', 'Outside match man'],
+    'Man Coverage': ['Deep technique man', 'Inside technique man', 'Outside technique man', 'Trail technique man', 'Inside release man', 'Outside release man', 'Inside match man', 'Outside match man'],
     'Bracket': ['LOCK+MEG', 'TRAIL+APEX', 'CAP+DEEP', 'CUT+CROSSER'],
     'Zone Deep': ['Deep middle 1/3', 'Deep left (cov2)', 'Deep right (cov2)', 'Deep left (cov3)', 'Deep right (cov3)', 'Deep far left (cov4)', 'Deep far right (cov4)', 'Deep seam left (cov4)', 'Deep seam right (cov4)', 'Deep left/right seam+fit shallow'],
     'Zone Short': ['Robber', 'Flat/Out L', 'Flat/Out R', 'Curl/Flat L', 'Curl/Flat R', 'Curl/Hook L', 'Curl/Hook R', 'Curl/Hole L', 'Curl/Hole R', 'Flat L', 'Flat R', 'Out L', 'Out R', 'Curl L', 'Curl R', 'Hook L', 'Hook R', 'Hole', 'Deep hole/Tampa', 'Spy'],
@@ -2199,6 +2319,55 @@ function drawDefensiveAssignmentArrow(ctx, x, y, assignment, color, isDashed, wi
             ctx.moveTo(x, y);
             ctx.lineTo(targetPos.x, targetPos.y);
             ctx.stroke();
+            
+            // Draw technique arrow for man coverage
+            if (assignment.action) {
+                let techDx = 0, techDy = 0;
+                const techArrowLength = 8;
+                
+                if (assignment.action.includes('Deep technique')) {
+                    // Deep: arrow downfield (toward endzone for defense)
+                    techDy = -techArrowLength;
+                } else if (assignment.action.includes('Inside technique')) {
+                    // Inside: arrow toward center of field
+                    const isOnLeft = x < width / 2;
+                    techDx = isOnLeft ? techArrowLength : -techArrowLength;
+                } else if (assignment.action.includes('Outside technique')) {
+                    // Outside: arrow toward sideline
+                    const isOnLeft = x < width / 2;
+                    techDx = isOnLeft ? -techArrowLength : techArrowLength;
+                } else if (assignment.action.includes('Trail technique')) {
+                    // Trail: arrow behind receiver (toward backfield for defense)
+                    techDy = techArrowLength;
+                }
+                
+                if (techDx !== 0 || techDy !== 0) {
+                    // Draw small red arrow at defender position
+                    ctx.strokeStyle = '#8B0000'; // Dark red
+                    ctx.fillStyle = '#8B0000';
+                    ctx.lineWidth = 1.5;
+                    ctx.setLineDash([]);
+                    const techEndX = x + techDx;
+                    const techEndY = y + techDy;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(techEndX, techEndY);
+                    ctx.stroke();
+                    
+                    // Draw arrowhead
+                    const angle = Math.atan2(techDy, techDx);
+                    const arrowHeadLength = 4;
+                    const arrowHeadAngle = Math.PI / 6;
+                    ctx.beginPath();
+                    ctx.moveTo(techEndX, techEndY);
+                    ctx.lineTo(techEndX - arrowHeadLength * Math.cos(angle - arrowHeadAngle),
+                              techEndY - arrowHeadLength * Math.sin(angle - arrowHeadAngle));
+                    ctx.moveTo(techEndX, techEndY);
+                    ctx.lineTo(techEndX - arrowHeadLength * Math.cos(angle + arrowHeadAngle),
+                              techEndY - arrowHeadLength * Math.sin(angle + arrowHeadAngle));
+                    ctx.stroke();
+                }
+            }
         }
         ctx.setLineDash([]);
         return;
@@ -2537,8 +2706,8 @@ function applyDefensivePlaycall(playcallName) {
         coverNumber = 4;
     }
     
-    // Handle Bracket playcalls specially
-    if (playcallName.includes('Bracket')) {
+    // Handle Quarters Match playcalls specially
+    if (playcallName.includes('Quarters Match')) {
         applyBracketPlaycall(playcallName);
         return;
     }
@@ -3742,15 +3911,53 @@ function renderFormationDropdowns() {
     const defenseSelect = document.getElementById('defensiveFormationSelect');
     
     if (offenseSelect) {
-        // Only populate if empty
-        if (offenseSelect.options.length <= 1) {
-            Object.keys(offensiveFormations).forEach(name => {
-                const option = document.createElement('option');
-                option.value = name;
-                option.textContent = name;
-                offenseSelect.appendChild(option);
-            });
-        }
+        // Count personnel
+        const players = selectedPlayers.map(id => getPlayerById(id)).filter(p => p);
+        const rbCount = players.filter(p => p.position === 'RB').length;
+        const teCount = players.filter(p => p.position === 'TE').length;
+        const qbCount = players.filter(p => p.position === 'QB').length;
+        
+        // Filter formations based on personnel
+        const filteredFormations = Object.keys(offensiveFormations).filter(name => {
+            const formation = offensiveFormations[name];
+            
+            // Empty formations require no RB
+            if (formation.RB === null && rbCount > 0) {
+                return false;
+            }
+            
+            // Formations with RB require at least 1 RB
+            if (formation.RB !== null && rbCount === 0) {
+                return false;
+            }
+            
+            // Wildcat requires no QB
+            if (formation.QB === null && qbCount > 0) {
+                return false;
+            }
+            
+            // Formations with QB require at least 1 QB
+            if (formation.QB !== null && qbCount === 0) {
+                return false;
+            }
+            
+            // Check TE count matches formation requirements
+            const formationTECount = formation.TE ? formation.TE.length : 0;
+            if (teCount < formationTECount) {
+                return false;
+            }
+            
+            return true;
+        });
+        
+        // Clear and repopulate dropdown
+        offenseSelect.innerHTML = '<option value="">Select formation...</option>';
+        filteredFormations.forEach(name => {
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            offenseSelect.appendChild(option);
+        });
         
         // Add event listener if not already added
         if (!offenseSelect.dataset.listenerAdded) {
@@ -3966,9 +4173,9 @@ function prePopulateOffensiveLine() {
         
         // Position players based on their role
         if (player.position === 'QB') {
-            position = { name: 'QB (Shotgun)', x: 0, y: -10, section: 'Offensive backfield' };
+            position = resolveLocationName('QB (Shotgun)', false) || { name: 'QB (Shotgun)', x: 0, y: -10, section: 'Offensive backfield' };
         } else if (player.position === 'RB') {
-            position = { name: 'Behind QB (Shotgun)', x: 0, y: -15, section: 'Offensive backfield' };
+            position = resolveLocationName('Behind QB (Shotgun)', false) || { name: 'Behind QB (Shotgun)', x: 0, y: -13, section: 'Offensive backfield' };
         } else if (['OT', 'OG', 'C'].includes(player.position)) {
             const olOrder = ['C', 'OG', 'OG', 'OT', 'OT'];
             const positionIndex = olOrder.indexOf(player.position);
@@ -3990,56 +4197,69 @@ function prePopulateOffensiveLine() {
                     }
                 }
                 
-                const olPositions = [
-                    { name: 'Center', x: 0, y: -3 },
-                    { name: 'Left Guard', x: -2, y: -3 },
-                    { name: 'Right Guard', x: 2, y: -3 },
-                    { name: 'Left Tackle', x: -4, y: -3 },
-                    { name: 'Right Tackle', x: 4, y: -3 }
+                const olPositionNames = [
+                    'Center',
+                    'Left Guard',
+                    'Right Guard',
+                    'Left Tackle',
+                    'Right Tackle'
                 ];
                 
-                if (olArrayIndex >= 0 && olArrayIndex < olPositions.length) {
-                    position = { ...olPositions[olArrayIndex], section: 'Offensive line of scrimmage' };
+                if (olArrayIndex >= 0 && olArrayIndex < olPositionNames.length) {
+                    position = resolveLocationName(olPositionNames[olArrayIndex], false); // Offensive - prefer Y < 0
+                    if (position) {
+                        position.section = 'Offensive line of scrimmage';
+                    }
                 }
             }
         } else if (player.position === 'TE') {
-            const tePositions = [
-                { name: 'Wing left', x: -6.5, y: -3 },
-            { name: 'Tight left', x: -5.5, y: -3 },
-            { name: 'Tight right', x: 5.5, y: -3 }
+            const tePositionNames = [
+                'Wing left',
+                'Tight left',
+                'Tight right'
             ];
-            if (teIndex < tePositions.length) {
-                position = { ...tePositions[teIndex], section: 'Offensive line of scrimmage' };
+            if (teIndex < tePositionNames.length) {
+                position = resolveLocationName(tePositionNames[teIndex], false); // Offensive - prefer Y < 0
+                if (position) {
+                    position.section = 'Offensive line of scrimmage';
+                }
                 teIndex++;
             } else {
                 // Extra TE - put in WR spot
-                const wrPositions = [
-                    { name: 'Slot left', x: -10, y: -3 },
-                    { name: 'Slot right', x: 10, y: -3 }
+                const wrPositionNames = [
+                    'Slot left',
+                    'Slot right'
                 ];
-                position = { ...wrPositions[(teIndex - tePositions.length) % wrPositions.length], section: 'Offensive line of scrimmage' };
+                const extraIndex = (teIndex - tePositionNames.length) % wrPositionNames.length;
+                position = resolveLocationName(wrPositionNames[extraIndex], false); // Offensive - prefer Y < 0
+                if (position) {
+                    position.section = 'Offensive line of scrimmage';
+                }
             }
         } else if (player.position === 'WR') {
-            const wrPositions = [
-                { name: 'Max split left', x: -18, y: -3 },
-                { name: 'Max split right', x: 18, y: -3 },
-                { name: 'Wide left', x: -14, y: -3 },
-                { name: 'Wide right', x: 14, y: -3 },
-                { name: 'Slot left', x: -10, y: -3 },
-                { name: 'Slot right', x: 10, y: -3 }
+            const wrPositionNames = [
+                'Max split left',
+                'Max split right',
+                'Wide left',
+                'Wide right',
+                'Slot left',
+                'Slot right'
             ];
-            if (wrIndex < wrPositions.length) {
-                position = { ...wrPositions[wrIndex], section: 'Offensive line of scrimmage' };
+            if (wrIndex < wrPositionNames.length) {
+                position = resolveLocationName(wrPositionNames[wrIndex], false); // Offensive - prefer Y < 0
+                if (position) {
+                    position.section = 'Offensive line of scrimmage';
+                }
                 wrIndex++;
             } else {
                 // Extra WR - spread out
-                position = { name: 'Seam left', x: -8, y: -3, section: 'Offensive line of scrimmage' };
+                position = resolveLocationName('Seam left', false) || { name: 'Seam left', x: -10.5, y: -3, section: 'Offensive line of scrimmage' };
             }
         }
         
         // Default fallback
         if (!position) {
-            position = { name: 'Slot left', x: -10, y: -3, section: 'Offensive line of scrimmage' };
+            position = resolveLocationName('Slot left', false) || { name: 'Slot left', x: -13, y: -3, section: 'Offensive line of scrimmage' };
         }
         
         // Map field coordinates -19.5 to +19.5 to 0 to canvasWidth (Max split at edges) - ZOOM IN
@@ -4087,11 +4307,11 @@ function prePopulateOffensiveLine() {
     let sIndex = 0;
     let extraDBIndex = 0; // For nickel/dime DBs
     
-    const nickelDimePositions = [
-        { name: 'Slot left', x: -10, y: 5, section: 'Coverage second level' },
-        { name: 'Slot right', x: 10, y: 5, section: 'Coverage second level' },
-        { name: 'Seam left', x: -8, y: 5, section: 'Coverage second level' },
-        { name: 'Seam right', x: 8, y: 5, section: 'Coverage second level' }
+    const nickelDimePositionNames = [
+        'Slot left',
+        'Slot right',
+        'Seam left',
+        'Seam right'
     ];
     
     selectedDefense.forEach((playerId) => {
@@ -4103,85 +4323,110 @@ function prePopulateOffensiveLine() {
         let position = null;
         
         if (player.position === 'DE') {
-            const dePositions = [
-                { name: 'Left 5 technique', x: -4.5, y: 2.5 },
-                { name: 'Right 5 technique', x: 4.5, y: 2.5 }
+            const dePositionNames = [
+                'Left 5 technique',
+                'Right 5 technique'
             ];
-            if (deIndex < dePositions.length) {
-                position = { ...dePositions[deIndex], section: 'Defensive line of scrimmage' };
+            if (deIndex < dePositionNames.length) {
+                position = resolveLocationName(dePositionNames[deIndex], true); // Defensive - prefer Y > 0
+                if (position) {
+                    position.section = 'Defensive line of scrimmage';
+                }
                 deIndex++;
             } else {
                 // Extra DE
-                position = { name: 'Left 4 technique', x: -4, y: 2.5, section: 'Defensive line of scrimmage' };
+                position = resolveLocationName('Left 4 technique', true) || { name: 'Left 4 technique', x: -4, y: 2.5, section: 'Defensive line of scrimmage' };
             }
         } else if (player.position === 'DT') {
-            const dtPositions = [
-                { name: 'Left 3 technique', x: -3, y: 2.5 },
-                { name: 'Right 3 technique', x: 3, y: 2.5 }
+            const dtPositionNames = [
+                'Left 3 technique',
+                'Right 3 technique'
             ];
-            if (dtIndex < dtPositions.length) {
-                position = { ...dtPositions[dtIndex], section: 'Defensive line of scrimmage' };
+            if (dtIndex < dtPositionNames.length) {
+                position = resolveLocationName(dtPositionNames[dtIndex], true); // Defensive - prefer Y > 0
+                if (position) {
+                    position.section = 'Defensive line of scrimmage';
+                }
                 dtIndex++;
             } else {
                 // Extra DT
-                position = { name: '0 technique', x: 0, y: 2.5, section: 'Defensive line of scrimmage' };
+                position = resolveLocationName('0 technique', true) || { name: '0 technique', x: 0, y: 2.5, section: 'Defensive line of scrimmage' };
             }
         } else if (['LB', 'MLB'].includes(player.position)) {
-            const lbPositions = [
-                { name: 'Left B gap (shallow)', x: -3, y: 6 },
-                { name: 'Right B gap (shallow)', x: 3, y: 6 },
-                { name: 'Over Center (shallow)', x: 0, y: 6 }
+            const lbPositionNames = [
+                'Left B gap (shallow)',
+                'Right B gap (shallow)',
+                'Over Center (shallow)'
             ];
-            if (lbIndex < lbPositions.length) {
-                position = { ...lbPositions[lbIndex], section: 'Defensive backfield' };
+            if (lbIndex < lbPositionNames.length) {
+                position = resolveLocationName(lbPositionNames[lbIndex], true); // Defensive - prefer Y > 0
+                if (position) {
+                    position.section = 'Defensive backfield';
+                }
                 lbIndex++;
             } else {
                 // Extra LB
-                const extraLB = [
-                    { name: 'Left A gap (shallow)', x: -1, y: 6 },
-                    { name: 'Right A gap (shallow)', x: 1, y: 6 }
+                const extraLBNames = [
+                    'Left A gap (shallow)',
+                    'Right A gap (shallow)'
                 ];
-                position = { ...extraLB[(lbIndex - lbPositions.length) % extraLB.length], section: 'Defensive backfield' };
+                const extraIndex = (lbIndex - lbPositionNames.length) % extraLBNames.length;
+                position = resolveLocationName(extraLBNames[extraIndex], true); // Defensive - prefer Y > 0
+                if (position) {
+                    position.section = 'Defensive backfield';
+                }
             }
         } else if (player.position === 'CB') {
-            const cbPositions = [
-                { name: 'Seam left', x: -12, y: 12 },
-                { name: 'Seam right', x: 12, y: 12 }
+            const cbPositionNames = [
+                'Seam left',
+                'Seam right'
             ];
-            if (cbIndex < cbPositions.length) {
-                position = { ...cbPositions[cbIndex], section: 'Max depth' };
+            if (cbIndex < cbPositionNames.length) {
+                position = resolveLocationName(cbPositionNames[cbIndex], true, 'Max depth'); // Defensive - prefer Y > 0, Max depth section
+                if (position) {
+                    position.section = 'Max depth';
+                }
                 cbIndex++;
             } else {
                 // Extra CB (nickel/dime) - assign to slot
-                if (extraDBIndex < nickelDimePositions.length) {
-                    position = nickelDimePositions[extraDBIndex];
+                if (extraDBIndex < nickelDimePositionNames.length) {
+                    position = resolveLocationName(nickelDimePositionNames[extraDBIndex], true, 'Coverage'); // Defensive - prefer Y > 0, Coverage section
+                    if (!position) {
+                        position = { name: nickelDimePositionNames[extraDBIndex], x: -13, y: 5.0, section: 'Coverage second level' };
+                    }
                     extraDBIndex++;
                 } else {
-                    position = { name: 'Slot left', x: -10, y: 5, section: 'Coverage second level' };
+                    position = resolveLocationName('Slot left', true, 'Coverage') || { name: 'Slot left', x: -13, y: 5.0, section: 'Coverage second level' };
                 }
             }
         } else if (player.position === 'S') {
-            const sPositions = [
-                { name: 'Deep middle 1/3', x: 0, y: 15 },
-                { name: 'Deep left', x: -8, y: 12 }
+            const sPositionNames = [
+                'Deep middle 1/3',
+                'Deep left'
             ];
-            if (sIndex < sPositions.length) {
-                position = { ...sPositions[sIndex], section: 'Max depth' };
+            if (sIndex < sPositionNames.length) {
+                position = resolveLocationName(sPositionNames[sIndex], true); // Defensive - prefer Y > 0
+                if (position) {
+                    position.section = 'Max depth';
+                }
                 sIndex++;
             } else {
                 // Extra S (big nickel/dime) - assign to slot
-                if (extraDBIndex < nickelDimePositions.length) {
-                    position = nickelDimePositions[extraDBIndex];
+                if (extraDBIndex < nickelDimePositionNames.length) {
+                    position = resolveLocationName(nickelDimePositionNames[extraDBIndex], true, 'Coverage'); // Defensive - prefer Y > 0, Coverage section
+                    if (!position) {
+                        position = { name: nickelDimePositionNames[extraDBIndex], x: 13, y: 5.0, section: 'Coverage second level' };
+                    }
                     extraDBIndex++;
                 } else {
-                    position = { name: 'Slot right', x: 10, y: 5, section: 'Coverage second level' };
+                    position = resolveLocationName('Slot right', true, 'Coverage') || { name: 'Slot right', x: 13, y: 5.0, section: 'Coverage second level' };
                 }
             }
         }
         
         // Default fallback
         if (!position) {
-            position = { name: 'Over Center (shallow)', x: 0, y: 6, section: 'Defensive backfield' };
+            position = resolveLocationName('Over Center (shallow)', true) || { name: 'Over Center (shallow)', x: 0, y: 6, section: 'Defensive backfield' };
         }
         
         // Map field coordinates -19.5 to +19.5 to 0 to canvasWidth (Max split at edges) - ZOOM IN
@@ -4206,186 +4451,302 @@ function prePopulateOffensiveLine() {
 // Formation definitions
 const offensiveFormations = {
     'Gun Spread': {
-        QB: { name: 'QB (Shotgun)', x: 0, y: -10 },
-        RB: { name: 'Behind QB (Shotgun)', x: 0, y: -13 },
+        QB: 'QB (Shotgun)',
+        RB: 'Behind QB (Shotgun)',
         WR: [
-            { name: 'Max split left', x: -18, y: -3 },
-            { name: 'Max split right', x: 18, y: -3 },
-            { name: 'Slot left', x: -10, y: -3 }
+            'Max split left',
+            'Max split right',
+            'Slot left'
         ],
         TE: [],
         OL: [
-            { name: 'Left Tackle', x: -4, y: -3 },
-            { name: 'Left Guard', x: -2, y: -3 },
-            { name: 'Center', x: 0, y: -3 },
-            { name: 'Right Guard', x: 2, y: -3 },
-            { name: 'Right Tackle', x: 4, y: -3 }
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
         ]
     },
     'Gun Trips': {
-        QB: { name: 'QB (Shotgun)', x: 0, y: -10 },
-        RB: { name: 'Behind QB (Shotgun)', x: 0, y: -13 },
+        QB: 'QB (Shotgun)',
+        RB: 'Behind QB (Shotgun)',
         WR: [
-            { name: 'Max split right', x: 18, y: -3 },
-            { name: 'Trips left', x: -12, y: -5 },
-            { name: 'Wide left', x: -14, y: -3 },
-            { name: 'Slot left', x: -10, y: -3 }
+            'Max split right',
+            'Flanker left',
+            'Wide left',
+            'Slot left'
         ],
         TE: [],
         OL: [
-            { name: 'Left Tackle', x: -4, y: -3 },
-            { name: 'Left Guard', x: -2, y: -3 },
-            { name: 'Center', x: 0, y: -3 },
-            { name: 'Right Guard', x: 2, y: -3 },
-            { name: 'Right Tackle', x: 4, y: -3 }
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
         ]
     },
     'Gun Bunch': {
-        QB: { name: 'QB (Shotgun)', x: 0, y: -10 },
-        RB: { name: 'Behind QB (Shotgun)', x: 0, y: -13 },
+        QB: 'QB (Shotgun)',
+        RB: 'Behind QB (Shotgun)',
         WR: [
-            { name: 'Max split left', x: -18, y: -3 },
-            { name: 'Seam left', x: -8, y: -3 },
-            { name: 'Slot left', x: -10, y: -3 }
+            'Max split left',
+            'Seam left',
+            'Slot left'
         ],
         TE: [
-            { name: 'Wing left', x: -6.5, y: -3 }
+            'Wing left'
         ],
         OL: [
-            { name: 'Left Tackle', x: -4, y: -3 },
-            { name: 'Left Guard', x: -2, y: -3 },
-            { name: 'Center', x: 0, y: -3 },
-            { name: 'Right Guard', x: 2, y: -3 },
-            { name: 'Right Tackle', x: 4, y: -3 }
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
         ]
     },
     'Gun Empty': {
-        QB: { name: 'QB (Shotgun)', x: 0, y: -10 },
+        QB: 'QB (Shotgun)',
         RB: null,
         WR: [
-            { name: 'Max split left', x: -18, y: -3 },
-            { name: 'Wide left', x: -14, y: -3 },
-            { name: 'Wide right', x: 14, y: -3 },
-            { name: 'Max split right', x: 18, y: -3 },
-            { name: 'Slot left', x: -10, y: -3 }
+            'Max split left',
+            'Wide left',
+            'Wide right',
+            'Max split right',
+            'Slot left'
         ],
         TE: [],
         OL: [
-            { name: 'Left Tackle', x: -4, y: -3 },
-            { name: 'Left Guard', x: -2, y: -3 },
-            { name: 'Center', x: 0, y: -3 },
-            { name: 'Right Guard', x: 2, y: -3 },
-            { name: 'Right Tackle', x: 4, y: -3 }
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
         ]
     },
     'Pistol': {
-        QB: { name: 'QB (Pistol)', x: 0, y: -8 },
-        RB: { name: 'Behind QB (Shotgun)', x: 0, y: -13 },
+        QB: 'QB (Pistol)',
+        RB: 'Behind QB (Shotgun)',
         WR: [
-            { name: 'Max split left', x: -18, y: -3 },
-            { name: 'Max split right', x: 18, y: -3 },
-            { name: 'Slot left', x: -10, y: -3 }
+            'Max split left',
+            'Max split right',
+            'Slot left'
         ],
         TE: [],
         OL: [
-            { name: 'Left Tackle', x: -4, y: -3 },
-            { name: 'Left Guard', x: -2, y: -3 },
-            { name: 'Center', x: 0, y: -3 },
-            { name: 'Right Guard', x: 2, y: -3 },
-            { name: 'Right Tackle', x: 4, y: -3 }
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
         ]
     },
     'I-Formation': {
-        QB: { name: 'QB (Under center)', x: 0, y: -5 },
-        RB: { name: 'Behind QB (I-formation)', x: 0, y: -9 },
+        QB: 'QB (Under center)',
+        RB: 'Behind QB (I-formation)',
         WR: [
-            { name: 'Max split left', x: -18, y: -3 },
-            { name: 'Max split right', x: 19, y: -3 }
+            'Max split left',
+            'Max split right'
         ],
         TE: [
-            { name: 'Tight left', x: -5.5, y: -3 }
+            'Tight left'
         ],
         OL: [
-            { name: 'Left Tackle', x: -4, y: -3 },
-            { name: 'Left Guard', x: -2, y: -3 },
-            { name: 'Center', x: 0, y: -3 },
-            { name: 'Right Guard', x: 2, y: -3 },
-            { name: 'Right Tackle', x: 4, y: -3 }
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
         ]
     },
     'Pro Set': {
-        QB: { name: 'QB (Under center)', x: 0, y: -5 },
-        RB: { name: 'T-left (Shotgun)', x: -3, y: -13 },
+        QB: 'QB (Under center)',
+        RB: 'T-left (Shotgun)',
         WR: [
-            { name: 'Max split left', x: -18, y: -3 },
-            { name: 'Max split right', x: 19, y: -3 }
+            'Max split left',
+            'Max split right'
         ],
         TE: [
-            { name: 'Tight left', x: -5.5, y: -3 }
+            'Tight left'
         ],
         OL: [
-            { name: 'Left Tackle', x: -4, y: -3 },
-            { name: 'Left Guard', x: -2, y: -3 },
-            { name: 'Center', x: 0, y: -3 },
-            { name: 'Right Guard', x: 2, y: -3 },
-            { name: 'Right Tackle', x: 4, y: -3 }
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
         ]
     },
     'Wing T': {
-        QB: { name: 'QB (Under center)', x: 0, y: -5 },
-        RB: { name: 'Behind QB (I-formation)', x: 0, y: -9 },
+        QB: 'QB (Under center)',
+        RB: 'Behind QB (I-formation)',
         WR: [
-            { name: 'Max split left', x: -18, y: -3 },
-            { name: 'Max split right', x: 19, y: -3 }
+            'Max split left',
+            'Max split right'
         ],
         TE: [
-            { name: 'Wing left', x: -6.5, y: -3 },
-            { name: 'Tight right', x: 5.5, y: -3 }
+            'Wing left',
+            'Tight right'
         ],
         OL: [
-            { name: 'Left Tackle', x: -4, y: -3 },
-            { name: 'Left Guard', x: -2, y: -3 },
-            { name: 'Center', x: 0, y: -3 },
-            { name: 'Right Guard', x: 2, y: -3 },
-            { name: 'Right Tackle', x: 4, y: -3 }
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
+        ]
+    },
+    'Gun (2 TE)': {
+        QB: 'QB (Shotgun)',
+        RB: 'Behind QB (Shotgun)',
+        WR: [
+            'Max split left',
+            'Max split right'
+        ],
+        TE: [
+            'Tight left',
+            'Tight right'
+        ],
+        OL: [
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
+        ]
+    },
+    'Pistol (2 TE)': {
+        QB: 'QB (Pistol)',
+        RB: 'Behind QB (Shotgun)',
+        WR: [
+            'Max split left',
+            'Max split right'
+        ],
+        TE: [
+            'Tight left',
+            'Tight right'
+        ],
+        OL: [
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
+        ]
+    },
+    'I-Form (2 TE)': {
+        QB: 'QB (Under center)',
+        RB: 'Behind QB (I-formation)',
+        WR: [
+            'Max split left',
+            'Max split right'
+        ],
+        TE: [
+            'Tight left',
+            'Tight right'
+        ],
+        OL: [
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
+        ]
+    },
+    'I-Form (2 RB, 2 TE)': {
+        QB: 'QB (Under center)',
+        RB: 'Behind QB (I-formation)',
+        WR: [
+            'Max split left',
+            'Max split right'
+        ],
+        TE: [
+            'Tight left',
+            'Tight right'
+        ],
+        OL: [
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
+        ]
+    },
+    'Gun 3x1 (2 TE)': {
+        QB: 'QB (Shotgun)',
+        RB: 'Behind QB (Shotgun)',
+        WR: [
+            'Max split left',
+            'Wide right',
+            'Slot right'
+        ],
+        TE: [
+            'Tight right',
+            'Wing right'
+        ],
+        OL: [
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
+        ]
+    },
+    'Gun 3x1 (2 TE) Flip': {
+        QB: 'QB (Shotgun)',
+        RB: 'Behind QB (Shotgun)',
+        WR: [
+            'Max split right',
+            'Wide left',
+            'Slot left'
+        ],
+        TE: [
+            'Tight left',
+            'Wing left'
+        ],
+        OL: [
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
         ]
     },
     'Ace': {
-        QB: { name: 'QB (Under center)', x: 0, y: -5 },
-        RB: { name: 'T-right (Shotgun)', x: 3, y: -13 },
+        QB: 'QB (Under center)',
+        RB: 'T-right (Shotgun)',
         WR: [
-            { name: 'Max split left', x: -18, y: -3 },
-            { name: 'Max split right', x: 18, y: -3 },
-            { name: 'Slot left', x: -10, y: -3 }
+            'Max split left',
+            'Max split right',
+            'Slot left'
         ],
         TE: [
-            { name: 'Tight right', x: 5.5, y: -3 }
+            'Tight right'
         ],
         OL: [
-            { name: 'Left Tackle', x: -4, y: -3 },
-            { name: 'Left Guard', x: -2, y: -3 },
-            { name: 'Center', x: 0, y: -3 },
-            { name: 'Right Guard', x: 2, y: -3 },
-            { name: 'Right Tackle', x: 4, y: -3 }
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
         ]
     },
     'Wildcat': {
         QB: null,
-        RB: { name: 'QB (Shotgun)', x: 0, y: -10 },
+        RB: 'QB (Shotgun)',
         WR: [
-            { name: 'Max split left', x: -18, y: -3 },
-            { name: 'Max split right', x: 18, y: -3 },
-            { name: 'Slot left', x: -10, y: -3 }
+            'Max split left',
+            'Max split right',
+            'Slot left'
         ],
         TE: [
-            { name: 'Tight right', x: 5.5, y: -3 }
+            'Tight right'
         ],
         OL: [
-            { name: 'Left Tackle', x: -4, y: -3 },
-            { name: 'Left Guard', x: -2, y: -3 },
-            { name: 'Center', x: 0, y: -3 },
-            { name: 'Right Guard', x: 2, y: -3 },
-            { name: 'Right Tackle', x: 4, y: -3 }
+            'Left Tackle',
+            'Left Guard',
+            'Center',
+            'Right Guard',
+            'Right Tackle'
         ]
     }
 };
@@ -4393,338 +4754,338 @@ const offensiveFormations = {
 const defensiveFormations = {
     '4-3 Even (2-high)': {
         DL: [
-            { name: 'Left 5 technique', x: -4.5, y: 2.5 },
-            { name: 'Left 2i technique', x: -1.5, y: 2.5 },
-            { name: 'Right 2i technique', x: 1.5, y: 2.5 },
-            { name: 'Right 5 technique', x: 4.5, y: 2.5 }
+            'Left 5 technique',
+            'Left 2i technique',
+            'Right 2i technique',
+            'Right 5 technique'
         ],
         LB: [
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Over Center (shallow)', x: 0, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 }
+            'Left B gap (shallow)',
+            'Over Center (shallow)',
+            'Right B gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep left', x: -8, y: 12 },
-            { name: 'Deep right', x: 8, y: 12 }
+            'Deep left',
+            'Deep right'
         ]
     },
     '4-3 Even (1-high)': {
         DL: [
-            { name: 'Left 5 technique', x: -4.5, y: 2.5 },
-            { name: 'Left 2i technique', x: -1.5, y: 2.5 },
-            { name: 'Right 2i technique', x: 1.5, y: 2.5 },
-            { name: 'Right 5 technique', x: 4.5, y: 2.5 }
+            'Left 5 technique',
+            'Left 2i technique',
+            'Right 2i technique',
+            'Right 5 technique'
         ],
         LB: [
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Over Center (shallow)', x: 0, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 }
+            'Left B gap (shallow)',
+            'Over Center (shallow)',
+            'Right B gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep middle 1/3', x: 0, y: 15 },
-            { name: 'Left B gap (deep)', x: -3, y: 8.5 }
+            'Deep middle 1/3',
+            'Left B gap (deep)'
         ]
     },
     '4-3 Bear (2-high)': {
         DL: [
-            { name: 'Left 5 technique', x: -4.5, y: 2.5 },
-            { name: 'Left 1 technique', x: -1, y: 2.5 },
-            { name: 'Right 3 technique', x: 3, y: 2.5 },
-            { name: 'Right 5 technique', x: 4.5, y: 2.5 }
+            'Left 5 technique',
+            'Left 1 technique',
+            'Right 3 technique',
+            'Right 5 technique'
         ],
         LB: [
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Over Center (shallow)', x: 0, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 }
+            'Left B gap (shallow)',
+            'Over Center (shallow)',
+            'Right B gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep left', x: -8, y: 12 },
-            { name: 'Deep right', x: 8, y: 12 }
+            'Deep left',
+            'Deep right'
         ]
     },
     '4-3 Bear (1-high)': {
         DL: [
-            { name: 'Left 5 technique', x: -4.5, y: 2.5 },
-            { name: 'Left 1 technique', x: -1, y: 2.5 },
-            { name: 'Right 3 technique', x: 3, y: 2.5 },
-            { name: 'Right 5 technique', x: 4.5, y: 2.5 }
+            'Left 5 technique',
+            'Left 1 technique',
+            'Right 3 technique',
+            'Right 5 technique'
         ],
         LB: [
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Over Center (shallow)', x: 0, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 }
+            'Left B gap (shallow)',
+            'Over Center (shallow)',
+            'Right B gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep middle 1/3', x: 0, y: 15 },
-            { name: 'Left B gap (deep)', x: -3, y: 8.5 }
+            'Deep middle 1/3',
+            'Left B gap (deep)'
         ]
     },
     '4-3 Over (2-high)': {
         DL: [
-            { name: 'Left 5 technique', x: -4.5, y: 2.5 },
-            { name: 'Left 3 technique', x: -3, y: 2.5 },
-            { name: 'Right 1 technique', x: 1, y: 2.5 },
-            { name: 'Right 5 technique', x: 4.5, y: 2.5 }
+            'Left 5 technique',
+            'Left 3 technique',
+            'Right 1 technique',
+            'Right 5 technique'
         ],
         LB: [
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Over Center (shallow)', x: 0, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 }
+            'Left B gap (shallow)',
+            'Over Center (shallow)',
+            'Right B gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep left', x: -8, y: 12 },
-            { name: 'Deep right', x: 8, y: 12 }
+            'Deep left',
+            'Deep right'
         ]
     },
     '4-3 Over (1-high)': {
         DL: [
-            { name: 'Left 5 technique', x: -4.5, y: 2.5 },
-            { name: 'Left 3 technique', x: -3, y: 2.5 },
-            { name: 'Right 1 technique', x: 1, y: 2.5 },
-            { name: 'Right 5 technique', x: 4.5, y: 2.5 }
+            'Left 5 technique',
+            'Left 3 technique',
+            'Right 1 technique',
+            'Right 5 technique'
         ],
         LB: [
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Over Center (shallow)', x: 0, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 }
+            'Left B gap (shallow)',
+            'Over Center (shallow)',
+            'Right B gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep middle 1/3', x: 0, y: 15 },
-            { name: 'Left B gap (deep)', x: -3, y: 8.5 }
+            'Deep middle 1/3',
+            'Left B gap (deep)'
         ]
     },
     '4-3 Under (2-high)': {
         DL: [
-            { name: 'Left 4i technique', x: -3.5, y: 2.5 },
-            { name: '0 technique', x: 0, y: 2.5 },
-            { name: 'Right 3 technique', x: 3, y: 2.5 },
-            { name: 'Right 5 technique', x: 4.5, y: 2.5 }
+            'Left 4i technique',
+            '0 technique',
+            'Right 3 technique',
+            'Right 5 technique'
         ],
         LB: [
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Over Center (shallow)', x: 0, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 }
+            'Left B gap (shallow)',
+            'Over Center (shallow)',
+            'Right B gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep left', x: -8, y: 12 },
-            { name: 'Deep right', x: 8, y: 12 }
+            'Deep left',
+            'Deep right'
         ]
     },
     '4-3 Under (1-high)': {
         DL: [
-            { name: 'Left 4i technique', x: -3.5, y: 2.5 },
-            { name: '0 technique', x: 0, y: 2.5 },
-            { name: 'Right 3 technique', x: 3, y: 2.5 },
-            { name: 'Right 5 technique', x: 4.5, y: 2.5 }
+            'Left 4i technique',
+            '0 technique',
+            'Right 3 technique',
+            'Right 5 technique'
         ],
         LB: [
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Over Center (shallow)', x: 0, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 }
+            'Left B gap (shallow)',
+            'Over Center (shallow)',
+            'Right B gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep middle 1/3', x: 0, y: 15 },
-            { name: 'Left B gap (deep)', x: -3, y: 8.5 }
+            'Deep middle 1/3',
+            'Left B gap (deep)'
         ]
     },
     '3-4 Under (2-high)': {
         DL: [
-            { name: 'Left 4i technique', x: -3.5, y: 2.5 },
-            { name: '0 technique', x: 0, y: 2.5 },
-            { name: 'Right 5 technique', x: 4.5, y: 2.5 }
+            'Left 4i technique',
+            '0 technique',
+            'Right 5 technique'
         ],
         LB: [
-            { name: 'Left C gap (shallow)', x: -4.5, y: 6 },
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 },
-            { name: 'Right C gap (shallow)', x: 4.5, y: 6 }
+            'Left C gap (shallow)',
+            'Left B gap (shallow)',
+            'Right B gap (shallow)',
+            'Right C gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep left', x: -8, y: 12 },
-            { name: 'Deep right', x: 8, y: 12 }
+            'Deep left',
+            'Deep right'
         ]
     },
     '3-4 Under (1-high)': {
         DL: [
-            { name: 'Left 4i technique', x: -3.5, y: 2.5 },
-            { name: '0 technique', x: 0, y: 2.5 },
-            { name: 'Right 5 technique', x: 4.5, y: 2.5 }
+            'Left 4i technique',
+            '0 technique',
+            'Right 5 technique'
         ],
         LB: [
-            { name: 'Left C gap (shallow)', x: -4.5, y: 6 },
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 },
-            { name: 'Right C gap (shallow)', x: 4.5, y: 6 }
+            'Left C gap (shallow)',
+            'Left B gap (shallow)',
+            'Right B gap (shallow)',
+            'Right C gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep middle 1/3', x: 0, y: 15 },
-            { name: 'Left B gap (deep)', x: -3, y: 8.5 }
+            'Deep middle 1/3',
+            'Left B gap (deep)'
         ]
     },
     '3-4 Okie (2-high)': {
         DL: [
-            { name: 'Left 4 technique', x: -8, y: 2.5 },
-            { name: '0 technique', x: 0, y: 2.5 },
-            { name: 'Right 4 technique', x: 8, y: 2.5 }
+            'Left 7 technique',
+            '0 technique',
+            'Right 7 technique'
         ],
         LB: [
-            { name: 'Left C gap (shallow)', x: -4.5, y: 6 },
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 },
-            { name: 'Right C gap (shallow)', x: 4.5, y: 6 }
+            'Left C gap (shallow)',
+            'Left B gap (shallow)',
+            'Right B gap (shallow)',
+            'Right C gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep left', x: -8, y: 12 },
-            { name: 'Deep right', x: 8, y: 12 }
+            'Deep left',
+            'Deep right'
         ]
     },
     '3-4 Okie (1-high)': {
         DL: [
-            { name: 'Left 4 technique', x: -8, y: 2.5 },
-            { name: '0 technique', x: 0, y: 2.5 },
-            { name: 'Right 4 technique', x: 8, y: 2.5 }
+            'Left 7 technique',
+            '0 technique',
+            'Right 7 technique'
         ],
         LB: [
-            { name: 'Left C gap (shallow)', x: -4.5, y: 6 },
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 },
-            { name: 'Right C gap (shallow)', x: 4.5, y: 6 }
+            'Left C gap (shallow)',
+            'Left B gap (shallow)',
+            'Right B gap (shallow)',
+            'Right C gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep middle 1/3', x: 0, y: 15 },
-            { name: 'Left B gap (deep)', x: -3, y: 8.5 }
+            'Deep middle 1/3',
+            'Left B gap (deep)'
         ]
     },
     '3-4 Bear (2-high)': {
         DL: [
-            { name: 'Left 3 technique', x: -3, y: 2.5 },
-            { name: '0 technique', x: 0, y: 2.5 },
+            'Left 3 technique',
+            '0 technique',
             { name: 'Right 3 technique', x: 5, y: 2.5 }
         ],
         LB: [
-            { name: 'Left C gap (shallow)', x: -4.5, y: 6 },
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 },
-            { name: 'Right C gap (shallow)', x: 4.5, y: 6 }
+            'Left C gap (shallow)',
+            'Left B gap (shallow)',
+            'Right B gap (shallow)',
+            'Right C gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep left', x: -8, y: 12 },
-            { name: 'Deep right', x: 8, y: 12 }
+            'Deep left',
+            'Deep right'
         ]
     },
     '3-4 Bear (1-high)': {
         DL: [
-            { name: 'Left 3 technique', x: -3, y: 2.5 },
-            { name: '0 technique', x: 0, y: 2.5 },
+            'Left 3 technique',
+            '0 technique',
             { name: 'Right 3 technique', x: 5, y: 2.5 }
         ],
         LB: [
-            { name: 'Left C gap (shallow)', x: -4.5, y: 6 },
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 },
-            { name: 'Right C gap (shallow)', x: 4.5, y: 6 }
+            'Left C gap (shallow)',
+            'Left B gap (shallow)',
+            'Right B gap (shallow)',
+            'Right C gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep middle 1/3', x: 0, y: 15 },
-            { name: 'Left B gap (deep)', x: -3, y: 8.5 }
+            'Deep middle 1/3',
+            'Left B gap (deep)'
         ]
     },
     '3-4 Tite (2-high)': {
         DL: [
-            { name: 'Left 4i technique', x: -3.5, y: 2.5 },
-            { name: '0 technique', x: 0, y: 2.5 },
-            { name: 'Right 4i technique', x: 6, y: 2.5 }
+            'Left 4i technique',
+            '0 technique',
+            'Right 4i technique'
         ],
         LB: [
-            { name: 'Left C gap (shallow)', x: -4.5, y: 6 },
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 },
-            { name: 'Right C gap (shallow)', x: 4.5, y: 6 }
+            'Left C gap (shallow)',
+            'Left B gap (shallow)',
+            'Right B gap (shallow)',
+            'Right C gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep left', x: -8, y: 12 },
-            { name: 'Deep right', x: 8, y: 12 }
+            'Deep left',
+            'Deep right'
         ]
     },
     '3-4 Tite (1-high)': {
         DL: [
-            { name: 'Left 4i technique', x: -3.5, y: 2.5 },
-            { name: '0 technique', x: 0, y: 2.5 },
-            { name: 'Right 4i technique', x: 6, y: 2.5 }
+            'Left 4i technique',
+            '0 technique',
+            'Right 4i technique'
         ],
         LB: [
-            { name: 'Left C gap (shallow)', x: -4.5, y: 6 },
-            { name: 'Left B gap (shallow)', x: -3, y: 6 },
-            { name: 'Right B gap (shallow)', x: 3, y: 6 },
-            { name: 'Right C gap (shallow)', x: 4.5, y: 6 }
+            'Left C gap (shallow)',
+            'Left B gap (shallow)',
+            'Right B gap (shallow)',
+            'Right C gap (shallow)'
         ],
         CB: [
-            { name: 'Seam left', x: -12, y: 12 },
-            { name: 'Seam right', x: 12, y: 12 }
+            'Seam left',
+            'Seam right'
         ],
         S: [
-            { name: 'Deep middle 1/3', x: 0, y: 15 },
-            { name: 'Left B gap (deep)', x: -3, y: 8.5 }
+            'Deep middle 1/3',
+            'Left B gap (deep)'
         ]
     }
 };
@@ -4770,16 +5131,20 @@ function applyOffensiveFormation(formationName) {
     const usedPositions = new Set(); // Track by position name
     const usedCoordinates = new Set(); // Track by x,y coordinates
     
-    // Priority list for WR/receiver positions (excluding Max split)
+    // Priority list for WR/receiver positions (excluding Max split) - using location names
     const receiverPriorityList = [
-        { name: 'Wide left', x: -14, y: -3 },
-        { name: 'Wide right', x: 14, y: -3 },
-        { name: 'Slot left', x: -10, y: -3 },
-        { name: 'Slot right', x: 10, y: -3 },
-        { name: 'Trips left', x: -12, y: -5 },
-        { name: 'Trips right', x: 12, y: -5 },
-        { name: 'Tight right', x: 5.5, y: -3 },
-        { name: 'Tight left', x: -5.5, y: -3 }
+        'Wide left',
+        'Wide right',
+        'Slot left',
+        'Slot right',
+        'Flanker left',
+        'Flanker right',
+        'Seam left',
+        'Seam right',
+        'Tight right',
+        'Tight left',
+        'Wing left',
+        'Wing right'
     ];
     
     // Helper function to find next available receiver position
@@ -4792,18 +5157,18 @@ function applyOffensiveFormation(formationName) {
             ? allFormationSpots.filter(pos => !pos.name.toLowerCase().includes('max split'))
             : allFormationSpots;
         
-        for (const pos of filteredFormation) {
-            const coordKey = `${pos.x},${pos.y}`;
-            if (!usedPositions.has(pos.name) && !usedCoordinates.has(coordKey)) {
+        for (const posEntry of filteredFormation) {
+            const pos = resolveFormationPosition(posEntry, false); // Offensive - prefer Y < 0
+            if (pos && !usedPositions.has(pos.name) && !usedCoordinates.has(`${pos.x},${pos.y}`)) {
                 return pos;
             }
         }
         
         // Then try priority list
-        for (const pos of receiverPriorityList) {
-            const coordKey = `${pos.x},${pos.y}`;
-            if (!usedPositions.has(pos.name) && !usedCoordinates.has(coordKey)) {
-                return { ...pos, section: 'Offensive line of scrimmage' };
+        for (const locName of receiverPriorityList) {
+            const pos = resolveLocationName(locName, false); // Offensive - prefer Y < 0
+            if (pos && !usedPositions.has(pos.name) && !usedCoordinates.has(`${pos.x},${pos.y}`)) {
+                return pos;
             }
         }
         
@@ -4826,12 +5191,12 @@ function applyOffensiveFormation(formationName) {
         
         // QB always gets QB position if available
         if (player.position === 'QB' && formation.QB) {
-            position = formation.QB;
+            position = resolveFormationPosition(formation.QB, false); // Offensive - prefer Y < 0
         }
         // RB gets RB position if available, otherwise can go to receiver spot
         else if (player.position === 'RB') {
             if (formation.RB && rbIndex === 0) {
-                position = formation.RB;
+                position = resolveFormationPosition(formation.RB, false); // Offensive - prefer Y < 0
                 rbIndex++;
             } else {
                 // RB in empty formation - assign to a receiver spot
@@ -4841,14 +5206,14 @@ function applyOffensiveFormation(formationName) {
         // OL gets OL positions
         else if (['OT', 'OG', 'C'].includes(player.position) && formation.OL) {
             if (olIndex < formation.OL.length) {
-                position = formation.OL[olIndex];
+                position = resolveFormationPosition(formation.OL[olIndex], false); // Offensive - prefer Y < 0
                 olIndex++;
             }
         }
         // TE gets TE positions, or receiver spot if no TE spots
         else if (player.position === 'TE') {
             if (formation.TE && teIndex < formation.TE.length) {
-                position = formation.TE[teIndex];
+                position = resolveFormationPosition(formation.TE[teIndex], false); // Offensive - prefer Y < 0
                 teIndex++;
             } else {
                 // TE can go to receiver spot
@@ -4863,13 +5228,13 @@ function applyOffensiveFormation(formationName) {
         // If still no position assigned, use a default based on position type
         if (!position) {
             if (player.position === 'QB') {
-                position = { name: 'QB (Shotgun)', x: 0, y: -10, section: 'Offensive backfield' };
+                position = resolveLocationName('QB (Shotgun)', false) || { name: 'QB (Shotgun)', x: 0, y: -10, section: 'Offensive backfield' };
             } else if (player.position === 'RB') {
-                position = getNextAvailableReceiverPosition() || { name: 'Wide left', x: -14, y: -3, section: 'Offensive line of scrimmage' };
+                position = getNextAvailableReceiverPosition() || resolveLocationName('Wide left', false) || { name: 'Wide left', x: -16.75, y: -3, section: 'Offensive line of scrimmage' };
             } else if (['OT', 'OG', 'C'].includes(player.position)) {
-                position = { name: 'Center', x: 0, y: -3, section: 'Offensive line of scrimmage' };
+                position = resolveLocationName('Center', false) || { name: 'Center', x: 0, y: -3, section: 'Offensive line of scrimmage' };
             } else {
-                position = getNextAvailableReceiverPosition() || { name: 'Slot left', x: -10, y: -3, section: 'Offensive line of scrimmage' };
+                position = getNextAvailableReceiverPosition() || resolveLocationName('Slot left', false) || { name: 'Slot left', x: -13, y: -3, section: 'Offensive line of scrimmage' };
             }
         }
         
@@ -4975,12 +5340,7 @@ function applyDefensiveFormation(formationName) {
     let dbIndex = 0; // For extra DBs (nickel/dime)
     
     // Nickel/Dime positions for extra CBs: Wide left, Wide right, Slot left, Slot right (in that order)
-    const nickelDimePositions = [
-        { name: 'Wide left', x: -14, y: 5, section: 'Coverage second level' },
-        { name: 'Wide right', x: 14, y: 5, section: 'Coverage second level' },
-        { name: 'Slot left', x: -10, y: 5, section: 'Coverage second level' },
-        { name: 'Slot right', x: 10, y: 5, section: 'Coverage second level' }
-    ];
+    // These will be resolved from fieldlocations.json
     
     // Apply formation - assign ALL 11 players
     selectedDefense.forEach((playerId) => {
@@ -4992,56 +5352,76 @@ function applyDefensiveFormation(formationName) {
         // Check if this player is in the DL alignment
         const dlIndex = dlAlignment.indexOf(playerId);
         if (dlIndex >= 0 && dlIndex < formation.DL.length && formation.DL) {
-            position = formation.DL[dlIndex];
+            position = resolveFormationPosition(formation.DL[dlIndex], true); // Defensive - prefer Y > 0
         }
         // LBs get LB positions
         else if (['LB', 'MLB'].includes(player.position)) {
             if (formation.LB && lbIndex < formation.LB.length) {
-                position = formation.LB[lbIndex];
+                position = resolveFormationPosition(formation.LB[lbIndex], true); // Defensive - prefer Y > 0
                 lbIndex++;
             } else {
                 // Extra LB - put in a gap or shallow zone
                 const extraLBPositions = [
-                    { name: 'Left A gap (shallow)', x: -1, y: 6, section: 'Defensive backfield' },
-                    { name: 'Right A gap (shallow)', x: 1, y: 6, section: 'Defensive backfield' },
-                    { name: 'Left C gap (shallow)', x: -4.5, y: 6, section: 'Defensive backfield' },
-                    { name: 'Right C gap (shallow)', x: 4.5, y: 6, section: 'Defensive backfield' }
+                    'Left A gap (shallow)',
+                    'Right A gap (shallow)',
+                    'Left C gap (shallow)',
+                    'Right C gap (shallow)'
                 ];
                 const extraIndex = lbIndex - (formation.LB ? formation.LB.length : 0);
                 if (extraIndex < extraLBPositions.length) {
-                    position = extraLBPositions[extraIndex];
+                    position = resolveLocationName(extraLBPositions[extraIndex], true); // Defensive - prefer Y > 0
                 }
             }
         }
         // CBs get CB positions, then extra go to nickel spots
         else if (player.position === 'CB') {
             if (formation.CB && cbIndex < formation.CB.length) {
-                position = formation.CB[cbIndex];
+                position = resolveFormationPosition(formation.CB[cbIndex], true); // Defensive - prefer Y > 0
                 cbIndex++;
             } else {
                 // Extra CB (nickel/dime) - assign to slot positions
-                if (dbIndex < nickelDimePositions.length) {
-                    position = nickelDimePositions[dbIndex];
+                const nickelDimeLocationNames = [
+                    'Wide left',
+                    'Wide right',
+                    'Slot left',
+                    'Slot right'
+                ];
+                if (dbIndex < nickelDimeLocationNames.length) {
+                    position = resolveLocationName(nickelDimeLocationNames[dbIndex], true, 'Coverage'); // Defensive - prefer Y > 0, Coverage section
+                    if (!position) {
+                        // Fallback to second level if not found
+                        position = resolveLocationName('Slot left', true, 'Coverage') || { name: 'Slot left', x: -13, y: 5.0, section: 'Coverage second level' };
+                    }
                     dbIndex++;
                 } else {
                     // Fallback
-                    position = { name: 'Slot left', x: -8, y: 5, section: 'Coverage second level' };
+                    position = resolveLocationName('Slot left', true, 'Coverage') || { name: 'Slot left', x: -13, y: 5.0, section: 'Coverage second level' };
                 }
             }
         }
         // Safeties get S positions, then extra go to nickel spots
         else if (player.position === 'S') {
             if (formation.S && sIndex < formation.S.length) {
-                position = formation.S[sIndex];
+                position = resolveFormationPosition(formation.S[sIndex], true); // Defensive - prefer Y > 0
                 sIndex++;
             } else {
                 // Extra S (big nickel/dime) - assign to slot positions
-                if (dbIndex < nickelDimePositions.length) {
-                    position = nickelDimePositions[dbIndex];
+                const nickelDimeLocationNames = [
+                    'Wide left',
+                    'Wide right',
+                    'Slot left',
+                    'Slot right'
+                ];
+                if (dbIndex < nickelDimeLocationNames.length) {
+                    position = resolveLocationName(nickelDimeLocationNames[dbIndex], true, 'Coverage'); // Defensive - prefer Y > 0, Coverage section
+                    if (!position) {
+                        // Fallback to second level if not found
+                        position = resolveLocationName('Slot right', true, 'Coverage') || { name: 'Slot right', x: 13, y: 5.0, section: 'Coverage second level' };
+                    }
                     dbIndex++;
                 } else {
                     // Fallback
-                    position = { name: 'Slot right', x: 8, y: 5, section: 'Coverage second level' };
+                    position = resolveLocationName('Slot right', true, 'Coverage') || { name: 'Slot right', x: 13, y: 5.0, section: 'Coverage second level' };
                 }
             }
         }
@@ -5049,15 +5429,15 @@ function applyDefensiveFormation(formationName) {
         // If still no position assigned, use a default based on position type
         if (!position) {
             if (['DE', 'DT'].includes(player.position)) {
-                position = { name: '0 technique', x: 0, y: 2.5, section: 'Defensive line of scrimmage' };
+                position = resolveLocationName('0 technique', true) || { name: '0 technique', x: 0, y: 2.5, section: 'Defensive line of scrimmage' };
             } else if (['LB', 'MLB'].includes(player.position)) {
-                position = { name: 'Over Center (shallow)', x: 0, y: 6, section: 'Defensive backfield' };
+                position = resolveLocationName('Over Center (shallow)', true) || { name: 'Over Center (shallow)', x: 0, y: 6, section: 'Defensive backfield' };
             } else if (player.position === 'CB') {
-                position = { name: 'Slot left', x: -8, y: 5, section: 'Coverage second level' };
+                position = resolveLocationName('Slot left', true, 'Coverage') || { name: 'Slot left', x: -13, y: 5.0, section: 'Coverage second level' };
             } else if (player.position === 'S') {
-                position = { name: 'Slot right', x: 8, y: 5, section: 'Coverage second level' };
+                position = resolveLocationName('Slot right', true, 'Coverage') || { name: 'Slot right', x: 13, y: 5.0, section: 'Coverage second level' };
             } else {
-                position = { name: 'Over Center (shallow)', x: 0, y: 6, section: 'Defensive backfield' };
+                position = resolveLocationName('Over Center (shallow)', true) || { name: 'Over Center (shallow)', x: 0, y: 6, section: 'Defensive backfield' };
             }
         }
         
@@ -5621,6 +6001,54 @@ function renderAssignmentArrows() {
         
         // Positions are already in canvas coordinates
         drawAssignmentArrow(ctx, pos.x, pos.y, assignment.action, player.position, false, canvasWidth, centerY);
+        
+        // Draw technique arrow for man coverage
+        if (assignment.category === 'Man Coverage' && assignment.action) {
+            let techDx = 0, techDy = 0;
+            const techArrowLength = 10;
+            
+            if (assignment.action.includes('Deep technique')) {
+                // Deep: arrow downfield (toward endzone for defense)
+                techDy = -techArrowLength;
+            } else if (assignment.action.includes('Inside technique')) {
+                // Inside: arrow toward center of field
+                const isOnLeft = pos.x < canvasWidth / 2;
+                techDx = isOnLeft ? techArrowLength : -techArrowLength;
+            } else if (assignment.action.includes('Outside technique')) {
+                // Outside: arrow toward sideline
+                const isOnLeft = pos.x < canvasWidth / 2;
+                techDx = isOnLeft ? -techArrowLength : techArrowLength;
+            } else if (assignment.action.includes('Trail technique')) {
+                // Trail: arrow behind receiver (toward backfield for defense)
+                techDy = techArrowLength;
+            }
+            
+            if (techDx !== 0 || techDy !== 0) {
+                // Draw small dark red arrow at defender position
+                ctx.strokeStyle = '#8B0000'; // Dark red
+                ctx.fillStyle = '#8B0000';
+                ctx.lineWidth = 1.5;
+                const techEndX = pos.x + techDx;
+                const techEndY = pos.y + techDy;
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+                ctx.lineTo(techEndX, techEndY);
+                ctx.stroke();
+                
+                // Draw arrowhead
+                const angle = Math.atan2(techDy, techDx);
+                const arrowHeadLength = 5;
+                const arrowHeadAngle = Math.PI / 6;
+                ctx.beginPath();
+                ctx.moveTo(techEndX, techEndY);
+                ctx.lineTo(techEndX - arrowHeadLength * Math.cos(angle - arrowHeadAngle),
+                          techEndY - arrowHeadLength * Math.sin(angle - arrowHeadAngle));
+                ctx.moveTo(techEndX, techEndY);
+                ctx.lineTo(techEndX - arrowHeadLength * Math.cos(angle + arrowHeadAngle),
+                          techEndY - arrowHeadLength * Math.sin(angle + arrowHeadAngle));
+                ctx.stroke();
+            }
+        }
     });
     
     ctx.restore();
@@ -5842,9 +6270,10 @@ EXAMPLES:
 
 -8 to -10: unblocked rusher, routes into coverage, no quick throw.
 
--4 to 0: neutral/good scheme, even matchups.
+-2 to 0: neutral/good scheme, even matchups.
+-4 to -2: correct commitment that matches offensive playcall.
 
-+2 to +5: wrong coverage/commit exploited.`;
++2 to +6: wrong coverage/commit exploited.`;
 
     // Build user message (same as callLLM)
     const allPlayers = [];
@@ -5862,7 +6291,7 @@ EXAMPLES:
         const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
         const actualPlayer = getPlayerById(playerId);
         const actualPosition = actualPlayer ? actualPlayer.position : (player.position || 'Unknown');
-        const isOLInSkillPosition = (actualPosition === 'OT' || actualPosition === 'OG' || actualPosition === 'C') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Trips') || pos.location.includes('Max split'));
+        const isOLInSkillPosition = (actualPosition === 'OT' || actualPosition === 'OG' || actualPosition === 'C') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Flanker') || pos.location.includes('Trips') || pos.location.includes('Max split'));
         const warning = isOLInSkillPosition ? ' ⚠️ OFFENSIVE LINEMAN IN SKILL POSITION!' : '';
         allPlayers.push({
             side: 'OFFENSE',
@@ -5890,7 +6319,7 @@ EXAMPLES:
         const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
         const actualPlayer = getPlayerById(playerId);
         const actualPosition = actualPlayer ? actualPlayer.position : (player.position || 'Unknown');
-        const isDLInOffensivePosition = (actualPosition === 'DE' || actualPosition === 'DT') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Trips') || pos.location.includes('Max split'));
+        const isDLInOffensivePosition = (actualPosition === 'DE' || actualPosition === 'DT') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Flanker') || pos.location.includes('Trips') || pos.location.includes('Max split'));
         const warning = isDLInOffensivePosition ? ' ⚠️ DEFENSIVE LINEMAN IN OFFENSIVE SKILL POSITION!' : '';
         allPlayers.push({
             side: 'DEFENSE',
@@ -6400,7 +6829,7 @@ EXAMPLES:
         const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
         // Check if defensive lineman is in an offensive skill position (actual offsides/misalignment)
         const actualPosition = actualPlayer ? actualPlayer.position : (p.position || 'Unknown');
-        const isDLInOffensivePosition = (actualPosition === 'DE' || actualPosition === 'DT') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Trips') || pos.location.includes('Max split'));
+        const isDLInOffensivePosition = (actualPosition === 'DE' || actualPosition === 'DT') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Flanker') || pos.location.includes('Trips') || pos.location.includes('Max split'));
         const warning = isDLInOffensivePosition ? ' ⚠️ DEFENSIVE LINEMAN IN OFFENSIVE SKILL POSITION!' : '';
         allPlayers.push({
             side: 'DEFENSE',

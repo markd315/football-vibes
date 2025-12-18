@@ -20,17 +20,17 @@
             {
                 "Name": "Behind QB (Shotgun)",
                 "X": 0,
-                "Y": -15
+                "Y": -13
             },
             {
                 "Name": "T-left (Shotgun)",
                 "X": -3,
-                "Y": -15
+                "Y": -13
             },
             {
                 "Name": "T-right (Shotgun)",
                 "X": 3,
-                "Y": -15
+                "Y": -13
             },
             {
                 "Name": "QB (Under center)",
@@ -49,13 +49,33 @@
             },
             {
                 "Name": "Behind tight end (Left)",
-                "X": -8,
+                "X": -6,
                 "Y": -8
             },
             {
                 "Name": "Behind tight end (Right)",
-                "X": 8,
+                "X": 6,
                 "Y": -8
+            },
+            {
+                "Name": "Trips left hole (inside)",
+                "X": -14.25,
+                "Y": -5
+            },
+            {
+                "Name": "Trips right hole (inside)",
+                "X": 14.25,
+                "Y": -5
+            },
+            {
+                "Name": "Trips left hole (outside)",
+                "X": -16.125,
+                "Y": -5
+            },
+            {
+                "Name": "Trips right hole (outside)",
+                "X": 16.125,
+                "Y": -5
             }
         ]
     },
@@ -89,52 +109,62 @@
             },
             {
                 "Name": "Tight left",
-                "X": -5.5,
+                "X": -6,
                 "Y": -3
             },
             {
                 "Name": "Tight right",
-                "X": 5.5,
+                "X": 6,
                 "Y": -3
             },
             {
                 "Name": "Wing left",
-                "X": -6.5,
-                "Y": -3
-            },
-            {
-                "Name": "Wing right",
-                "X": 6.5,
-                "Y": -3
-            },
-            {
-                "Name": "Seam left",
                 "X": -8,
                 "Y": -3
             },
             {
-                "Name": "Seam right",
+                "Name": "Wing right",
                 "X": 8,
                 "Y": -3
             },
             {
+                "Name": "Seam left",
+                "X": -10.5,
+                "Y": -3
+            },
+            {
+                "Name": "Seam right",
+                "X": 10.5,
+                "Y": -3
+            },
+            {
                 "Name": "Slot left",
-                "X": -10,
+                "X": -13,
                 "Y": -3
             },
             {
                 "Name": "Slot right",
-                "X": 10,
+                "X": 13,
+                "Y": -3
+            },
+            {
+                "Name": "Flanker left",
+                "X": -15.5,
+                "Y": -3
+            },
+            {
+                "Name": "Flanker right",
+                "X": 15.5,
                 "Y": -3
             },
             {
                 "Name": "Wide left",
-                "X": -14,
+                "X": -16.75,
                 "Y": -3
             },
             {
                 "Name": "Wide right",
-                "X": 14,
+                "X": 16.75,
                 "Y": -3
             },
             {
@@ -146,16 +176,6 @@
                 "Name": "Max split right",
                 "X": 18,
                 "Y": -3
-            },
-            {
-                "Name": "Trips left",
-                "X": -12,
-                "Y": -5
-            },
-            {
-                "Name": "Trips right",
-                "X": 12,
-                "Y": -5
             }
         ]
     },
@@ -249,22 +269,42 @@
             },
             {
                 "Name": "Left 6 technique",
-                "X": -5,
-                "Y": 2.5
-            },
-            {
-                "Name": "Right 6 technique",
-                "X": 5,
-                "Y": 2.5
-            },
-            {
-                "Name": "Left 7 technique",
                 "X": -6,
                 "Y": 2.5
             },
             {
-                "Name": "Right 7 technique",
+                "Name": "Right 6 technique",
                 "X": 6,
+                "Y": 2.5
+            },
+            {
+                "Name": "Left 7 technique",
+                "X": -7,
+                "Y": 2.5
+            },
+            {
+                "Name": "Right 7 technique",
+                "X": 7,
+                "Y": 2.5
+            },
+            {
+                "Name": "Left 8 technique",
+                "X": -8,
+                "Y": 2.5
+            },
+            {
+                "Name": "Right 8 technique",
+                "X": 8,
+                "Y": 2.5
+            },
+            {
+                "Name": "Left 9 technique",
+                "X": -9,
+                "Y": 2.5
+            },
+            {
+                "Name": "Right 9 technique",
+                "X": 9,
                 "Y": 2.5
             }
         ]
@@ -299,12 +339,22 @@
             },
             {
                 "Name": "Left C gap (shallow)",
-                "X": -4.5,
+                "X": -5,
                 "Y": 6
             },
             {
                 "Name": "Right C gap (shallow)",
-                "X": 4.5,
+                "X": 5,
+                "Y": 6
+            },
+            {
+                "Name": "Left D gap (shallow)",
+                "X": -7,
+                "Y": 6
+            },
+            {
+                "Name": "Right D gap (shallow)",
+                "X": 7,
                 "Y": 6
             }
         ]
@@ -339,12 +389,22 @@
             },
             {
                 "Name": "Left C gap (deep)",
-                "X": -4.5,
+                "X": -5,
                 "Y": 8.5
             },
             {
                 "Name": "Right C gap (deep)",
-                "X": 4.5,
+                "X": 5,
+                "Y": 8.5
+            },
+            {
+                "Name": "Left D gap (deep)",
+                "X": -7,
+                "Y": 8.5
+            },
+            {
+                "Name": "Right D gap (deep)",
+                "X": 7,
                 "Y": 8.5
             }
         ]
@@ -363,53 +423,63 @@
                 "Y": 2.0
             },
             {
-                "Name": "Wide left (press)",
-                "X": -14,
-                "Y": 2.0
-            },
-            {
-                "Name": "Wide right (press)",
-                "X": 14,
-                "Y": 2.0
-            },
-            {
                 "Name": "Seam left (press)",
-                "X": -8,
+                "X": -10.5,
                 "Y": 2.0
             },
             {
                 "Name": "Seam right (press)",
-                "X": 8,
+                "X": 10.5,
                 "Y": 2.0
             },
             {
                 "Name": "Slot left (press)",
-                "X": -10,
+                "X": -13,
                 "Y": 2.0
             },
             {
                 "Name": "Slot right (press)",
-                "X": 10,
+                "X": 13,
                 "Y": 2.0
             },
             {
-                "Name": "Tight left (press)",
-                "X": -7.5,
+                "Name": "Flanker left (press)",
+                "X": -15.5,
                 "Y": 2.0
             },
             {
-                "Name": "Tight right (press)",
-                "X": 7.5,
+                "Name": "Flanker right (press)",
+                "X": 15.5,
                 "Y": 2.0
             },
             {
-                "Name": "Wing left (press)",
-                "X": -8.5,
+                "Name": "Wide left (press)",
+                "X": -16.75,
                 "Y": 2.0
             },
             {
-                "Name": "Wing right (press)",
-                "X": 8.5,
+                "Name": "Wide right (press)",
+                "X": 16.75,
+                "Y": 2.0
+            },
+            {
+                "Name": "Trips left hole (press)",
+                "X": -14.25,
+                "Y": 2.0
+            },
+            {
+                "Name": "Trips right hole (press)",
+                "X": 14.25,
+                "Y": 2.0
+            },
+            {
+                "Name": "Trips left hole (outside press)",
+                "X": -16.125,
+                "Y": 2.0
+            },
+            {
+                "Name": "Trips right hole (outside press)",
+                "X": 16.125,
                 "Y": 2.0
             }
         ]
@@ -428,53 +498,63 @@
                 "Y": 5.0
             },
             {
-                "Name": "Wide left",
-                "X": -14,
-                "Y": 5.0
-            },
-            {
-                "Name": "Wide right",
-                "X": 14,
-                "Y": 5.0
-            },
-            {
                 "Name": "Seam left",
-                "X": -8,
+                "X": -10.5,
                 "Y": 5.0
             },
             {
                 "Name": "Seam right",
-                "X": 8,
+                "X": 10.5,
                 "Y": 5.0
             },
             {
                 "Name": "Slot left",
-                "X": -10,
+                "X": -13,
                 "Y": 5.0
             },
             {
                 "Name": "Slot right",
-                "X": 10,
+                "X": 13,
                 "Y": 5.0
             },
             {
-                "Name": "Tight left",
-                "X": -7.5,
+                "Name": "Flanker left",
+                "X": -15.5,
                 "Y": 5.0
             },
             {
-                "Name": "Tight right",
-                "X": 7.5,
+                "Name": "Flanker right",
+                "X": 15.5,
                 "Y": 5.0
             },
             {
-                "Name": "Wing left",
-                "X": -8.5,
+                "Name": "Wide left",
+                "X": -16.75,
                 "Y": 5.0
             },
             {
-                "Name": "Wing right",
-                "X": 8.5,
+                "Name": "Wide right",
+                "X": 16.75,
+                "Y": 5.0
+            },
+            {
+                "Name": "Trips left hole (inside)",
+                "X": -14.25,
+                "Y": 5.0
+            },
+            {
+                "Name": "Trips right hole (inside)",
+                "X": 14.25,
+                "Y": 5.0
+            },
+            {
+                "Name": "Trips left hole (outside)",
+                "X": -16.125,
+                "Y": 5.0
+            },
+            {
+                "Name": "Trips right hole (outside)",
+                "X": 16.125,
                 "Y": 5.0
             }
         ]
@@ -493,53 +573,13 @@
                 "Y": 10.0
             },
             {
-                "Name": "Wide left (cushion)",
-                "X": -14,
-                "Y": 10.0
-            },
-            {
-                "Name": "Wide right (cushion)",
-                "X": 14,
-                "Y": 10.0
-            },
-            {
-                "Name": "Seam left (cushion)",
+                "Name": "Wing left (cushion)",
                 "X": -8,
                 "Y": 10.0
             },
             {
-                "Name": "Seam right (cushion)",
-                "X": 8,
-                "Y": 10.0
-            },
-            {
-                "Name": "Slot left (cushion)",
-                "X": -10,
-                "Y": 10.0
-            },
-            {
-                "Name": "Slot right (cushion)",
-                "X": 10,
-                "Y": 10.0
-            },
-            {
-                "Name": "Tight left (cushion)",
-                "X": -7.5,
-                "Y": 10.0
-            },
-            {
-                "Name": "Tight right (cushion)",
-                "X": 7.5,
-                "Y": 10.0
-            },
-            {
-                "Name": "Wing left (cushion)",
-                "X": -8.5,
-                "Y": 10.0
-            },
-            {
                 "Name": "Wing right (cushion)",
-                "X": 8.5,
+                "X": 8,
                 "Y": 10.0
             }
         ]
@@ -549,12 +589,12 @@
         "Locations": [
             {
                 "Name": "Seam left",
-                "X": -12,
+                "X": -10.5,
                 "Y": 12
             },
             {
                 "Name": "Seam right",
-                "X": 12,
+                "X": 10.5,
                 "Y": 12
             },
             {
@@ -574,12 +614,12 @@
             },
             {
                 "Name": "Deep seam left",
-                "X": -12,
+                "X": -10.5,
                 "Y": 15
             },
             {
                 "Name": "Deep seam right",
-                "X": 12,
+                "X": 10.5,
                 "Y": 15
             },
             {

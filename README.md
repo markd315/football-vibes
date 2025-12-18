@@ -40,7 +40,6 @@ Football Vibes is a **split-screen multiplayer game** designed for two players o
 
 When you first load the game, you'll select teams for both the home and away sides. Each team has separate offensive and defensive rosters with 24 players each.
 
-![Team Selection](public/media/teamsel.png)
 ![Team Selection 2](public/media/teamsel2.png)
 
 ### Play Design Phases
@@ -94,7 +93,7 @@ This is where the strategic battle happens. Both coordinators assign responsibil
 - Blitzes and rushes
 - Gap responsibilities
 
-Players can use playcall dropdowns to quickly set default assignments for the entire team, or assign individual responsibilities. Visual playcall diagrams show routes and coverage patterns.
+Players can use playcall dropdowns to quickly set default assignments for the entire team, or assign individual responsibilities. Visual playcall diagrams show routes and coverage patterns (WIP)
 
 ![Pass vs Bracket Coverage](public/media/phase4passvbracket.png)
 ![Run vs Zone Defense](public/media/phase4runvzone.png)
