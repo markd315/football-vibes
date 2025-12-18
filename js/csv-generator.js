@@ -1,5 +1,21 @@
 // CSV generation for LLM prompt
 // Generates the player CSV that goes into the LLM prompt
+// Note: This module expects calculateEffectivePercentile to be available globally
+// or passed as a parameter. For now, it's called from app.js context.
+
+/**
+ * Safely gets a global variable
+ * @param {string} varName - Name of the global variable
+ * @returns {*} The global variable value or null
+ */
+function getGlobal(varName) {
+    try {
+        const getter = new Function('return typeof ' + varName + ' !== "undefined" ? ' + varName + ' : null');
+        return getter();
+    } catch(e) {
+        return null;
+    }
+}
 
 /**
  * Generates CSV data for all players in the play
@@ -80,6 +96,21 @@ function generatePlayerCSV(playData, allPlayers) {
  * @returns {Array} Array of player objects ready for CSV
  */
 function buildPlayersForCSV(playData) {
+    // Safely access global variables
+    const assignments = getGlobal('assignments') || { offense: {}, defense: {} };
+    const selectedPlayers = getGlobal('selectedPlayers') || [];
+    const selectedDefense = getGlobal('selectedDefense') || [];
+    const playerPositions = getGlobal('playerPositions') || {};
+    const fieldLocations = getGlobal('fieldLocations') || [];
+    const getPlayerById = getGlobal('getPlayerById');
+    const getLocationCoords = getGlobal('getLocationCoords');
+    const calculateEffectivePercentile = getGlobal('calculateEffectivePercentile');
+    
+    if (!getPlayerById || !getLocationCoords || !calculateEffectivePercentile) {
+        console.error('Required global functions not available: getPlayerById, getLocationCoords, calculateEffectivePercentile');
+        return [];
+    }
+    
     const allPlayers = [];
     
     // Determine play type for trait detection
@@ -103,7 +134,7 @@ function buildPlayersForCSV(playData) {
         const pos = playerPositions[playerId];
         if (!pos || !pos.location) return;
         
-        const locCoords = getLocationCoords(pos.location);
+        const locCoords = getLocationCoords(pos.location, fieldLocations);
         const assignment = assignments.offense[player.name] || {};
         const assignmentText = assignment.action ? `${assignment.category}: ${assignment.action}` : 'No assignment';
         const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
@@ -136,7 +167,7 @@ function buildPlayersForCSV(playData) {
         const pos = playerPositions[playerId];
         if (!pos || !pos.location) return;
         
-        const locCoords = getLocationCoords(pos.location);
+        const locCoords = getLocationCoords(pos.location, fieldLocations);
         const assignment = assignments.defense[player.name] || {};
         const assignmentText = assignment.action ? `${assignment.category}: ${assignment.action}` : 'No assignment';
         const manTarget = (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) ? ` (Man coverage on: ${assignment.manCoverageTarget})` : '';

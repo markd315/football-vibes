@@ -17,8 +17,7 @@ Evaluate: 40% alignment, 30% assignment, 20% positional mismatches, 10% player r
 
 Late or missed assignments invalidate coverage.
 
-Identify routes into coverage voids or open windows.
-
+Look at the backend shell of the defense. Is the middle of the field open or closed? Which routes are likely to be single-covered? Identify whether the routes attack the weaknesses, especially deep.
 Blitz w/o backfield protection = less success, more leverage.
 
 Blocking mismatches: inferior vs elite = less success, more leverage.
@@ -50,7 +49,27 @@ EXAMPLES:
  * @returns {string} User message content
  */
 function generateUserMessage(playData, csvData) {
-    const situation = `${gameState.down}${getDownSuffix(gameState.down)} & ${gameState.distance} @ ${gameState["opp-yardline"]}yd Q${gameState.quarter} ${gameState.time} ${gameState.score.home}-${gameState.score.away}`;
+    // Safely access global gameState and getDownSuffix
+    let gameStateLocal = null;
+    let getDownSuffixLocal = null;
+    try {
+        const getGlobal = new Function('return { gameState: typeof gameState !== "undefined" ? gameState : null, getDownSuffix: typeof getDownSuffix !== "undefined" ? getDownSuffix : null }');
+        const globals = getGlobal();
+        gameStateLocal = globals.gameState;
+        getDownSuffixLocal = globals.getDownSuffix;
+    } catch(e) {}
+    
+    if (!gameStateLocal) {
+        console.error('gameState is not defined');
+        return 'Error: gameState not available';
+    }
+    
+    const getDownSuffixFn = getDownSuffixLocal || ((down) => {
+        const suffixes = ['', 'st', 'nd', 'rd'];
+        return down > 3 ? 'th' : (suffixes[down] || 'th');
+    });
+    
+    const situation = `${gameStateLocal.down}${getDownSuffixFn(gameStateLocal.down)} & ${gameStateLocal.distance} @ ${gameStateLocal["opp-yardline"]}yd Q${gameStateLocal.quarter} ${gameStateLocal.time} ${gameStateLocal.score.home}-${gameStateLocal.score.away}`;
     
     const coachingPoints = [];
     if (playData.coachingPointOffense) {
@@ -80,7 +99,23 @@ Grade purely on scheme potential; commit fully to numeric advantage, ignoring ex
  * @returns {string} Full prompt string
  */
 function generateFullPrompt(playData) {
-    const allPlayers = buildPlayersForCSV(playData);
+    // Safely access global buildPlayersForCSV
+    let buildPlayersForCSVLocal = null;
+    try {
+        const getGlobal = new Function('return typeof buildPlayersForCSV !== "undefined" ? buildPlayersForCSV : null');
+        buildPlayersForCSVLocal = getGlobal();
+    } catch(e) {}
+    
+    if (!buildPlayersForCSVLocal) {
+        console.error('buildPlayersForCSV is not defined');
+        return {
+            systemPrompt: FIXED_INSTRUCTIONS,
+            userMessage: 'Error: buildPlayersForCSV not available',
+            fullPrompt: FIXED_INSTRUCTIONS
+        };
+    }
+    
+    const allPlayers = buildPlayersForCSVLocal(playData);
     const csvData = generatePlayerCSV(playData, allPlayers);
     const userMessage = generateUserMessage(playData, csvData);
     

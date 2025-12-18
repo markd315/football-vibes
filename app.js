@@ -26,19 +26,26 @@ let cacheExpiryTime = null; // When the cache expires (Date object)
 let cacheTimerInterval = null; // Interval for updating cache timer display
 let traitAdjustments = []; // Trait adjustments applied in the current play
 
+// Capture original field utility functions before creating wrappers (to avoid recursion)
+// These are loaded from js/field/field-utils.js and js/field/field-location-utils.js
+const _originalGetLocationCoords = typeof getLocationCoords !== 'undefined' && getLocationCoords.length === 2 ? getLocationCoords : null;
+const _originalResolveLocationName = typeof resolveLocationName !== 'undefined' && resolveLocationName.length === 4 ? resolveLocationName : null;
+const _originalResolveFormationPosition = typeof resolveFormationPosition !== 'undefined' && resolveFormationPosition.length === 5 ? resolveFormationPosition : null;
+
 // Initialize
 async function init() {
     try {
         console.log('Initializing application...');
-        await loadGameState();
-        await loadAvailableTeams();
+        // Load functions need loadJsonConfig parameter - get it from team-loader.js
+        gameState = await loadGameState(loadJsonConfig);
+        availableTeams = await loadAvailableTeams();
         await loadFieldLocations();
-        await loadStateMachine();
-        await loadBaselineRates();
-        await loadTiming();
-        await loadFatigue();
+        stateMachine = await loadStateMachine(loadJsonConfig);
+        baselineRates = await loadBaselineRates(loadJsonConfig);
+        timingConfig = await loadTiming(loadJsonConfig);
+        fatigueConfig = await loadFatigue(loadJsonConfig);
         
-        populateTeamSelectors();
+        populateTeamSelectors(availableTeams, (side) => updateTeamPreview(side, availableTeams, categorizeOffense, categorizeDefense, calcWeightedEval, tierAvg, checkStartGameButton));
         console.log('Initialization complete - showing team selection');
     } catch (error) {
         console.error('Error during initialization:', error);
@@ -46,196 +53,10 @@ async function init() {
 }
 
 // Load available teams by scanning rosters folder
-async function loadAvailableTeams() {
-    try {
-        const response = await fetch('rosters/teams.json?_=' + Date.now()); // Cache bust
-        if (response.ok) {
-            const teamsData = await response.json();
-            console.log('Raw teams.json data:', teamsData);
-            availableTeams = [];
-            // Load all teams from teams.json
-            for (const [id, team] of Object.entries(teamsData)) {
-                availableTeams.push({
-                    id: id,
-                    name: team.name,
-                    city: team.city || '',
-                    record: team.record || '',
-                    offenseFile: team.roster || `${id}-offense.json`,
-                    defenseFile: team.defense || `${id}-defense.json`
-                });
-            }
-        } else {
-            console.error('Failed to load teams.json:', response.status);
-        }
-        console.log('Available teams:', availableTeams);
-    } catch (error) {
-        console.error('Error loading available teams:', error);
-        availableTeams = [
-            { id: 'rams', name: 'Rams', city: 'Los Angeles', record: '', offenseFile: 'rams-offense.json', defenseFile: 'rams-defense.json' },
-            { id: 'jaguars', name: 'Jaguars', city: 'Jacksonville', record: '', offenseFile: 'jaguars-offense.json', defenseFile: 'jaguars-defense.json' }
-        ];
-    }
-}
+// Team loading functions loaded from js/team-selection/team-loader.js
+// Team UI functions loaded from js/team-selection/team-ui.js
 
-// Populate team selection dropdowns
-function populateTeamSelectors() {
-    const homeSelect = document.getElementById('homeTeamSelect');
-    const awaySelect = document.getElementById('awayTeamSelect');
-    
-    availableTeams.forEach(team => {
-        const displayName = team.city ? `${team.city} ${team.name}` : team.name;
-        const recordStr = team.record ? ` (${team.record})` : '';
-        
-        homeSelect.innerHTML += `<option value="${team.id}">${displayName}${recordStr}</option>`;
-        awaySelect.innerHTML += `<option value="${team.id}">${displayName}${recordStr}</option>`;
-    });
-    
-    homeSelect.addEventListener('change', () => updateTeamPreview('home'));
-    awaySelect.addEventListener('change', () => updateTeamPreview('away'));
-}
-
-// Update team preview when selection changes
-async function updateTeamPreview(side) {
-    const select = document.getElementById(`${side}TeamSelect`);
-    const preview = document.getElementById(`${side}TeamPreview`);
-    const teamId = select.value;
-    
-    if (!teamId) {
-        preview.innerHTML = '';
-        checkStartGameButton();
-        return;
-    }
-    
-    const team = availableTeams.find(t => t.id === teamId);
-    if (!team) return;
-    
-    // Load roster to show preview
-    try {
-        const offenseResp = await fetch(`rosters/${team.offenseFile}`);
-        const defenseResp = await fetch(`rosters/${team.defenseFile}`);
-        
-        if (offenseResp.ok && defenseResp.ok) {
-            const offense = await offenseResp.json();
-            const defense = await defenseResp.json();
-            
-            const offCat = categorizeOffense(offense);
-            const defCat = categorizeDefense(defense);
-            const offEval = calcWeightedEval(offCat);
-            const defEval = calcWeightedEval(defCat);
-            const overall = (offEval + defEval) / 2;
-            
-            preview.innerHTML = `
-                <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 10px;">
-                    ${team.city ? team.city + ' ' : ''}${team.name}
-                </div>
-                <div style="font-size: 1.1em; margin-bottom: 8px;">Overall: <strong>${overall.toFixed(1)}</strong></div>
-                <div style="font-size: 0.85em; color: #666;">
-                    <div><strong>Offense:</strong> ${offEval.toFixed(1)} weighted</div>
-                    <div style="margin-left: 10px; font-size: 0.9em;">
-                        Starters: ${tierAvg(offCat.starters).toFixed(0)} | Subs: ${tierAvg(offCat.subs).toFixed(0)} | Backup: ${tierAvg(offCat.backups).toFixed(0)} | Depth: ${tierAvg(offCat.depth).toFixed(0)}
-                    </div>
-                    <div style="margin-top: 5px;"><strong>Defense:</strong> ${defEval.toFixed(1)} weighted</div>
-                    <div style="margin-left: 10px; font-size: 0.9em;">
-                        Starters: ${tierAvg(defCat.starters).toFixed(0)} | Subs: ${tierAvg(defCat.subs).toFixed(0)} | Backup: ${tierAvg(defCat.backups).toFixed(0)} | Depth: ${tierAvg(defCat.depth).toFixed(0)}
-                    </div>
-                </div>
-            `;
-        }
-    } catch (e) {
-        preview.innerHTML = '<div style="color: #c00;">Error loading roster</div>';
-    }
-    
-    checkStartGameButton();
-}
-
-function calcAvgPercentile(players) {
-    if (!players.length) return 0;
-    return players.reduce((sum, p) => sum + (p.percentile || 0), 0) / players.length;
-}
-
-// Weighted eval calculation matching team-eval.js
-const EVAL_WEIGHTS = { starters: 1.0, subs: 0.35, backups: 0.05, depth: 0.01 };
-
-function categorizeOffense(players) {
-    const byPos = {};
-    players.forEach(p => { byPos[p.position] = byPos[p.position] || []; byPos[p.position].push(p); });
-    for (const pos in byPos) byPos[pos].sort((a, b) => b.percentile - a.percentile);
-    
-    const starters = [], subs = [], backups = [], depth = [];
-    if (byPos['QB']?.[0]) starters.push(byPos['QB'][0]);
-    if (byPos['RB']?.[0]) starters.push(byPos['RB'][0]);
-    for (let i = 0; i < 3 && byPos['WR']?.[i]; i++) starters.push(byPos['WR'][i]);
-    if (byPos['TE']?.[0]) starters.push(byPos['TE'][0]);
-    for (let i = 0; i < 2 && byPos['OT']?.[i]; i++) starters.push(byPos['OT'][i]);
-    for (let i = 0; i < 2 && byPos['OG']?.[i]; i++) starters.push(byPos['OG'][i]);
-    if (byPos['C']?.[0]) starters.push(byPos['C'][0]);
-    
-    if (byPos['RB']?.[1]) subs.push(byPos['RB'][1]);
-    if (byPos['WR']?.[3]) subs.push(byPos['WR'][3]);
-    if (byPos['WR']?.[4]) subs.push(byPos['WR'][4]);
-    if (byPos['TE']?.[1]) subs.push(byPos['TE'][1]);
-    
-    const used = { QB: 1, RB: 2, WR: 5, TE: 2, OT: 2, OG: 2, C: 1 };
-    for (const pos in byPos) {
-        const idx = used[pos] || 0;
-        if (byPos[pos][idx]) { backups.push(byPos[pos][idx]); used[pos] = idx + 1; }
-    }
-    for (const pos in byPos) {
-        const idx = used[pos] || 0;
-        for (let i = idx; i < byPos[pos].length; i++) depth.push(byPos[pos][i]);
-    }
-    return { starters, subs, backups, depth };
-}
-
-function categorizeDefense(players) {
-    const byPos = {};
-    players.forEach(p => { byPos[p.position] = byPos[p.position] || []; byPos[p.position].push(p); });
-    for (const pos in byPos) byPos[pos].sort((a, b) => b.percentile - a.percentile);
-    
-    const starters = [], subs = [], backups = [], depth = [];
-    const allDBs = [...(byPos['CB'] || []), ...(byPos['S'] || [])].sort((a, b) => b.percentile - a.percentile);
-    
-    for (let i = 0; i < 4 && byPos['DE']?.[i]; i++) starters.push(byPos['DE'][i]);
-    for (let i = 0; i < 2 && byPos['DT']?.[i]; i++) starters.push(byPos['DT'][i]);
-    if (byPos['MLB']?.[0]) starters.push(byPos['MLB'][0]);
-    for (let i = 0; i < 2 && byPos['LB']?.[i]; i++) starters.push(byPos['LB'][i]);
-    for (let i = 0; i < 5 && allDBs[i]; i++) starters.push(allDBs[i]);
-    
-    if (byPos['LB']?.[2]) subs.push(byPos['LB'][2]);
-    if (allDBs[5]) subs.push(allDBs[5]);
-    
-    const used = { DE: 4, DT: 2, MLB: 1, LB: 3 };
-    const usedDBs = new Set(allDBs.slice(0, 6).map(p => p.name));
-    for (const pos of ['DE', 'DT', 'MLB', 'LB']) {
-        const idx = used[pos] || 0;
-        if (byPos[pos]?.[idx]) { backups.push(byPos[pos][idx]); used[pos] = idx + 1; }
-    }
-    for (const pos of ['CB', 'S']) {
-        const rem = (byPos[pos] || []).filter(p => !usedDBs.has(p.name));
-        if (rem[0]) { backups.push(rem[0]); usedDBs.add(rem[0].name); }
-    }
-    for (const pos of ['DE', 'DT', 'MLB', 'LB']) {
-        const idx = used[pos] || 0;
-        for (let i = idx; i < (byPos[pos]?.length || 0); i++) depth.push(byPos[pos][i]);
-    }
-    for (const pos of ['CB', 'S']) {
-        depth.push(...(byPos[pos] || []).filter(p => !usedDBs.has(p.name)));
-    }
-    return { starters, subs, backups, depth };
-}
-
-function calcWeightedEval(categories) {
-    let totalWeight = 0, weightedSum = 0;
-    for (const [tier, players] of Object.entries(categories)) {
-        const w = EVAL_WEIGHTS[tier];
-        for (const p of players) { weightedSum += p.percentile * w; totalWeight += w; }
-    }
-    return totalWeight > 0 ? weightedSum / totalWeight : 0;
-}
-
-function tierAvg(players) {
-    return players.length ? players.reduce((s, p) => s + p.percentile, 0) / players.length : 0;
-}
+// Personnel functions loaded from js/personnel/personnel-rules.js
 
 function checkStartGameButton() {
     const homeTeam = document.getElementById('homeTeamSelect').value;
@@ -265,7 +86,20 @@ async function startGame() {
     };
     
     // Load the selected rosters
-    await loadSelectedRosters(homeTeam, awayTeam);
+    const loadedRosters = await loadSelectedRosters(homeTeam, awayTeam);
+    rosters['home-offense'] = loadedRosters['home-offense'];
+    rosters['home-defense'] = loadedRosters['home-defense'];
+    rosters['away-offense'] = loadedRosters['away-offense'];
+    rosters['away-defense'] = loadedRosters['away-defense'];
+    
+    // Initialize stamina for all players
+    Object.keys(rosters).forEach(key => {
+        rosters[key].forEach(player => {
+            if (player.stamina === undefined) {
+                player.stamina = 100;
+            }
+        });
+    });
     
     console.log('Rosters loaded:', {
         'home-offense': rosters['home-offense'].length,
@@ -280,7 +114,7 @@ async function startGame() {
     
     
     // Initialize personnel for the game
-    updateRostersForPossession();
+    updateRostersForPossession(gameState, rosters);
     renderPersonnelSelection();
     updatePersonnelDisplay();
     
@@ -344,248 +178,22 @@ function refreshCacheTimer() {
     updateCacheTimer();
 }
 
-async function loadSelectedRosters(homeTeam, awayTeam) {
-    // Load home offense
-    const homeOffenseResp = await fetch(`rosters/${homeTeam.offenseFile}`);
-    rosters['home-offense'] = await homeOffenseResp.json();
-    rosters['home-offense'].forEach(p => { if (p.stamina === undefined) p.stamina = 100.0; });
-    
-    // Load home defense
-    const homeDefenseResp = await fetch(`rosters/${homeTeam.defenseFile}`);
-    rosters['home-defense'] = await homeDefenseResp.json();
-    rosters['home-defense'].forEach(p => { if (p.stamina === undefined) p.stamina = 100.0; });
-    
-    // Load away offense
-    const awayOffenseResp = await fetch(`rosters/${awayTeam.offenseFile}`);
-    rosters['away-offense'] = await awayOffenseResp.json();
-    rosters['away-offense'].forEach(p => { if (p.stamina === undefined) p.stamina = 100.0; });
-    
-    // Load away defense
-    const awayDefenseResp = await fetch(`rosters/${awayTeam.defenseFile}`);
-    rosters['away-defense'] = await awayDefenseResp.json();
-    rosters['away-defense'].forEach(p => { if (p.stamina === undefined) p.stamina = 100.0; });
-}
-
-// General helper to load JSON config files
-async function loadJsonConfig(path, defaultValue = null) {
-    try {
-        const response = await fetch(path);
-        if (!response.ok) {
-            throw new Error(`Failed to load ${path}: ${response.status}`);
-        }
-        return await response.json();
-    } catch (error) {
-        console.error(`Error loading ${path}:`, error);
-        if (defaultValue !== null) {
-            console.warn(`Using default value for ${path}`);
-            return defaultValue;
-        }
-        throw error;
-    }
-}
-
-// Load baseline rates
-async function loadBaselineRates() {
-    const defaultValue = {
-        "success-rate": 43.0,
-        "havoc-rate": 12.0,
-        "explosive-rate": 10.0
-    };
-    baselineRates = await loadJsonConfig('context/eval-format.json', defaultValue);
-}
-
-// Load timing configuration
-async function loadTiming() {
-    const defaultValue = {
-        "timeout-runoff": 6,
-        "winning-team": {
-            "run": 44,
-            "pass": 28
-        },
-        "losing-team": {
-            "run": 36,
-            "pass": 19
-        }
-    };
-    timingConfig = await loadJsonConfig('outcomes/timing.json', defaultValue);
-}
-
-// Load fatigue configuration
-async function loadFatigue() {
-    const defaultValue = {
-        "baseline-fatigue": 2.5,
-        "baseline-recovery": 2.25,
-        "position-modifiers": {
-            "always": {
-                "DE": 1.0,
-                "DT": 1.0
-            },
-            "run": {
-                "LB": 1.0,
-                "MLB": 1.0,
-                "RB": 1.0,
-                "OT": 0.5,
-                "OG": 0.5,
-                "C": 0.5
-            },
-            "pass": {
-                "WR": 1.0,
-                "CB": 1.0,
-                "S": 1.0
-            }
-        },
-        "effectiveness-curve": {
-            "high-stamina-threshold": 85,
-            "high-stamina-multiplier": 0.99,
-            "medium-stamina-threshold": 60,
-            "medium-stamina-multiplier": 0.80,
-            "min-multiplier": 0.20
-        }
-    };
-    fatigueConfig = await loadJsonConfig('fatigue.json', defaultValue);
-}
-
-// Load data files
-async function loadGameState() {
-    const defaultValue = {
-        possession: "home",
-        quarter: 1,
-        down: 1,
-        distance: 10,
-        "opp-yardline": 65,
-        score: { home: 0, away: 0 },
-        time: "15:00",
-        timeouts: { home: 3, away: 3 },
-        timeoutCalled: false
-    };
-    
-    try {
-        gameState = await loadJsonConfig('gamestate.json', defaultValue);
-        // Initialize timeouts if missing
-        if (!gameState.timeouts) {
-            gameState.timeouts = { home: 3, away: 3 };
-        }
-        if (gameState.timeoutCalled === undefined) {
-            gameState.timeoutCalled = false;
-        }
-    } catch (error) {
-        gameState = defaultValue;
-    }
-}
+// Team loading functions (loadSelectedRosters) loaded from js/team-selection/team-loader.js
+// Game state loading functions (loadJsonConfig, loadBaselineRates, loadTiming, loadFatigue, loadGameState) loaded from js/game-state/game-state-loader.js
 
 // loadTeams and loadRosters are now handled by team selection screen
 
-// Update which rosters are active based on possession
-function updateRostersForPossession() {
-    const possession = gameState.possession || 'home';
-    // The team with the ball uses their offense, the other team uses their defense
-    if (possession === 'home') {
-        rosters.offense = rosters['home-offense'];
-        rosters.defense = rosters['away-defense'];
-    } else {
-        rosters.offense = rosters['away-offense'];
-        rosters.defense = rosters['home-defense'];
-    }
-}
+// Game state update functions (updateRostersForPossession) loaded from js/game-state/game-state-updater.js
 
 async function loadFieldLocations() {
     fieldLocations = await loadJsonConfig('fieldlocations.json', []);
     renderField();
 }
 
-// Global helper to get location coordinates
-function getLocationCoords(locationName) {
-    if (!fieldLocations || !locationName) return null;
-    for (const section of fieldLocations) {
-        for (const loc of section.Locations) {
-            if (loc.Name === locationName) {
-                return { x: loc.X, y: loc.Y };
-            }
-        }
-    }
-    return null;
-}
+// Field location functions loaded from js/field/field-utils.js and js/field/field-location-utils.js
+// Use functions directly - they require fieldLocations parameter
 
-// Helper to resolve location name to full position object (name, x, y, section)
-// Does a global sweep to find all matches, then filters by side of Y=0 and section type
-function resolveLocationName(locationName, preferDefensive = false, preferredSection = null) {
-    if (!fieldLocations || !locationName) return null;
-    
-    // First, do a global sweep to find ALL matching location names
-    const allMatches = [];
-    for (const section of fieldLocations) {
-        for (const loc of section.Locations) {
-            if (loc.Name === locationName) {
-                allMatches.push({
-                    name: loc.Name,
-                    x: loc.X,
-                    y: loc.Y,
-                    section: section.Section
-                });
-            }
-        }
-    }
-    
-    if (allMatches.length === 0) return null;
-    if (allMatches.length === 1) return allMatches[0];
-    
-    // Multiple matches found - filter by criteria
-    let filtered = allMatches;
-    
-    // Filter by section if specified
-    if (preferredSection) {
-        const sectionFiltered = filtered.filter(m => 
-            m.section.toLowerCase().includes(preferredSection.toLowerCase())
-        );
-        if (sectionFiltered.length > 0) {
-            filtered = sectionFiltered;
-        }
-    }
-    
-    // Filter by side of Y=0 line (defensive = Y > 0, offensive = Y < 0)
-    if (preferDefensive) {
-        // Prefer defensive positions (Y > 0)
-        const defensiveMatches = filtered.filter(m => m.y > 0);
-        if (defensiveMatches.length > 0) {
-            filtered = defensiveMatches;
-        }
-    } else {
-        // Prefer offensive positions (Y < 0)
-        const offensiveMatches = filtered.filter(m => m.y < 0);
-        if (offensiveMatches.length > 0) {
-            filtered = offensiveMatches;
-        }
-    }
-    
-    // If still multiple matches, prefer positions closer to Y=0 (line of scrimmage)
-    if (filtered.length > 1) {
-        filtered.sort((a, b) => Math.abs(a.y) - Math.abs(b.y));
-    }
-    
-    return filtered[0];
-}
-
-// Helper to resolve formation position (handles both old format with x/y and new format with just name)
-function resolveFormationPosition(pos, preferDefensive = false, preferredSection = null) {
-    // If it's already a resolved position with x, y, return as-is
-    if (pos.x !== undefined && pos.y !== undefined) {
-        return pos;
-    }
-    // If it's just a string (location name), resolve it
-    if (typeof pos === 'string') {
-        return resolveLocationName(pos, preferDefensive, preferredSection);
-    }
-    // If it's an object with just a name, resolve it
-    if (pos.name && pos.x === undefined) {
-        const resolved = resolveLocationName(pos.name, preferDefensive, preferredSection);
-        return resolved ? { ...resolved, ...pos } : pos;
-    }
-    return pos;
-}
-
-async function loadStateMachine() {
-    stateMachine = await loadJsonConfig('play-state-machine.json', {});
-}
+// Game state loading functions (loadStateMachine) loaded from js/game-state/game-state-loader.js
 
 // Render functions
 function renderPersonnelSelection() {
@@ -865,8 +473,8 @@ function updatePersonnelDisplay() {
     if (!personnelDisplay) return;
     
     // Detect offensive personnel
-    const offensePersonnel = detectOffensivePersonnel();
-    const defensePersonnel = detectDefensivePersonnel();
+    const offensePersonnel = detectOffensivePersonnel(selectedPlayers, getPlayerById);
+    const defensePersonnel = detectDefensivePersonnel(selectedDefense, getPlayerById);
     
     // Update timeout counts
     const homeTimeouts = gameState.timeouts?.home || 3;
@@ -903,89 +511,7 @@ function updatePersonnelDisplay() {
     }
 }
 
-function detectOffensivePersonnel() {
-    if (selectedPlayers.length === 0) return 'No players selected';
-    
-    const players = selectedPlayers.map(id => getPlayerById(id)).filter(p => p);
-    const qb = players.filter(p => p.position === 'QB').length;
-    const rb = players.filter(p => p.position === 'RB').length;
-    const te = players.filter(p => p.position === 'TE').length;
-    const wr = players.filter(p => p.position === 'WR').length;
-    const ol = players.filter(p => ['OT', 'OG', 'C'].includes(p.position)).length;
-    
-    // Check for extra linemen (>5)
-    const hasExtraLinemen = ol > 5;
-    const asterisk = hasExtraLinemen ? '*' : '';
-    
-    // Wildcat if no QB
-    if (qb === 0) {
-        return hasExtraLinemen ? `WILDCAT* (${ol} linemen)` : 'WILDCAT';
-    }
-    
-    // Personnel format: (RB)(TE)(WR) with asterisk for extra linemen
-    // Support: 00, 01, 10, 11, 12, 13, 21, 22 + asterisk versions
-    
-    if (rb === 0 && te === 0 && wr === 5) {
-        return `00${asterisk} Personnel (0 RB, 0 TE, 5 WR${hasExtraLinemen ? `, ${ol} linemen` : ''})`;
-    } else if (rb === 0 && te === 1 && wr === 4) {
-        return `01${asterisk} Personnel (0 RB, 1 TE, 4 WR${hasExtraLinemen ? `, ${ol} linemen` : ''})`;
-    } else if (rb === 1 && te === 0 && wr === 4) {
-        return `10${asterisk} Personnel (1 RB, 0 TE, 4 WR${hasExtraLinemen ? `, ${ol} linemen` : ''})`;
-    } else if (rb === 1 && te === 1 && wr === 3) {
-        return `11${asterisk} Personnel (1 RB, 1 TE, 3 WR${hasExtraLinemen ? `, ${ol} linemen` : ''})`;
-    } else if (rb === 1 && te === 2 && wr === 2) {
-        return `12${asterisk} Personnel (1 RB, 2 TE, 2 WR${hasExtraLinemen ? `, ${ol} linemen` : ''})`;
-    } else if (rb === 1 && te === 3) {
-        return `13${asterisk} Personnel (1 RB, 3 TE${hasExtraLinemen ? `, ${ol} linemen` : ''})`;
-    } else if (rb === 2 && te === 1 && wr === 2) {
-        return `21${asterisk} Personnel (2 RB, 1 TE, 2 WR${hasExtraLinemen ? `, ${ol} linemen` : ''})`;
-    } else if (rb === 2 && te === 2 && wr === 1) {
-        return `22${asterisk} Personnel (2 RB, 2 TE, 1 WR${hasExtraLinemen ? `, ${ol} linemen` : ''})`;
-    } else {
-        // Custom format - show all positions
-        const parts = [];
-        if (rb > 0) parts.push(`${rb} RB`);
-        if (te > 0) parts.push(`${te} TE`);
-        if (wr > 0) parts.push(`${wr} WR`);
-        if (hasExtraLinemen) parts.push(`${ol} OL`);
-        return `${rb}${te}${wr}${asterisk} Personnel (${parts.join(', ')})`;
-    }
-}
-
-function detectDefensivePersonnel() {
-    if (selectedDefense.length === 0) return 'No players selected';
-    
-    const players = selectedDefense.map(id => getPlayerById(id)).filter(p => p);
-    const cb = players.filter(p => p.position === 'CB').length;
-    const s = players.filter(p => p.position === 'S').length;
-    const db = cb + s;
-    const lb = players.filter(p => p.position === 'LB' || p.position === 'MLB').length;
-    const dl = players.filter(p => ['DE', 'DT'].includes(p.position)).length;
-    
-    // Defensive personnel based on number and type of DBs
-    if (db === 4) {
-        return 'Base (4 DB)';
-    } else if (db === 5) {
-        // Distinguish between Nickel (3CB/2S) and Big Nickel (3S/2CB)
-        if (s === 3 && cb === 2) {
-            return 'Big Nickel (3 S, 2 CB)';
-        } else if (cb === 3 && s === 2) {
-            return 'Nickel (3 CB, 2 S)';
-        } else {
-            return `Nickel (5 DB: ${cb} CB, ${s} S)`;
-        }
-    } else if (db === 6) {
-        return 'Dime (6 DB)';
-    } else if (db === 7) {
-        return 'Quarter (7 DB)';
-    } else if (db >= 8) {
-        return 'Quarter+ (8+ DB)';
-    } else if (db === 3) {
-        return '3 DB (Rare)';
-    } else {
-        return `${db} DB (${cb} CB, ${s} S), ${lb} LB, ${dl} DL`;
-    }
-}
+// Personnel detection functions loaded from js/personnel/personnel-detection.js
 
 // Helper function to check if a location is a "box location"
 // Box locations: tight to tight (X: -5.5 to 5.5), all gaps, all defensive line techniques, QB/RB backfield, Over Center
@@ -1143,400 +669,9 @@ function renderField() {
     renderAssignmentArrows();
 }
 
-// Playcall definitions
-const offensivePlaycalls = {
-    'IZR left': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'IZR left' },
-        'OT': { category: 'Run Block', action: 'Zone inside left' },
-        'OG': { category: 'Run Block', action: 'Zone inside left' },
-        'C': { category: 'Run Block', action: 'Zone inside left' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Block', action: 'Block' }
-    },
-    'IZR right': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'IZR right' },
-        'OT': { category: 'Run Block', action: 'Zone inside right' },
-        'OG': { category: 'Run Block', action: 'Zone inside right' },
-        'C': { category: 'Run Block', action: 'Zone inside right' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Block', action: 'Block' }
-    },
-    'OZR left': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'OZR left' },
-        'OT': { category: 'Run Block', action: 'Zone outside left' },
-        'OG': { category: 'Run Block', action: 'Zone outside left' },
-        'C': { category: 'Run Block', action: 'Zone outside left' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Block', action: 'Block' }
-    },
-    'OZR right': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'OZR right' },
-        'OT': { category: 'Run Block', action: 'Zone outside right' },
-        'OG': { category: 'Run Block', action: 'Zone outside right' },
-        'C': { category: 'Run Block', action: 'Zone outside right' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Block', action: 'Block' }
-    },
-    'Power left': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'Left B gap' },
-        'OT': { category: 'Run Block', action: 'Gap left B' }, // Weak side tackle doesn't pull
-        'OG': { category: 'Run Block', action: 'Gap left A' }, // Weak side guard pulls (handled in applyOffensivePlaycall)
-        'C': { category: 'Run Block', action: 'Gap left A' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Run Block', action: 'Gap left C' }
-    },
-    'Power right': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'Right B gap' },
-        'OT': { category: 'Run Block', action: 'Gap right B' }, // Weak side tackle doesn't pull
-        'OG': { category: 'Run Block', action: 'Gap right A' }, // Weak side guard pulls (handled in applyOffensivePlaycall)
-        'C': { category: 'Run Block', action: 'Gap right A' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Run Block', action: 'Gap right C' }
-    },
-    'Counter left': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'Left C gap' },
-        'OT': { category: 'Run Block', action: 'Gap left B' }, // Weak side tackle pulls (handled in applyOffensivePlaycall)
-        'OG': { category: 'Run Block', action: 'Gap left A' }, // Weak side guard pulls (handled in applyOffensivePlaycall)
-        'C': { category: 'Run Block', action: 'Gap left A' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Run Block', action: 'Gap left C' }
-    },
-    'Counter right': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'Right C gap' },
-        'OT': { category: 'Run Block', action: 'Gap right B' }, // Weak side tackle pulls (handled in applyOffensivePlaycall)
-        'OG': { category: 'Run Block', action: 'Gap right A' }, // Weak side guard pulls (handled in applyOffensivePlaycall)
-        'C': { category: 'Run Block', action: 'Gap right A' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Run Block', action: 'Gap right C' }
-    },
-    'Duo': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'Left A gap' },
-        'OT': { category: 'Run Block', action: 'Combo' },
-        'OG': { category: 'Run Block', action: 'Combo' },
-        'C': { category: 'Run Block', action: 'Zone inside left' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Block', action: 'Block' }
-    },
-    'Iso': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'Left A gap' },
-        'OT': { category: 'Run Block', action: 'Zone inside left' },
-        'OG': { category: 'Run Block', action: 'Zone inside left' },
-        'C': { category: 'Run Block', action: 'Zone inside left' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Block', action: 'Block' }
-    },
-    'Shallow Cross': {
-        'QB': { category: 'Pass', action: '3 step drop' },
-        'RB': { category: 'Protect', action: 'Block right' },
-        'WR': { category: 'Route', action: '2 Slant' },
-        'TE': { category: 'Route', action: '6 Shallow dig' },
-        'OT': { category: 'Pass Block', action: 'Outside priority' },
-        'OG': { category: 'Pass Block', action: 'Inside priority' },
-        'C': { category: 'Pass Block', action: 'Inside priority' }
-    },
-    'Dagger': {
-        'QB': { category: 'Pass', action: '5 step drop' },
-        'RB': { category: 'Protect', action: 'Block left' },
-        'WR': { category: 'Route', action: '6 Shallow dig' },
-        'TE': { category: 'Route', action: '8 Post' },
-        'OT': { category: 'Pass Block', action: 'Outside priority' },
-        'OG': { category: 'Pass Block', action: 'Inside priority' },
-        'C': { category: 'Pass Block', action: 'Inside priority' }
-    },
-    'Flood': {
-        'QB': { category: 'Pass', action: '5 step drop' },
-        'RB': { category: 'Protect', action: 'Block right' },
-        'WR': { category: 'Route', action: '7 Corner' },
-        'TE': { category: 'Route', action: '1 Flat' },
-        'OT': { category: 'Pass Block', action: 'Outside priority' },
-        'OG': { category: 'Pass Block', action: 'Inside priority' },
-        'C': { category: 'Pass Block', action: 'Inside priority' }
-    },
-    'Levels': {
-        'QB': { category: 'Pass', action: '3 step drop' },
-        'RB': { category: 'Route', action: '1 Flat' },
-        'WR': { category: 'Route', action: '6 Shallow dig' },
-        'TE': { category: 'Route', action: 'Deep dig' },
-        'OT': { category: 'Pass Block', action: 'Inside priority' },
-        'OG': { category: 'Pass Block', action: 'Inside priority' },
-        'C': { category: 'Pass Block', action: 'Inside priority' }
-    },
-    'Sail': {
-        'QB': { category: 'Pass', action: '5 step drop' },
-        'RB': { category: 'Route', action: '1 Flat' },
-        'WR': { category: 'Route', action: '7 Corner' },
-        'TE': { category: 'Route', action: '5 Out' },
-        'OT': { category: 'Pass Block', action: 'Outside priority' },
-        'OG': { category: 'Pass Block', action: 'Inside priority' },
-        'C': { category: 'Pass Block', action: 'Inside priority' }
-    },
-    'Four Verticals': {
-        'QB': { category: 'Pass', action: '7 step drop' },
-        'RB': { category: 'Protect', action: 'Block left' },
-        'WR': { category: 'Route', action: '9 Go/Fly/Fade' },
-        'TE': { category: 'Route', action: '9 Go/Fly/Fade' },
-        'OT': { category: 'Pass Block', action: 'Outside priority' },
-        'OG': { category: 'Pass Block', action: 'Inside priority' },
-        'C': { category: 'Pass Block', action: 'Inside priority' }
-    },
-    'Curl flats': {
-        'QB': { category: 'Pass', action: '3 step drop' },
-        'RB': { category: 'Route', action: '1 Flat' },
-        'WR': { category: 'Route', action: '4 Curl/Hook' },
-        'TE': { category: 'Route', action: '4 Curl/Hook' },
-        'OT': { category: 'Pass Block', action: 'Inside priority' },
-        'OG': { category: 'Pass Block', action: 'Inside priority' },
-        'C': { category: 'Pass Block', action: 'Inside priority' }
-    },
-    'Mesh': {
-        'QB': { category: 'Pass', action: '3 step drop' },
-        'RB': { category: 'Route', action: '1 Flat' },
-        'WR': { category: 'Route', action: '2 Slant' },
-        'TE': { category: 'Route', action: '2 Slant' },
-        'OT': { category: 'Pass Block', action: 'Inside priority' },
-        'OG': { category: 'Pass Block', action: 'Inside priority' },
-        'C': { category: 'Pass Block', action: 'Inside priority' }
-    },
-    'Drive': {
-        'QB': { category: 'Pass', action: '3 step drop' },
-        'RB': { category: 'Route', action: '1 Flat' },
-        'WR': { category: 'Route', action: '6 Shallow dig' },
-        'TE': { category: 'Route', action: '6 Shallow dig' },
-        'OT': { category: 'Pass Block', action: 'Inside priority' },
-        'OG': { category: 'Pass Block', action: 'Inside priority' },
-        'C': { category: 'Pass Block', action: 'Inside priority' }
-    },
-    'Ohio': {
-        'QB': { category: 'Pass', action: '5 step drop' },
-        'RB': { category: 'Route', action: 'Wheel' },
-        'WR': { category: 'Route', action: '8 Post' },
-        'TE': { category: 'Route', action: '7 Corner' },
-        'OT': { category: 'Pass Block', action: 'Outside priority' },
-        'OG': { category: 'Pass Block', action: 'Inside priority' },
-        'C': { category: 'Pass Block', action: 'Inside priority' }
-    },
-    'QB Sneak': {
-        'QB': { category: 'Run', action: 'Sneak' },
-        'RB': { category: 'Run', action: 'Left A gap' },
-        'OT': { category: 'Run Block', action: 'Zone inside left' },
-        'OG': { category: 'Run Block', action: 'Zone inside left' },
-        'C': { category: 'Run Block', action: 'Zone inside left' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Block', action: 'Block' }
-    },
-    'Toss left': {
-        'QB': { category: 'Run', action: 'Toss left' },
-        'RB': { category: 'Run', action: 'OZR left' },
-        'OT': { category: 'Run Block', action: 'Zone outside left' },
-        'OG': { category: 'Run Block', action: 'Zone outside left' },
-        'C': { category: 'Run Block', action: 'Zone outside left' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Block', action: 'Block' }
-    },
-    'Toss right': {
-        'QB': { category: 'Run', action: 'Toss right' },
-        'RB': { category: 'Run', action: 'OZR right' },
-        'OT': { category: 'Run Block', action: 'Zone outside right' },
-        'OG': { category: 'Run Block', action: 'Zone outside right' },
-        'C': { category: 'Run Block', action: 'Zone outside right' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Block', action: 'Block' }
-    },
-    'Flea flicker': {
-        'QB': { category: 'Pass', action: 'Play action pass' },
-        'RB': { category: 'Run', action: 'Flea flicker' },
-        'WR': { category: 'Route', action: '9 Go/Fly/Fade' },
-        'TE': { category: 'Route', action: '9 Go/Fly/Fade' },
-        'OT': { category: 'Pass Block', action: 'Outside priority' },
-        'OG': { category: 'Pass Block', action: 'Inside priority' },
-        'C': { category: 'Pass Block', action: 'Inside priority' }
-    },
-    'Reverse left': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'IZR left' },
-        'WR': { category: 'Block', action: 'Jet Motion' },
-        'TE': { category: 'Block', action: 'Block' },
-        'OT': { category: 'Run Block', action: 'Zone outside left' },
-        'OG': { category: 'Run Block', action: 'Zone outside left' },
-        'C': { category: 'Run Block', action: 'Zone outside left' }
-    },
-    'Reverse right': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'IZR right' },
-        'WR': { category: 'Block', action: 'Jet Motion' },
-        'TE': { category: 'Block', action: 'Block' },
-        'OT': { category: 'Run Block', action: 'Zone outside right' },
-        'OG': { category: 'Run Block', action: 'Zone outside right' },
-        'C': { category: 'Run Block', action: 'Zone outside right' }
-    },
-    'Speed option left': {
-        'QB': { category: 'Run', action: 'Speed option left' },
-        'RB': { category: 'Run', action: 'OZR left' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Block', action: 'Block' },
-        'OT': { category: 'Run Block', action: 'Zone outside left' },
-        'OG': { category: 'Run Block', action: 'Zone outside left' },
-        'C': { category: 'Run Block', action: 'Zone outside left' }
-    },
-    'Speed option right': {
-        'QB': { category: 'Run', action: 'Speed option right' },
-        'RB': { category: 'Run', action: 'OZR right' },
-        'WR': { category: 'Block', action: 'Block' },
-        'TE': { category: 'Block', action: 'Block' },
-        'OT': { category: 'Run Block', action: 'Zone outside right' },
-        'OG': { category: 'Run Block', action: 'Zone outside right' },
-        'C': { category: 'Run Block', action: 'Zone outside right' }
-    },
-    'Jet sweep left': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'Sweep' },
-        'WR': { category: 'Block', action: 'Jet Motion' },
-        'TE': { category: 'Block', action: 'Block' },
-        'OT': { category: 'Run Block', action: 'Zone outside left' },
-        'OG': { category: 'Run Block', action: 'Pull' },
-        'C': { category: 'Run Block', action: 'Zone outside left' }
-    },
-    'Jet sweep right': {
-        'QB': { category: 'Run', action: 'Handoff' },
-        'RB': { category: 'Run', action: 'Sweep' },
-        'WR': { category: 'Block', action: 'Jet Motion' },
-        'TE': { category: 'Block', action: 'Block' },
-        'OT': { category: 'Run Block', action: 'Zone outside right' },
-        'OG': { category: 'Run Block', action: 'Pull' },
-        'C': { category: 'Run Block', action: 'Zone outside right' }
-    }
-};
-
-const defensivePlaycalls = {
-    'Cover 2': {
-        'CB': { category: 'Zone Short', action: 'Flat L' },
-        'S': { category: 'Zone Deep', action: 'Deep left (cov2)' },
-        'LB': { category: 'Zone Short', action: 'Curl/Hook L' },
-        'MLB': { category: 'Zone Short', action: 'Hole' },
-        'Nickel': { category: 'Zone Short', action: 'Curl/Hook L' }
-    },
-    'Cover 2 man': {
-        'CB': { category: 'Man Coverage', action: 'Inside technique man' },
-        'S': { category: 'Zone Deep', action: 'Deep left (cov2)' },
-        'LB': { category: 'Man Coverage', action: 'Inside technique man' },
-        'MLB': { category: 'Man Coverage', action: 'Inside technique man' }
-    },
-    'Tampa 2': {
-        'CB': { category: 'Zone Short', action: 'Flat L' },
-        'S': { category: 'Zone Deep', action: 'Deep left (cov2)' },
-        'LB': { category: 'Zone Short', action: 'Curl/Hook L' },
-        'MLB': { category: 'Zone Short', action: 'Deep hole/Tampa' }
-    },
-    'Cover 1 (man)': {
-        'CB': { category: 'Man Coverage', action: 'Inside technique man' },
-        'S': { category: 'Zone Deep', action: 'Deep middle 1/3' },
-        'LB': { category: 'Man Coverage', action: 'Inside technique man' },
-        'MLB': { category: 'Man Coverage', action: 'Inside technique man' }
-    },
-    'Cover 1 (force)': {
-        'CB': { category: 'Man Coverage', action: 'Outside technique man' },
-        'S': { category: 'Zone Deep', action: 'Deep middle 1/3' },
-        'LB': { category: 'Man Coverage', action: 'Inside technique man' },
-        'MLB': { category: 'Man Coverage', action: 'Inside technique man' }
-    },
-    'Cover 1 robber': {
-        'CB': { category: 'Man Coverage', action: 'Inside technique man' },
-        'S': { category: 'Zone Short', action: 'Robber' },
-        'LB': { category: 'Man Coverage', action: 'Inside technique man' },
-        'MLB': { category: 'Man Coverage', action: 'Inside technique man' }
-    },
-    'Cover 3': {
-        'CB': { category: 'Zone Deep', action: 'Deep left (cov3)' },
-        'S': { category: 'Zone Deep', action: 'Deep middle 1/3' },
-        'LB': { category: 'Zone Short', action: 'Hook L' },
-        'MLB': { category: 'Zone Short', action: 'Hook R' }
-    },
-    'Cover 4 (spot drop)': {
-        'CB': { category: 'Zone Deep', action: 'Deep far left (cov4)' },
-        'S': { category: 'Zone Deep', action: 'Deep middle 1/3' },
-        'LB': { category: 'Zone Short', action: 'Hook L' },
-        'MLB': { category: 'Zone Short', action: 'Hook R' }
-    },
-    'Cover 0 (LB blitz)': {
-        'CB': { category: 'Man Coverage', action: 'Inside technique man' },
-        'S': { category: 'Man Coverage', action: 'Inside technique man' },
-        'LB': { category: 'Rush', action: 'Left A gap' },
-        'MLB': { category: 'Rush', action: 'Right A gap' }
-    },
-    'Cover 0 (CB blitz)': {
-        'CB': { category: 'Rush', action: 'Left C gap' },
-        'S': { category: 'Man Coverage', action: 'Inside technique man' },
-        'LB': { category: 'Man Coverage', action: 'Inside technique man' },
-        'MLB': { category: 'Man Coverage', action: 'Inside technique man' }
-    },
-    'Quarters Match 3x1': 'bracket-3x1',
-    'Quarters Match 2x2': 'bracket-2x2'
-};
-
-// Assignment categories and actions
-const offensiveAssignments = {
-    'QB': {
-        'Pass': ['5 step drop', 'Boot right', 'Boot left', 'Play action pass', '3 step drop', '7 step drop'],
-        'Run': ['QB draw', 'Zone read left', 'Zone read right', 'Speed option left', 'Speed option right', 'Toss left', 'Toss right', 'Sneak', 'Handoff']
-    },
-    'RB': {
-        'Protect': ['Block left', 'Block right', 'Leak/delay left', 'Leak/delay right'],
-        'Run': ['IZR left', 'IZR right', 'OZR left', 'OZR right', 'Left A gap', 'Left B gap', 'Right A gap', 'Right B gap', 'Left C gap', 'Right C gap', 'Flea flicker', 'Sweep'],
-        'Route': ['Wheel', 'Tunnel screen', '1 Flat', 'Short hitch', 'Flat left', 'Flat right', 'Angle']
-    },
-    'WR': {
-        'Block': ['Block', 'Jet Motion', 'Jet motion option'],
-        'Route': ['1 Flat', 'Short hitch', '2 Slant', 'Slant-and-go', '3 Comeback', '4 Curl/Hook', '5 Out', 'Out-and-up', 'Deep out', '6 Shallow dig', 'Drag', '7 Corner', '8 Post', 'Skinny post', 'Post-corner', '9 Go/Fly/Fade', 'Deep dig', 'Whip route', 'Chip+Delay', 'Screen']
-    },
-    'TE': {
-        'Block': ['Block', 'Jet Motion', 'Jet motion option'],
-        'Pass Block': ['Inside priority', 'Outside priority', 'Slide left', 'Slide right'],
-        'Run Block': ['Zone inside left', 'Zone inside right', 'Zone outside left', 'Zone outside right', 'Gap left A', 'Gap left B', 'Gap left C', 'Gap right A', 'Gap right B', 'Gap right C', 'Pull', 'Seal edge', 'Combo'],
-        'Route': ['1 Flat', 'Short hitch', '2 Slant', 'Slant-and-go', '3 Comeback', '4 Curl/Hook', '5 Out', 'Out-and-up', 'Deep out', '6 Shallow dig', 'Drag', '7 Corner', '8 Post', 'Skinny post', 'Post-corner', '9 Go/Fly/Fade', 'Deep dig', 'Whip route', 'Chip+Delay']
-    },
-    'OT': {
-        'Pass Block': ['Inside priority', 'Outside priority', 'Slide left', 'Slide right'],
-        'Run Block': ['Zone inside left', 'Zone inside right', 'Zone outside left', 'Zone outside right', 'Gap left A', 'Gap left B', 'Gap left C', 'Gap right A', 'Gap right B', 'Gap right C', 'Pull', 'Seal edge', 'Combo']
-    },
-    'OG': {
-        'Pass Block': ['Inside priority', 'Outside priority', 'Slide left', 'Slide right'],
-        'Run Block': ['Zone inside left', 'Zone inside right', 'Zone outside left', 'Zone outside right', 'Gap left A', 'Gap left B', 'Gap left C', 'Gap right A', 'Gap right B', 'Gap right C', 'Pull', 'Seal edge', 'Combo']
-    },
-    'C': {
-        'Pass Block': ['Inside priority', 'Outside priority', 'Slide left', 'Slide right'],
-        'Run Block': ['Zone inside left', 'Zone inside right', 'Zone outside left', 'Zone outside right', 'Gap left A', 'Gap left B', 'Gap left C', 'Gap right A', 'Gap right B', 'Gap right C', 'Pull', 'Seal edge', 'Combo']
-    }
-};
-
-    // All defensive assignment options available to all positions
-const allDefensiveCategories = {
-    'Man Coverage': ['Inside technique man', 'Deep technique man', 'Outside technique man', 'Trail technique man', 'Inside match man', 'Outside match man'],
-    'Quarters Match': ['LOCK+MEG', 'TRAIL+APEX', 'CAP+DEEP', 'CUT+CROSSER'],
-    'Zone Deep': ['Deep middle 1/3', 'Deep left (cov2)', 'Deep right (cov2)', 'Deep left (cov3)', 'Deep right (cov3)', 'Deep far left (cov4)', 'Deep far right (cov4)', 'Deep seam left (cov4)', 'Deep seam right (cov4)', 'Deep left/right seam+fit shallow'],
-    'Zone Short': ['Robber', 'Flat/Out L', 'Flat/Out R', 'Curl/Flat L', 'Curl/Flat R', 'Curl/Hook L', 'Curl/Hook R', 'Curl/Hole L', 'Curl/Hole R', 'Flat L', 'Flat R', 'Out L', 'Out R', 'Curl L', 'Curl R', 'Hook L', 'Hook R', 'Hole', 'Deep hole/Tampa', 'Spy'],
-    'Rush': ['Left A gap', 'Right A gap', 'Left B gap', 'Right B gap', 'Left C gap', 'Right C gap', 'Contain'],
-    'Spy': ['Spy']
-};
-
-// All defensive positions get all options
-const defensiveAssignments = {
-    'CB': allDefensiveCategories,
-    'S': allDefensiveCategories,
-    'LB': allDefensiveCategories,
-    'MLB': allDefensiveCategories,
-    'DE': allDefensiveCategories,
-    'DT': allDefensiveCategories
-};
+// Playcall definitions loaded from js/assignments/playcalls-data.js
+// Assignment data loaded from js/assignments/assignments-data.js
+// Formation data loaded from js/formations/formations-data.js
 
 function renderAssignments() {
     const offenseSkillAssignments = document.getElementById('offenseSkillAssignments');
@@ -1559,7 +694,7 @@ function renderAssignments() {
         
         offensivePlaycallSelect.onchange = (e) => {
             if (e.target.value) {
-                applyOffensivePlaycall(e.target.value);
+                applyOffensivePlaycall(e.target.value, offensivePlaycalls, selectedPlayers, playerPositions, getPlayerById, updateAssignment, updateManCoverageSelector, renderPlaycallDiagram);
             }
         };
     }
@@ -1575,7 +710,7 @@ function renderAssignments() {
         
         defensivePlaycallSelect.onchange = (e) => {
             if (e.target.value) {
-                applyDefensivePlaycall(e.target.value);
+                applyDefensivePlaycall(e.target.value, defensivePlaycalls, selectedDefense, selectedPlayers, playerPositions, fieldLocations, assignments, getPlayerById, getLocationCoords, getDefaultGapFromLocation, updateAssignment, assignManCoverage, applyBracketPlaycall, renderField, renderPlayerMarkers, renderDefensePlaycallDiagram);
             }
         };
     }
@@ -1596,7 +731,7 @@ function renderAssignments() {
         if (!player) return;
         
         const location = playerPositions[playerId]?.location || 'Not placed';
-        const item = createAssignmentItem(player, 'offense', location);
+        const item = createAssignmentItem(player, 'offense', location, offensiveAssignments, defensiveAssignments, selectedPlayers, getPlayerById, populateActions, updateAssignment, updateManCoverageSelector, getDefaultGapFromLocation, assignments);
         
         // Group by position: QB + eligibles (QB, RB, WR, TE) vs linemen (OT, OG, C)
         if (['QB', 'RB', 'WR', 'TE'].includes(player.position)) {
@@ -1622,7 +757,7 @@ function renderAssignments() {
         }
         
         const location = playerPositions[playerId]?.location || 'Not placed';
-        const item = createAssignmentItem(player, 'defense', location);
+        const item = createAssignmentItem(player, 'defense', location, offensiveAssignments, defensiveAssignments, selectedPlayers, getPlayerById, populateActions, updateAssignment, updateManCoverageSelector, getDefaultGapFromLocation, assignments);
         
         // Group by position: DL (DE, DT), LBs (LB, MLB), Secondary (CB, S)
         if (['DE', 'DT'].includes(player.position)) {
@@ -2578,929 +1713,8 @@ function renderDefensePlaycallDiagram() {
     });
 }
 
-function applyOffensivePlaycall(playcallName) {
-    const playcall = offensivePlaycalls[playcallName];
-    if (!playcall) return;
-    
-    // Group players by position for better assignment distribution
-    const playersByPosition = {};
-    selectedPlayers.forEach((playerId) => {
-        const player = getPlayerById(playerId);
-        if (!player) return;
-        if (!playersByPosition[player.position]) {
-            playersByPosition[player.position] = [];
-        }
-        playersByPosition[player.position].push(player);
-    });
-    
-    selectedPlayers.forEach((playerId) => {
-        const player = getPlayerById(playerId);
-        if (!player) return;
-        
-        let assignment = playcall[player.position];
-        if (assignment) {
-            // Special handling for Power and Counter plays - weak side pulls
-            const pos = playerPositions[playerId];
-            if (pos && pos.location && (['Power left', 'Power right', 'Counter left', 'Counter right'].includes(playcallName))) {
-                // Determine if player is on left or right side
-                const location = pos.location || '';
-                const isLeftSide = location.includes('Left');
-                const isRightSide = location.includes('Right');
-                
-                // If location name doesn't specify, check X coordinate
-                let playerIsLeft = isLeftSide;
-                let playerIsRight = isRightSide;
-                
-                if (!isLeftSide && !isRightSide && pos.x !== undefined) {
-                    // Get canvas width to determine center
-                    const container = document.getElementById('fieldContainer');
-                    const canvasWidth = container ? container.offsetWidth : 1000;
-                    const centerX = canvasWidth / 2;
-                    playerIsLeft = pos.x < centerX;
-                    playerIsRight = pos.x >= centerX;
-                }
-                
-                // Determine weak side based on play direction
-                const isPowerLeft = playcallName === 'Power left';
-                const isPowerRight = playcallName === 'Power right';
-                const isCounterLeft = playcallName === 'Counter left';
-                const isCounterRight = playcallName === 'Counter right';
-                
-                const weakSideIsRight = isPowerLeft || isCounterLeft;
-                const weakSideIsLeft = isPowerRight || isCounterRight;
-                
-                // Check if this player is on the weak side
-                const isWeakSide = (weakSideIsRight && playerIsRight) || (weakSideIsLeft && playerIsLeft);
-                
-                if (isWeakSide) {
-                    if (player.position === 'OG') {
-                        // Weak side guard always pulls in Power and Counter
-                        assignment = { category: 'Run Block', action: 'Pull' };
-                    } else if (player.position === 'OT') {
-                        // Weak side tackle only pulls in Counter, not Power
-                        if (isCounterLeft || isCounterRight) {
-                            assignment = { category: 'Run Block', action: 'Pull' };
-                        }
-                        // In Power, OT stays with default zone assignment
-                    }
-                }
-            }
-            
-            // Update the assignment
-            updateAssignment(player, 'offense', assignment.category, assignment.action);
-            
-            // Update the UI
-            if (window.assignmentItems && window.assignmentItems.offense[player.name]) {
-                const { item } = window.assignmentItems.offense[player.name];
-                const selects = item.querySelectorAll('select');
-                const categorySelect = selects[0];
-                const actionSelect = selects[1];
-                
-                if (categorySelect && actionSelect) {
-                    categorySelect.value = assignment.category;
-                    // Trigger change to populate actions
-                    const changeEvent = new Event('change', { bubbles: true });
-                    categorySelect.dispatchEvent(changeEvent);
-                    
-                    // Set action after category populates
-                    setTimeout(() => {
-                        if (actionSelect.options.length > 0) {
-                            // Find matching action or use first available
-                            let found = false;
-                            for (let i = 0; i < actionSelect.options.length; i++) {
-                                if (actionSelect.options[i].value === assignment.action) {
-                                    actionSelect.value = assignment.action;
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (!found && actionSelect.options.length > 1) {
-                                actionSelect.selectedIndex = 1; // Skip empty option
-                            }
-                            actionSelect.dispatchEvent(new Event('change', { bubbles: true }));
-                            // Update man coverage selector visibility
-                            updateManCoverageSelector(item, player, 'offense', assignment.category, assignment.action);
-                        }
-                    }, 10);
-                }
-            }
-        }
-    });
-    
-    // Update playcall diagram
-    renderPlaycallDiagram();
-}
-
-function applyDefensivePlaycall(playcallName) {
-    // Extract cover number from playcall name (0-4)
-    // Special case: Cover 2 man uses Cover 2 backend but man coverage underneath
-    const isCover2Man = playcallName.includes('Cover 2 man');
-    let coverNumber = null;
-    if (playcallName.includes('Cover 0')) {
-        coverNumber = 0;
-    } else if (playcallName.includes('Cover 1')) {
-        coverNumber = 1;
-    } else if (playcallName.includes('Cover 2')) {
-        coverNumber = 2;
-    } else if (playcallName.includes('Cover 3')) {
-        coverNumber = 3;
-    } else if (playcallName.includes('Cover 4')) {
-        coverNumber = 4;
-    }
-    
-    // Handle Quarters Match playcalls specially
-    if (playcallName.includes('Quarters Match')) {
-        applyBracketPlaycall(playcallName);
-        return;
-    }
-    
-    if (coverNumber === null) {
-        // Fallback to old system for non-cover playcalls
-        const playcall = defensivePlaycalls[playcallName];
-        if (!playcall) return;
-        
-        selectedDefense.forEach((playerId) => {
-            const player = getPlayerById(playerId);
-            if (!player) return;
-            
-            const assignment = playcall[player.position];
-            if (assignment && typeof assignment === 'object') {
-                let action = assignment.action;
-                // Adjust L/R zone assignments based on player field position
-                if (assignment.category === 'Zone Short' || assignment.category === 'Zone Deep') {
-                    const pos = playerPositions[playerId];
-                    if (pos && pos.location) {
-                        const coords = getLocationCoords(pos.location);
-                        if (coords) {
-                            const isLeft = coords.x < 0;
-                            // Replace L/R in zone name based on actual position
-                            if (action.includes(' L') && !isLeft) {
-                                action = action.replace(' L', ' R');
-                            } else if (action.includes(' R') && isLeft) {
-                                action = action.replace(' R', ' L');
-                            }
-                            // Handle (cov2), (cov3), (cov4) variants
-                            if (action.includes('left') && !isLeft) {
-                                action = action.replace('left', 'right');
-                            } else if (action.includes('right') && isLeft) {
-                                action = action.replace('right', 'left');
-                            }
-                        }
-                    }
-                }
-                updateAssignment(player, 'defense', assignment.category, action);
-            } else if (player.position === 'DE' || player.position === 'DT') {
-                // DL always rush - get gap from technique alignment
-                const location = playerPositions[playerId]?.location || '';
-                const defaultGap = getDefaultGapFromLocation(location, player);
-                if (defaultGap) {
-                    updateAssignment(player, 'defense', 'Rush', defaultGap);
-                }
-            }
-        });
-        updateDefensivePlaycallUI();
-        renderDefensePlaycallDiagram();
-        return;
-    }
-    
-    // Get all defensive players grouped by position
-    const playersByPosition = {
-        'CB': [],
-        'S': [],
-        'LB': [],
-        'MLB': [],
-        'DE': [],
-        'DT': []
-    };
-    
-    selectedDefense.forEach((playerId) => {
-        const player = getPlayerById(playerId);
-        if (!player) return;
-        if (playersByPosition[player.position]) {
-            playersByPosition[player.position].push(player);
-        }
-    });
-    
-    // Deep zone assignments based on cover number
-    const deepZoneAssignments = {
-        0: [],
-        1: ['Deep middle 1/3'],
-        2: ['Deep left (cov2)', 'Deep right (cov2)'],
-        3: ['Deep left (cov3)', 'Deep right (cov3)', 'Deep middle 1/3'],
-        4: ['Deep far left (cov4)', 'Deep far right (cov4)', 'Deep seam left (cov4)', 'Deep seam right (cov4)']
-    };
-    
-    const deepZones = deepZoneAssignments[coverNumber] || [];
-    
-    // Prioritize safeties for deep zones, then CBs
-    const safeties = playersByPosition['S'];
-    const cbs = playersByPosition['CB'];
-    const deepZonePlayers = [...safeties, ...cbs]; // Safeties first
-    
-    // Assign deep zones to safeties first, then CBs
-    deepZones.forEach((zone, index) => {
-        if (index < deepZonePlayers.length) {
-            const player = deepZonePlayers[index];
-            updateAssignment(player, 'defense', 'Zone Deep', zone);
-        }
-    });
-    
-    // Track which DBs got deep zones
-    const deepZoneAssigned = deepZonePlayers.slice(0, deepZones.length);
-    
-    // Remaining DBs get man (Cover 0/1, Cover 2 man) or zone short (Cover 2-4)
-    const allDBs = [...safeties, ...cbs];
-    const remainingDBs = allDBs.filter(db => !deepZoneAssigned.includes(db));
-    const useMan = coverNumber <= 1 || isCover2Man;
-    
-    // Helper function to calculate distance between two field coordinates
-    function calculateDistance(coord1, coord2) {
-        const dx = coord1.x - coord2.x;
-        const dy = coord1.y - coord2.y;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
-    
-    // Helper function to assign man coverage to nearest target
-    function assignManCoverage(defender, eligibleOffense, action = 'Inside technique man') {
-        const defenderId = selectedDefense.find(id => {
-            const p = getPlayerById(id);
-            return p && p.name === defender.name;
-        });
-        if (!defenderId) return false;
-        
-        const defenderPos = playerPositions[defenderId];
-        if (!defenderPos || !defenderPos.location) return false;
-        
-        const defenderCoords = getLocationCoords(defenderPos.location);
-        if (!defenderCoords) return false;
-        
-        // Find nearest uncovered eligible offensive player
-        let nearestTarget = null;
-        let nearestDistance = Infinity;
-        
-        eligibleOffense.forEach((offense) => {
-            if (!offense.covered) {
-                const distance = calculateDistance(defenderCoords, offense.coords);
-                if (distance < nearestDistance) {
-                    nearestDistance = distance;
-                    nearestTarget = offense;
-                }
-            }
-        });
-        
-        if (nearestTarget) {
-            // Store man coverage target before calling updateAssignment
-            if (!assignments.defense[defender.name]) assignments.defense[defender.name] = {};
-            assignments.defense[defender.name].manCoverageTarget = nearestTarget.player.name;
-            // Now update assignment (which will preserve the manCoverageTarget)
-            updateAssignment(defender, 'defense', 'Man Coverage', action);
-            nearestTarget.covered = true; // Mark as covered
-            return true;
-        }
-        return false;
-    }
-    
-    if (useMan) {
-        // Man coverage - assign to nearest eligible offensive players using coordinate distance
-        const eligibleOffense = [];
-        selectedPlayers.forEach((playerId) => {
-            const player = getPlayerById(playerId);
-            if (player && ['WR', 'TE', 'RB'].includes(player.position)) {
-                const pos = playerPositions[playerId];
-                if (pos && pos.location) {
-                    const locCoords = getLocationCoords(pos.location);
-                    if (locCoords) {
-                        eligibleOffense.push({ 
-                            player, 
-                            playerId,
-                            coords: locCoords,
-                            covered: false // Track if already assigned
-                        });
-                    }
-                }
-            }
-        });
-        
-        if (coverNumber === 0) {
-            // Cover 0: Need exactly 5 man-to-man assignments (3-5 CB, 0-2 LB)
-            // Also need 2 LBs to blitz (not in man coverage)
-            // So: 5 man coverage (3-5 CB, 0-2 LB) + 2 LB blitz = 7 defensive backs/LBs
-            // The remaining 4 are DL who rush
-            
-            const allLBs = [...playersByPosition['LB'], ...playersByPosition['MLB']];
-            const manCoveragePlayers = [];
-            let manCoverageCount = 0;
-            const targetManCount = 5;
-            let lbManCount = 0;
-            const maxLBManCount = 2; // Maximum 2 LBs in man coverage
-            
-            // First, assign CBs to man coverage (prioritize CBs, need 3-5)
-            for (const cb of cbs) {
-                if (manCoverageCount >= targetManCount) break;
-                if (assignManCoverage(cb, eligibleOffense, 'Inside technique man')) {
-                    manCoveragePlayers.push(cb);
-                    manCoverageCount++;
-                }
-            }
-            
-            // Then assign safeties if we need more (but prefer LBs if we haven't used 2 yet)
-            // Actually, for Cover 0, safeties typically also play man, so assign them
-            for (const s of safeties) {
-                if (manCoverageCount >= targetManCount) break;
-                if (assignManCoverage(s, eligibleOffense, 'Inside technique man')) {
-                    manCoveragePlayers.push(s);
-                    manCoverageCount++;
-                }
-            }
-            
-            // Finally, assign LBs if we still need more (up to 2 LBs for man coverage)
-            // But we need to reserve 2 LBs for blitz, so only use LBs if we have enough
-            const availableLBsForMan = allLBs.length - 2; // Reserve 2 for blitz
-            for (const lb of allLBs) {
-                if (manCoverageCount >= targetManCount || lbManCount >= Math.min(maxLBManCount, availableLBsForMan)) break;
-                if (assignManCoverage(lb, eligibleOffense, 'Inside technique man')) {
-                    manCoveragePlayers.push(lb);
-                    manCoverageCount++;
-                    lbManCount++;
-                }
-            }
-            
-            // If we still don't have 5, use more LBs (but this means we'll have fewer blitzers)
-            if (manCoverageCount < targetManCount) {
-                for (const lb of allLBs) {
-                    if (manCoverageCount >= targetManCount) break;
-                    if (manCoveragePlayers.includes(lb)) continue; // Skip already assigned
-                    if (assignManCoverage(lb, eligibleOffense, 'Inside technique man')) {
-                        manCoveragePlayers.push(lb);
-                        manCoverageCount++;
-                        lbManCount++;
-                    }
-                }
-            }
-        } else if (isCover2Man) {
-            // Cover 2 man: 2 safeties already have deep zones, assign remaining DBs (CBs) to man coverage
-            remainingDBs.forEach((db) => {
-                assignManCoverage(db, eligibleOffense, 'Inside technique man');
-            });
-        } else {
-            // Cover 1: Assign all remaining DBs to man coverage
-            remainingDBs.forEach((db) => {
-                assignManCoverage(db, eligibleOffense, 'Inside technique man');
-            });
-        }
-    } else {
-        // Zone short for remaining DBs
-        // For Cover 2: CBs get hard flat, but nickel CB plays curl/hook like LB
-        if (coverNumber === 2) {
-            // Separate CBs from other DBs
-            const remainingCBs = remainingDBs.filter(db => db.position === 'CB');
-            const otherDBs = remainingDBs.filter(db => db.position !== 'CB');
-            
-            // In Cover 2: 2 outside CBs play flat, nickel CB plays curl/hook
-            // Sort CBs by X position to identify outside vs nickel
-            const cbsWithPositions = remainingCBs.map(cb => {
-                const cbPlayerId = selectedDefense.find(id => {
-                    const p = getPlayerById(id);
-                    return p && p.name === cb.name;
-                });
-                if (cbPlayerId) {
-                    const cbPos = playerPositions[cbPlayerId];
-                    if (cbPos && cbPos.location) {
-                        const cbCoords = getLocationCoords(cbPos.location);
-                        return { cb, coords: cbCoords, location: cbPos.location };
-                    }
-                }
-                return { cb, coords: null, location: null };
-            }).filter(item => item.coords !== null);
-            
-            // Sort by X coordinate (left to right)
-            cbsWithPositions.sort((a, b) => a.coords.x - b.coords.x);
-            
-            // Identify nickel CB (typically in slot position or middle CB)
-            // Nickel is usually the one in slot position or the middle of the 3
-            const nickelCB = cbsWithPositions.find(item => 
-                item.location && (item.location.includes('Slot') || item.location.includes('Seam'))
-            ) || (cbsWithPositions.length === 3 ? cbsWithPositions[1] : null); // Middle CB if 3 total
-            
-            // Assign outside CBs to flat
-            cbsWithPositions.forEach((item, index) => {
-                if (item === nickelCB) {
-                    // Nickel CB plays curl/hook L (like a linebacker)
-                    updateAssignment(item.cb, 'defense', 'Zone Short', 'Curl/Hook L');
-                } else {
-                    // Outside CBs play flat based on position
-                    const flatAction = item.coords.x < 0 ? 'Flat L' : 'Flat R';
-                    updateAssignment(item.cb, 'defense', 'Zone Short', flatAction);
-                }
-            });
-            
-            // Other DBs (safeties that didn't get deep zones) get hook
-            otherDBs.forEach((db) => {
-                updateAssignment(db, 'defense', 'Zone Short', 'Hook');
-            });
-        } else {
-            remainingDBs.forEach((db) => {
-                updateAssignment(db, 'defense', 'Zone Short', 'Hook');
-            });
-        }
-    }
-    
-    // LBs get man (Cover 0/1) or zone short (Cover 2-4), or blitz (Cover 0)
-    const allLBs = [...playersByPosition['LB'], ...playersByPosition['MLB']];
-    
-    if (coverNumber === 0) {
-        // Cover 0: 2 LBs must blitz (not in man coverage)
-        // Find LBs that are NOT in man coverage
-        const lbManCoverage = allLBs.filter(lb => {
-            const assignment = assignments.defense[lb.name];
-            return assignment && assignment.category === 'Man Coverage';
-        });
-        
-        // Assign 2 LBs to blitz (from those not in man coverage)
-        const lbBlitzers = allLBs.filter(lb => !lbManCoverage.includes(lb));
-        let blitzCount = 0;
-        const targetBlitzCount = 2;
-        
-        // Common blitz gaps
-        const blitzGaps = ['Left A gap', 'Right A gap', 'Left B gap', 'Right B gap'];
-        
-        lbBlitzers.forEach((lb) => {
-            if (blitzCount >= targetBlitzCount) return;
-            
-            const lbPlayerId = selectedDefense.find(id => {
-                const p = getPlayerById(id);
-                return p && p.name === lb.name;
-            });
-            if (!lbPlayerId) return;
-            
-            // Assign blitz gap based on position
-            const gap = blitzGaps[blitzCount % blitzGaps.length];
-            updateAssignment(lb, 'defense', 'Rush', gap);
-            blitzCount++;
-        });
-        
-        // If we don't have enough LBs for blitz, that's a personnel issue
-        // But we should still try to assign what we have
-    } else if (isCover2Man) {
-        // Cover 2 man: LBs play man coverage (5 total: CBs + LBs)
-        // Get eligible offensive players for man coverage
-        const eligibleOffense = [];
-        selectedPlayers.forEach((playerId) => {
-            const player = getPlayerById(playerId);
-            if (player && ['WR', 'TE', 'RB'].includes(player.position)) {
-                const pos = playerPositions[playerId];
-                if (pos && pos.location) {
-                    const locCoords = getLocationCoords(pos.location);
-                    if (locCoords) {
-                        // Check if already covered by a DB
-                        let covered = false;
-                        remainingDBs.forEach((db) => {
-                            const assignment = assignments.defense[db.name];
-                            if (assignment && assignment.manCoverageTarget === player.name) {
-                                covered = true;
-                            }
-                        });
-                        
-                        eligibleOffense.push({ 
-                            player, 
-                            playerId,
-                            coords: locCoords,
-                            covered: covered
-                        });
-                    }
-                }
-            }
-        });
-        
-        // Assign LBs to man coverage
-        allLBs.forEach((lb) => {
-            assignManCoverage(lb, eligibleOffense, 'Inside technique man');
-        });
-    } else if (coverNumber === 2) {
-        // For Cover 2: LBs/nickels get Curl/Hook, MLB gets Hole
-        allLBs.forEach((lb) => {
-            if (lb.position === 'MLB') {
-                updateAssignment(lb, 'defense', 'Zone Short', 'Hole');
-            } else {
-                // Assign Curl/Hook based on field position
-                const lbPlayerId = selectedDefense.find(id => {
-                    const p = getPlayerById(id);
-                    return p && p.name === lb.name;
-                });
-                if (lbPlayerId) {
-                    const lbPos = playerPositions[lbPlayerId];
-                    if (lbPos && lbPos.location) {
-                        const lbCoords = getLocationCoords(lbPos.location);
-                        if (lbCoords) {
-                            const curlHookAction = lbCoords.x < 0 ? 'Curl/Hook L' : 'Curl/Hook R';
-                            updateAssignment(lb, 'defense', 'Zone Short', curlHookAction);
-                        } else {
-                            updateAssignment(lb, 'defense', 'Zone Short', 'Curl/Hook L');
-                        }
-                    } else {
-                        updateAssignment(lb, 'defense', 'Zone Short', 'Curl/Hook L');
-                    }
-                }
-            }
-        });
-    } else if (useMan) {
-        // Get eligible offensive players (including ones not yet covered by DBs)
-        const eligibleOffense = [];
-        selectedPlayers.forEach((playerId) => {
-            const player = getPlayerById(playerId);
-            if (player && ['WR', 'TE', 'RB'].includes(player.position)) {
-                const pos = playerPositions[playerId];
-                if (pos && pos.location) {
-                    const locCoords = getLocationCoords(pos.location);
-                    if (locCoords) {
-                        // Check if already covered by a DB
-                        let covered = false;
-                        remainingDBs.forEach((db) => {
-                            const assignment = assignments.defense[db.name];
-                            if (assignment && assignment.manCoverageTarget === player.name) {
-                                covered = true;
-                            }
-                        });
-                        
-                        eligibleOffense.push({ 
-                            player, 
-                            playerId,
-                            coords: locCoords,
-                            covered: covered
-                        });
-                    }
-                }
-            }
-        });
-        
-        // Assign each LB to nearest uncovered eligible offensive player
-        allLBs.forEach((lb) => {
-            const lbPlayerId = selectedDefense.find(id => {
-                const p = getPlayerById(id);
-                return p && p.name === lb.name;
-            });
-            if (!lbPlayerId) return;
-            
-            const lbPos = playerPositions[lbPlayerId];
-            if (!lbPos || !lbPos.location) return;
-            
-            const lbCoords = getLocationCoords(lbPos.location);
-            if (!lbCoords) return;
-            
-            // Find nearest uncovered eligible offensive player
-            let nearestTarget = null;
-            let nearestDistance = Infinity;
-            
-            eligibleOffense.forEach((offense) => {
-                if (!offense.covered) {
-                    const distance = calculateDistance(lbCoords, offense.coords);
-                    if (distance < nearestDistance) {
-                        nearestDistance = distance;
-                        nearestTarget = offense;
-                    }
-                }
-            });
-            
-            if (nearestTarget) {
-                // Store man coverage target before calling updateAssignment
-                if (!assignments.defense[lb.name]) assignments.defense[lb.name] = {};
-                assignments.defense[lb.name].manCoverageTarget = nearestTarget.player.name;
-                // Now update assignment (which will preserve the manCoverageTarget)
-                updateAssignment(lb, 'defense', 'Man Coverage', 'Inside technique man');
-                nearestTarget.covered = true; // Mark as covered
-            } else {
-                // No uncovered eligible players, assign zone
-                updateAssignment(lb, 'defense', 'Zone Short', 'Hook');
-            }
-        });
-    } else {
-        // Zone short for LBs
-        allLBs.forEach((lb) => {
-            updateAssignment(lb, 'defense', 'Zone Short', 'Hook');
-        });
-    }
-    
-    // DL always rush - get gap from technique alignment (not from playcall)
-    // Playcalls only set coverage assignments, not DL rush gaps
-    const allDL = [...playersByPosition['DE'], ...playersByPosition['DT']];
-    allDL.forEach((dl) => {
-        // Always get gap from technique alignment
-        const playerId = selectedDefense.find(id => {
-            const p = getPlayerById(id);
-            return p && p.name === dl.name;
-        });
-        const location = playerId ? (playerPositions[playerId]?.location || '') : '';
-        const defaultGap = getDefaultGapFromLocation(location, dl);
-        if (defaultGap) {
-            updateAssignment(dl, 'defense', 'Rush', defaultGap);
-        } else {
-            // If we can't determine gap from location, don't auto-assign - let user choose
-            // Don't default to "Left A gap" or "Contain"
-            console.warn(`Could not determine default gap for ${dl.name} at location "${location}"`);
-        }
-    });
-    
-    // Reposition safeties based on coverage
-    const safetyPlayers = playersByPosition['S'];
-    if (safetyPlayers.length >= 2) {
-        const container = document.getElementById('fieldContainer');
-        const canvasWidth = container ? container.offsetWidth : 1000;
-        const canvasHeight = container ? container.offsetHeight : 0;
-        const effectiveHeight = canvasHeight * 0.97;
-        
-        if (coverNumber === 2) {
-            // Cover 2: deep left/right hashes
-            const leftHash = { name: 'Deep left hash', x: -7, y: 12, section: 'Deep coverage' };
-            const rightHash = { name: 'Deep right hash', x: 7, y: 12, section: 'Deep coverage' };
-            const x1 = ((leftHash.x + 19.5) / 39) * canvasWidth;
-            const y1 = (effectiveHeight / 2) - (leftHash.y * 15);
-            const x2 = ((rightHash.x + 19.5) / 39) * canvasWidth;
-            const y2 = (effectiveHeight / 2) - (rightHash.y * 15);
-            
-            const safety1Id = selectedDefense.find(id => {
-                const p = getPlayerById(id);
-                return p && p.name === safetyPlayers[0].name;
-            });
-            const safety2Id = selectedDefense.find(id => {
-                const p = getPlayerById(id);
-                return p && p.name === safetyPlayers[1].name;
-            });
-            
-            if (safety1Id) {
-                playerPositions[safety1Id] = {
-                    x: x1,
-                    y: y1,
-                    location: leftHash.name,
-                    section: leftHash.section,
-                    isOffsides: false
-                };
-            }
-            if (safety2Id) {
-                playerPositions[safety2Id] = {
-                    x: x2,
-                    y: y2,
-                    location: rightHash.name,
-                    section: rightHash.section,
-                    isOffsides: false
-                };
-            }
-        } else if (coverNumber === 1) {
-            // Cover 1: deep middle 1/3 and right C gap (deep)
-            const deepMiddle = { name: 'Deep middle 1/3', x: 0, y: 15, section: 'Deep coverage' };
-            const rightCGapDeep = { name: 'Right C gap (deep)', x: 4.5, y: 8.5, section: 'Box safety / Deep LB' };
-            const x1 = ((deepMiddle.x + 19.5) / 39) * canvasWidth;
-            const y1 = (effectiveHeight / 2) - (deepMiddle.y * 15);
-            const x2 = ((rightCGapDeep.x + 19.5) / 39) * canvasWidth;
-            const y2 = (effectiveHeight / 2) - (rightCGapDeep.y * 15);
-            
-            const safety1Id = selectedDefense.find(id => {
-                const p = getPlayerById(id);
-                return p && p.name === safetyPlayers[0].name;
-            });
-            const safety2Id = selectedDefense.find(id => {
-                const p = getPlayerById(id);
-                return p && p.name === safetyPlayers[1].name;
-            });
-            
-            if (safety1Id) {
-                playerPositions[safety1Id] = {
-                    x: x1,
-                    y: y1,
-                    location: deepMiddle.name,
-                    section: deepMiddle.section,
-                    isOffsides: false
-                };
-            }
-            if (safety2Id) {
-                playerPositions[safety2Id] = {
-                    x: x2,
-                    y: y2,
-                    location: rightCGapDeep.name,
-                    section: rightCGapDeep.section,
-                    isOffsides: false
-                };
-            }
-        }
-    }
-    
-    updateDefensivePlaycallUI();
-    renderDefensePlaycallDiagram();
-    renderField();
-    renderPlayerMarkers();
-}
-
-function applyBracketPlaycall(playcallName) {
-    const is3x1 = playcallName.includes('3x1');
-    
-    // Get all defensive players with their X positions and Y depth
-    const playersWithPos = [];
-    selectedDefense.forEach((playerId) => {
-        const player = getPlayerById(playerId);
-        if (!player) return;
-        const pos = playerPositions[playerId];
-        if (!pos) return;
-        
-        // Get coordinates from location
-        let xCoord = 0, yCoord = 0;
-        for (const section of fieldLocations) {
-            for (const loc of section.Locations) {
-                if (loc.Name === pos.location && loc.Y > 0) {
-                    xCoord = loc.X;
-                    yCoord = loc.Y;
-                    break;
-                }
-            }
-        }
-        
-        playersWithPos.push({ player, playerId, xCoord, yCoord, pos });
-    });
-    
-    // Separate by side of field (left = negative X, right = positive X)
-    const leftSide = playersWithPos.filter(p => p.xCoord < 0);
-    const rightSide = playersWithPos.filter(p => p.xCoord >= 0);
-    
-    // Assign D-line first
-    playersWithPos.forEach(({ player, playerId }) => {
-        if (player.position === 'DE' || player.position === 'DT') {
-            const location = playerPositions[playerId]?.location || '';
-            const defaultGap = getDefaultGapFromLocation(location, player);
-            if (defaultGap) {
-                updateAssignment(player, 'defense', 'Rush', defaultGap);
-            }
-        }
-    });
-    
-    // Helper to assign 3-over-2 bracket to a side
-    // Uses exactly: 1 CAP (deepest), 1 MEG (widest), 1 TRAIL (innermost nickel/LB)
-    function assignBracket3over2(sidePlayers) {
-        const coveragePlayers = sidePlayers.filter(p => 
-            ['CB', 'S', 'LB', 'MLB'].includes(p.player.position)
-        );
-        
-        if (coveragePlayers.length < 2) return [];
-        
-        const assigned = [];
-        
-        // Sort by depth (Y coordinate - higher = deeper)
-        const byDepth = [...coveragePlayers].sort((a, b) => b.yCoord - a.yCoord);
-        
-        // CAP = deepest player (usually safety)
-        const capPlayer = byDepth[0];
-        updateAssignment(capPlayer.player, 'defense', 'Quarters Match', 'CAP+DEEP');
-        assigned.push(capPlayer);
-        
-        // Remaining for MEG and TRAIL
-        const remaining = coveragePlayers.filter(p => p !== capPlayer);
-        
-        // Sort by width (absolute X, descending = widest first)
-        const byWidth = [...remaining].sort((a, b) => Math.abs(b.xCoord) - Math.abs(a.xCoord));
-        
-        // MEG = widest (usually outside CB)
-        const megPlayer = byWidth[0];
-        updateAssignment(megPlayer.player, 'defense', 'Quarters Match', 'LOCK+MEG');
-        assigned.push(megPlayer);
-        
-        // TRAIL = innermost, prioritize nickel CBs then LBs - only if we have a 3rd player
-        const trailCandidates = remaining.filter(p => p !== megPlayer);
-        if (trailCandidates.length > 0) {
-            trailCandidates.sort((a, b) => {
-                if (a.player.position === 'CB' && b.player.position !== 'CB') return -1;
-                if (b.player.position === 'CB' && a.player.position !== 'CB') return 1;
-                return Math.abs(a.xCoord) - Math.abs(b.xCoord);
-            });
-            const trailPlayer = trailCandidates[0];
-            updateAssignment(trailPlayer.player, 'defense', 'Quarters Match', 'TRAIL+APEX');
-            assigned.push(trailPlayer);
-        }
-        
-        return assigned;
-    }
-    
-    // Helper to assign 4-over-3 bracket (3x1 strong side)
-    // Uses: 1 CAP, 1 MEG, 1 TRAIL, 1 CUT+CROSSER
-    function assignBracket4over3(sidePlayers, allPlayers) {
-        const coveragePlayers = sidePlayers.filter(p => 
-            ['CB', 'S', 'LB', 'MLB'].includes(p.player.position)
-        );
-        
-        const assigned = [];
-        
-        // Sort by depth
-        const byDepth = [...coveragePlayers].sort((a, b) => b.yCoord - a.yCoord);
-        
-        // CAP = deepest
-        if (byDepth.length > 0) {
-            const capPlayer = byDepth[0];
-            updateAssignment(capPlayer.player, 'defense', 'Quarters Match', 'CAP+DEEP');
-            assigned.push(capPlayer);
-        }
-        
-        const remaining = coveragePlayers.filter(p => !assigned.includes(p));
-        const byWidth = [...remaining].sort((a, b) => Math.abs(b.xCoord) - Math.abs(a.xCoord));
-        
-        // MEG = widest
-        if (byWidth.length > 0) {
-            const megPlayer = byWidth[0];
-            updateAssignment(megPlayer.player, 'defense', 'Quarters Match', 'LOCK+MEG');
-            assigned.push(megPlayer);
-        }
-        
-        // TRAIL = next innermost CB/nickel
-        const trailCandidates = remaining.filter(p => !assigned.includes(p));
-        trailCandidates.sort((a, b) => {
-            if (a.player.position === 'CB' && b.player.position !== 'CB') return -1;
-            if (b.player.position === 'CB' && a.player.position !== 'CB') return 1;
-            return Math.abs(a.xCoord) - Math.abs(b.xCoord);
-        });
-        
-        if (trailCandidates.length > 0) {
-            const trailPlayer = trailCandidates[0];
-            updateAssignment(trailPlayer.player, 'defense', 'Quarters Match', 'TRAIL+APEX');
-            assigned.push(trailPlayer);
-        }
-        
-        // CUT+CROSSER = find an LB from this side that's not yet assigned
-        const cutCandidates = coveragePlayers.filter(p => 
-            !assigned.includes(p) && 
-            (p.player.position === 'LB' || p.player.position === 'MLB')
-        );
-        
-        if (cutCandidates.length > 0) {
-            cutCandidates.sort((a, b) => Math.abs(a.xCoord) - Math.abs(b.xCoord));
-            updateAssignment(cutCandidates[0].player, 'defense', 'Quarters Match', 'CUT+CROSSER');
-            assigned.push(cutCandidates[0]);
-        }
-        
-        return assigned;
-    }
-    
-    // Helper for weak side in 3x1 - just 2 defenders (CAP + MEG, no TRAIL needed)
-    function assignWeakSide2over1(sidePlayers) {
-        const coveragePlayers = sidePlayers.filter(p => 
-            ['CB', 'S'].includes(p.player.position) // Only DBs on weak side
-        );
-        
-        const assigned = [];
-        
-        // Sort by depth
-        const byDepth = [...coveragePlayers].sort((a, b) => b.yCoord - a.yCoord);
-        
-        // CAP = deepest (safety)
-        if (byDepth.length > 0) {
-            const capPlayer = byDepth[0];
-            updateAssignment(capPlayer.player, 'defense', 'Quarters Match', 'CAP+DEEP');
-            assigned.push(capPlayer);
-        }
-        
-        // MEG = the CB
-        const remaining = coveragePlayers.filter(p => !assigned.includes(p));
-        if (remaining.length > 0) {
-            const megPlayer = remaining[0];
-            updateAssignment(megPlayer.player, 'defense', 'Quarters Match', 'LOCK+MEG');
-            assigned.push(megPlayer);
-        }
-        
-        return assigned;
-    }
-    
-    let allAssigned = [];
-    
-    if (is3x1) {
-        // 3x1: Strong side (assume right for now) gets 4-over-3, weak side gets 2-over-1
-        // TODO: detect which side has more receivers
-        const strongAssigned = assignBracket4over3(rightSide, playersWithPos);
-        const weakAssigned = assignWeakSide2over1(leftSide);
-        allAssigned = [...strongAssigned, ...weakAssigned];
-    } else {
-        // 2x2: Both sides get 3-over-2
-        const leftAssigned = assignBracket3over2(leftSide);
-        const rightAssigned = assignBracket3over2(rightSide);
-        allAssigned = [...leftAssigned, ...rightAssigned];
-    }
-    
-    // Remaining LB gets blitz assignment (loose backer)
-    const allAssignedNames = new Set(allAssigned.map(p => p.player.name));
-    playersWithPos.forEach(({ player, playerId }) => {
-        if (!allAssignedNames.has(player.name) && 
-            (player.position === 'LB' || player.position === 'MLB')) {
-            // Loose backer blitzes
-            const location = playerPositions[playerId]?.location || '';
-            const defaultGap = getDefaultGapFromLocation(location, player);
-            if (defaultGap) {
-                updateAssignment(player, 'defense', 'Rush', defaultGap);
-            } else {
-                // Default to A gap blitz
-                const side = playersWithPos.find(p => p.player.name === player.name)?.xCoord < 0 ? 'Left' : 'Right';
-                updateAssignment(player, 'defense', 'Rush', `${side} A gap`);
-            }
-        }
-    });
-    
-    updateDefensivePlaycallUI();
-    renderDefensePlaycallDiagram();
-    renderField();
-    renderPlayerMarkers();
-}
+// Assignment functions loaded from js/assignments/assignments-apply.js
+// Use functions directly - they require parameters
 
 function updateDefensivePlaycallUI() {
     selectedDefense.forEach((playerId) => {
@@ -3535,7 +1749,7 @@ function updateDefensivePlaycallUI() {
                             actionSelect.selectedIndex = 1;
                         }
                         actionSelect.dispatchEvent(new Event('change', { bubbles: true }));
-                        updateManCoverageSelector(item, player, 'defense', assignment.category, assignment.action);
+                        updateManCoverageSelector(item, player, 'defense', assignment.category, assignment.action, selectedPlayers, getPlayerById, assignments);
                         
                         // Also directly set the man coverage selector value if it exists
                         const safeId = `manCoverage-${player.name.replace(/[^a-zA-Z0-9]/g, '_')}`;
@@ -3551,303 +1765,16 @@ function updateDefensivePlaycallUI() {
     });
 }
 
-function createAssignmentItem(player, side, location) {
-    const item = document.createElement('div');
-    item.className = 'assignment-item';
-    item.style.cssText = 'display: flex; flex-direction: column; gap: 4px; padding: 6px; background: #fff; border-radius: 4px; margin-bottom: 6px;';
-    
-    const header = document.createElement('div');
-    header.style.cssText = 'display: flex; flex-direction: column; margin-bottom: 2px;';
-    header.innerHTML = `
-        <div>
-            <strong style="font-size: 0.85em;">${player.name}</strong> <span style="font-size: 0.75em;">(${player.position})</span>
-            <div style="font-size: 0.7em; color: #666;">${location}</div>
-        </div>
-    `;
-    item.appendChild(header);
-    
-    // Two-stage selection: Category then Action
-    const categorySelect = document.createElement('select');
-    categorySelect.style.cssText = 'padding: 4px; border-radius: 3px; border: 1px solid #ddd; font-size: 0.8em; margin-bottom: 3px; width: 100%;';
-    categorySelect.innerHTML = '<option value="">Category...</option>';
-    
-    const actionSelect = document.createElement('select');
-    actionSelect.style.cssText = 'padding: 4px; border-radius: 3px; border: 1px solid #ddd; font-size: 0.8em; width: 100%;';
-    actionSelect.innerHTML = '<option value="">Action...</option>';
-    actionSelect.disabled = true;
-    
-    const assignments = side === 'offense' ? offensiveAssignments : defensiveAssignments;
-    const playerAssignments = assignments[player.position] || {};
-    
-    // Populate categories
-    Object.keys(playerAssignments).forEach(category => {
-        const option = document.createElement('option');
-        option.value = category;
-        option.textContent = category;
-        categorySelect.appendChild(option);
-    });
-    
-    // Pre-populate with most likely action
-    const defaultCategory = Object.keys(playerAssignments)[0];
-    if (defaultCategory) {
-        categorySelect.value = defaultCategory;
-        populateActions(actionSelect, playerAssignments[defaultCategory]);
-        actionSelect.disabled = false;
-        
-        // For DL players, try to pre-populate gap from technique
-        let defaultAction = playerAssignments[defaultCategory][0];
-        if (['DE', 'DT'].includes(player.position) && defaultCategory === 'Rush') {
-            const defaultGap = getDefaultGapFromLocation(location, player);
-            // Never auto-populate "Contain" - use gap from technique or first gap option
-            if (defaultGap && defaultGap !== 'Contain' && playerAssignments[defaultCategory].includes(defaultGap)) {
-                defaultAction = defaultGap;
-            } else if (defaultAction === 'Contain' && playerAssignments[defaultCategory].length > 1) {
-                // Skip "Contain" and use first gap option
-                defaultAction = playerAssignments[defaultCategory].find(action => action !== 'Contain') || defaultAction;
-            }
-        }
-        
-        if (defaultAction) {
-            actionSelect.value = defaultAction;
-            updateAssignment(player, side, defaultCategory, defaultAction);
-        }
-    }
-    
-    categorySelect.addEventListener('change', (e) => {
-        const category = e.target.value;
-        actionSelect.innerHTML = '<option value="">Select action...</option>';
-        actionSelect.disabled = !category;
-        
-        if (category && playerAssignments[category]) {
-            populateActions(actionSelect, playerAssignments[category]);
-            // Auto-select first action
-            if (playerAssignments[category].length > 0) {
-                actionSelect.value = playerAssignments[category][0];
-                updateAssignment(player, side, category, playerAssignments[category][0]);
-                // Update man coverage selector visibility
-                updateManCoverageSelector(item, player, side, category, playerAssignments[category][0]);
-            }
-        } else {
-            updateManCoverageSelector(item, player, side, '', '');
-        }
-    });
-    
-    actionSelect.addEventListener('change', (e) => {
-        updateAssignment(player, side, categorySelect.value, e.target.value);
-        // Show/hide man coverage selector
-        updateManCoverageSelector(item, player, side, categorySelect.value, e.target.value);
-    });
-    
-    // Man coverage selector (only for defensive players in man coverage)
-    const manCoverageSelect = document.createElement('select');
-    manCoverageSelect.style.cssText = 'padding: 4px; border-radius: 3px; border: 1px solid #ddd; font-size: 0.8em; margin-top: 3px; display: none; width: 100%;';
-    manCoverageSelect.innerHTML = '<option value="">Covering...</option>';
-    // Use a safe ID that escapes special characters
-    const safeId = `manCoverage-${player.name.replace(/[^a-zA-Z0-9]/g, '_')}`;
-    manCoverageSelect.id = safeId;
-    manCoverageSelect.dataset.playerName = player.name;
-    
-    // Populate with eligible offensive players
-    if (side === 'defense') {
-        selectedPlayers.forEach((playerId) => {
-            const offPlayer = getPlayerById(playerId);
-            if (offPlayer && ['WR', 'TE', 'RB'].includes(offPlayer.position)) {
-                const option = document.createElement('option');
-                option.value = offPlayer.name;
-                option.textContent = `${offPlayer.name} (${offPlayer.position})`;
-                manCoverageSelect.appendChild(option);
-            }
-        });
-    }
-    
-    manCoverageSelect.addEventListener('change', (e) => {
-        if (e.target.value) {
-            // Ensure assignments[side] exists
-            if (!assignments[side]) {
-                assignments[side] = {};
-            }
-            const currentAssignment = assignments[side][player.name];
-            if (currentAssignment) {
-                assignments[side][player.name] = {
-                    ...currentAssignment,
-                    manCoverageTarget: e.target.value
-                };
-            } else {
-                // Create assignment if it doesn't exist
-                assignments[side][player.name] = {
-                    category: 'Man Coverage',
-                    action: 'Inside technique man',
-                    manCoverageTarget: e.target.value
-                };
-            }
-            updateAssignment(player, side, 'Man Coverage', assignments[side][player.name].action);
-        }
-    });
-    
-    item.appendChild(categorySelect);
-    item.appendChild(actionSelect);
-    item.appendChild(manCoverageSelect);
-    
-    return item;
-}
-
-function updateManCoverageSelector(item, player, side, category, action) {
-    // Find man coverage select by data attribute or ID pattern
-    const safeId = `manCoverage-${player.name.replace(/[^a-zA-Z0-9]/g, '_')}`;
-    const manCoverageSelect = item.querySelector(`#${safeId}`) || 
-                              item.querySelector(`select[data-player-name="${player.name}"]`);
-    if (!manCoverageSelect) return;
-    
-    // Show selector only for defensive players in man coverage
-    if (side === 'defense' && category === 'Man Coverage' && 
-        (action === 'Inside technique man' || action === 'Outside technique man' || action === 'Inside match man' || action === 'Outside match man')) {
-        manCoverageSelect.style.display = 'block';
-        
-        // Update options if needed (do this first so we can set the value)
-        if (manCoverageSelect.options.length <= 1) {
-            selectedPlayers.forEach((playerId) => {
-                const offPlayer = getPlayerById(playerId);
-                if (offPlayer && ['WR', 'TE', 'RB'].includes(offPlayer.position)) {
-                    const option = document.createElement('option');
-                    option.value = offPlayer.name;
-                    option.textContent = `${offPlayer.name} (${offPlayer.position})`;
-                    manCoverageSelect.appendChild(option);
-                }
-            });
-        }
-        
-        // Set the selected value if manCoverageTarget exists (after options are populated)
-        const assignment = assignments[side][player.name];
-        if (assignment && assignment.manCoverageTarget) {
-            // Check if the option exists before setting
-            const optionExists = Array.from(manCoverageSelect.options).some(
-                opt => opt.value === assignment.manCoverageTarget
-            );
-            if (optionExists) {
-                manCoverageSelect.value = assignment.manCoverageTarget;
-            }
-        }
-    } else {
-        manCoverageSelect.style.display = 'none';
-        manCoverageSelect.value = '';
-    }
-}
-
-function populateActions(select, actions) {
-    actions.forEach(action => {
-        const option = document.createElement('option');
-        option.value = action;
-        option.textContent = action;
-        select.appendChild(option);
-    });
-}
+// Assignment UI functions loaded from js/assignments/assignments-item.js
+// Use functions directly - they require parameters
 
 // Map DL techniques to gaps
 // Map DL techniques to gaps
 // Default behavior: DL rush into the gap indicated by their technique
 // 3-tech = B gap, 2/4/6 tech prioritize inside gaps
-function getGapFromTechnique(technique, isLeft) {
-    // Technique mapping: 0/1=A gap, 2i/2/3=B gap, 4i/4/5/6/6i/7/9=C gap
-    const tech = technique.toString().toLowerCase();
-    let gap = '';
-    
-    if (tech === '0' || tech === '1') {
-        gap = 'A gap';
-    } else if (tech === '2i' || tech === '2' || tech === '3') {
-        gap = 'B gap'; // 3-tech = B gap, 2-tech prioritizes inside (B gap)
-    } else if (tech === '4i' || tech === '4' || tech === '5' || tech === '6' || tech === '6i' || tech === '7' || tech === '9') {
-        gap = 'C gap'; // 4/6 tech prioritize inside (C gap)
-    }
-    
-    if (gap && isLeft !== undefined) {
-        return `${isLeft ? 'Left' : 'Right'} ${gap}`;
-    }
-    return gap;
-}
-
-// Get default gap assignment from player's technique location
-function getDefaultGapFromLocation(location, player) {
-    if (!['DE', 'DT'].includes(player.position)) return null;
-    
-    // Extract technique and left/right from location name (e.g., "Left 5 technique", "Right 4i technique", "0 technique")
-    // First try to match with left/right prefix
-    let techMatch = location.match(/(left|right)\s+(\d+i?)\s+technique/i);
-    let isLeft = null;
-    
-    if (techMatch) {
-        const isLeft = techMatch[1].toLowerCase() === 'left';
-        const technique = techMatch[2];
-        const gap = getGapFromTechnique(technique, isLeft);
-        console.log(`getDefaultGapFromLocation: location="${location}", technique=${technique}, isLeft=${isLeft}, gap=${gap}`);
-        return gap;
-    }
-    
-    // Try without left/right prefix but with technique
-    techMatch = location.match(/(\d+i?)\s+technique/i);
-    if (techMatch) {
-        const technique = techMatch[1];
-        // Find player position to determine left/right from X coordinate
-        let playerPos = null;
-        for (const id in playerPositions) {
-            const p = getPlayerById(id);
-            if (p && p.name === player.name) {
-                playerPos = playerPositions[id];
-                break;
-            }
-        }
-        if (!playerPos) return null;
-        // Get canvas width from the field container
-        const container = document.getElementById('fieldContainer');
-        const canvasWidth = container ? container.offsetWidth : 1000;
-        isLeft = playerPos.x < (canvasWidth / 2);
-        return getGapFromTechnique(technique, isLeft);
-    }
-    
-    // Fallback to old format (just number)
-    techMatch = location.match(/^(\d+i?)$/);
-    if (techMatch) {
-        const technique = techMatch[1];
-        // Find player position to determine left/right from X coordinate
-        let playerPos = null;
-        for (const id in playerPositions) {
-            const p = getPlayerById(id);
-            if (p && p.name === player.name) {
-                playerPos = playerPositions[id];
-                break;
-            }
-        }
-        if (!playerPos) return null;
-        const container = document.getElementById('fieldContainer');
-        const canvasWidth = container ? container.offsetWidth : 1000;
-        isLeft = playerPos.x < (canvasWidth / 2);
-        return getGapFromTechnique(technique, isLeft);
-    }
-    
-    return null;
-    
-    return getGapFromTechnique(technique, isLeft);
-}
-
-function updateAssignment(player, side, category, action) {
-    if (!assignments[side]) assignments[side] = {};
-    // Preserve man coverage target if it exists
-    const existingAssignment = assignments[side][player.name];
-    assignments[side][player.name] = {
-        category: category,
-        action: action,
-        manCoverageTarget: existingAssignment?.manCoverageTarget || null
-    };
-    // Re-render field to show arrows
-    renderField();
-    renderPlayerMarkers();
-    renderAssignmentArrows();
-    // Update playcall diagrams
-    if (side === 'offense') {
-        renderPlaycallDiagram();
-    } else if (side === 'defense') {
-        renderDefensePlaycallDiagram();
-    }
-}
+// Assignment helper functions loaded from js/assignments/assignments-helpers.js
+// Assignment helper functions loaded from js/assignments/assignments-helpers.js
+// Use functions directly - they require parameters
 
 // Step navigation
 function renderStep(step) {
@@ -3965,7 +1892,7 @@ function renderFormationDropdowns() {
         if (!offenseSelect.dataset.listenerAdded) {
             offenseSelect.addEventListener('change', (e) => {
                 if (e.target.value) {
-                    applyOffensiveFormation(e.target.value);
+                    applyOffensiveFormation(e.target.value, offensiveFormations, selectedPlayers, playerPositions, fieldLocations, getPlayerById, resolveFormationPosition, resolveLocationName, renderField, renderPlayerMarkers);
                 }
             });
             offenseSelect.dataset.listenerAdded = 'true';
@@ -4004,7 +1931,7 @@ function renderFormationDropdowns() {
         if (!defenseSelect.dataset.listenerAdded) {
             defenseSelect.addEventListener('change', (e) => {
                 if (e.target.value) {
-                    applyDefensiveFormation(e.target.value);
+                    applyDefensiveFormation(e.target.value, defensiveFormations, selectedDefense, playerPositions, fieldLocations, getPlayerById, resolveFormationPosition, resolveLocationName, renderField, renderPlayerMarkers);
                 }
             });
             defenseSelect.dataset.listenerAdded = 'true';
@@ -4175,9 +2102,9 @@ function prePopulateOffensiveLine() {
         
         // Position players based on their role
         if (player.position === 'QB') {
-            position = resolveLocationName('QB (Shotgun)', false) || { name: 'QB (Shotgun)', x: 0, y: -10, section: 'Offensive backfield' };
+            position = resolveLocationName('QB (Shotgun)', false, null, fieldLocations) || { name: 'QB (Shotgun)', x: 0, y: -10, section: 'Offensive backfield' };
         } else if (player.position === 'RB') {
-            position = resolveLocationName('Behind QB (Shotgun)', false) || { name: 'Behind QB (Shotgun)', x: 0, y: -13, section: 'Offensive backfield' };
+            position = resolveLocationName('Behind QB (Shotgun)', false, null, fieldLocations) || { name: 'Behind QB (Shotgun)', x: 0, y: -13, section: 'Offensive backfield' };
         } else if (['OT', 'OG', 'C'].includes(player.position)) {
             const olOrder = ['C', 'OG', 'OG', 'OT', 'OT'];
             const positionIndex = olOrder.indexOf(player.position);
@@ -4208,7 +2135,7 @@ function prePopulateOffensiveLine() {
                 ];
                 
                 if (olArrayIndex >= 0 && olArrayIndex < olPositionNames.length) {
-                    position = resolveLocationName(olPositionNames[olArrayIndex], false); // Offensive - prefer Y < 0
+                    position = resolveLocationName(olPositionNames[olArrayIndex], false, null, fieldLocations); // Offensive - prefer Y < 0
                     if (position) {
                         position.section = 'Offensive line of scrimmage';
                     }
@@ -4221,7 +2148,7 @@ function prePopulateOffensiveLine() {
                 'Tight right'
             ];
             if (teIndex < tePositionNames.length) {
-                position = resolveLocationName(tePositionNames[teIndex], false); // Offensive - prefer Y < 0
+                position = resolveLocationName(tePositionNames[teIndex], false, null, fieldLocations); // Offensive - prefer Y < 0
                 if (position) {
                     position.section = 'Offensive line of scrimmage';
                 }
@@ -4233,7 +2160,7 @@ function prePopulateOffensiveLine() {
                     'Slot right'
                 ];
                 const extraIndex = (teIndex - tePositionNames.length) % wrPositionNames.length;
-                position = resolveLocationName(wrPositionNames[extraIndex], false); // Offensive - prefer Y < 0
+                position = resolveLocationName(wrPositionNames[extraIndex], false, null, fieldLocations); // Offensive - prefer Y < 0
                 if (position) {
                     position.section = 'Offensive line of scrimmage';
                 }
@@ -4248,20 +2175,20 @@ function prePopulateOffensiveLine() {
                 'Slot right'
             ];
             if (wrIndex < wrPositionNames.length) {
-                position = resolveLocationName(wrPositionNames[wrIndex], false); // Offensive - prefer Y < 0
+                position = resolveLocationName(wrPositionNames[wrIndex], false, null, fieldLocations); // Offensive - prefer Y < 0
                 if (position) {
                     position.section = 'Offensive line of scrimmage';
                 }
                 wrIndex++;
             } else {
                 // Extra WR - spread out
-                position = resolveLocationName('Seam left', false) || { name: 'Seam left', x: -10.5, y: -3, section: 'Offensive line of scrimmage' };
+                position = resolveLocationName('Seam left', false, null, fieldLocations) || { name: 'Seam left', x: -10.5, y: -3, section: 'Offensive line of scrimmage' };
             }
         }
         
         // Default fallback
         if (!position) {
-            position = resolveLocationName('Slot left', false) || { name: 'Slot left', x: -13, y: -3, section: 'Offensive line of scrimmage' };
+            position = resolveLocationName('Slot left', false, null, fieldLocations) || { name: 'Slot left', x: -13, y: -3, section: 'Offensive line of scrimmage' };
         }
         
         // Map field coordinates -19.5 to +19.5 to 0 to canvasWidth (Max split at edges) - ZOOM IN
@@ -4330,14 +2257,14 @@ function prePopulateOffensiveLine() {
                 'Right 5 technique'
             ];
             if (deIndex < dePositionNames.length) {
-                position = resolveLocationName(dePositionNames[deIndex], true); // Defensive - prefer Y > 0
+                position = resolveLocationName(dePositionNames[deIndex], true, null, fieldLocations); // Defensive - prefer Y > 0
                 if (position) {
                     position.section = 'Defensive line of scrimmage';
                 }
                 deIndex++;
             } else {
                 // Extra DE
-                position = resolveLocationName('Left 4 technique', true) || { name: 'Left 4 technique', x: -4, y: 2.5, section: 'Defensive line of scrimmage' };
+                position = resolveLocationName('Left 4 technique', true, null, fieldLocations) || { name: 'Left 4 technique', x: -4, y: 2.5, section: 'Defensive line of scrimmage' };
             }
         } else if (player.position === 'DT') {
             const dtPositionNames = [
@@ -4345,14 +2272,14 @@ function prePopulateOffensiveLine() {
                 'Right 3 technique'
             ];
             if (dtIndex < dtPositionNames.length) {
-                position = resolveLocationName(dtPositionNames[dtIndex], true); // Defensive - prefer Y > 0
+                position = resolveLocationName(dtPositionNames[dtIndex], true, null, fieldLocations); // Defensive - prefer Y > 0
                 if (position) {
                     position.section = 'Defensive line of scrimmage';
                 }
                 dtIndex++;
             } else {
                 // Extra DT
-                position = resolveLocationName('0 technique', true) || { name: '0 technique', x: 0, y: 2.5, section: 'Defensive line of scrimmage' };
+                position = resolveLocationName('0 technique', true, null, fieldLocations) || { name: '0 technique', x: 0, y: 2.5, section: 'Defensive line of scrimmage' };
             }
         } else if (['LB', 'MLB'].includes(player.position)) {
             const lbPositionNames = [
@@ -4361,7 +2288,7 @@ function prePopulateOffensiveLine() {
                 'Over Center (shallow)'
             ];
             if (lbIndex < lbPositionNames.length) {
-                position = resolveLocationName(lbPositionNames[lbIndex], true); // Defensive - prefer Y > 0
+                position = resolveLocationName(lbPositionNames[lbIndex], true, null, fieldLocations); // Defensive - prefer Y > 0
                 if (position) {
                     position.section = 'Defensive backfield';
                 }
@@ -4373,7 +2300,7 @@ function prePopulateOffensiveLine() {
                     'Right A gap (shallow)'
                 ];
                 const extraIndex = (lbIndex - lbPositionNames.length) % extraLBNames.length;
-                position = resolveLocationName(extraLBNames[extraIndex], true); // Defensive - prefer Y > 0
+                position = resolveLocationName(extraLBNames[extraIndex], true, null, fieldLocations); // Defensive - prefer Y > 0
                 if (position) {
                     position.section = 'Defensive backfield';
                 }
@@ -4384,7 +2311,7 @@ function prePopulateOffensiveLine() {
                 'Seam right'
             ];
             if (cbIndex < cbPositionNames.length) {
-                position = resolveLocationName(cbPositionNames[cbIndex], true, 'Max depth'); // Defensive - prefer Y > 0, Max depth section
+                position = resolveLocationName(cbPositionNames[cbIndex], true, 'Max depth', fieldLocations); // Defensive - prefer Y > 0, Max depth section
                 if (position) {
                     position.section = 'Max depth';
                 }
@@ -4392,13 +2319,13 @@ function prePopulateOffensiveLine() {
             } else {
                 // Extra CB (nickel/dime) - assign to slot
                 if (extraDBIndex < nickelDimePositionNames.length) {
-                    position = resolveLocationName(nickelDimePositionNames[extraDBIndex], true, 'Coverage'); // Defensive - prefer Y > 0, Coverage section
+                    position = resolveLocationName(nickelDimePositionNames[extraDBIndex], true, 'Coverage', fieldLocations); // Defensive - prefer Y > 0, Coverage section
                     if (!position) {
                         position = { name: nickelDimePositionNames[extraDBIndex], x: -13, y: 5.0, section: 'Coverage second level' };
                     }
                     extraDBIndex++;
                 } else {
-                    position = resolveLocationName('Slot left', true, 'Coverage') || { name: 'Slot left', x: -13, y: 5.0, section: 'Coverage second level' };
+                    position = resolveLocationName('Slot left', true, 'Coverage', fieldLocations) || { name: 'Slot left', x: -13, y: 5.0, section: 'Coverage second level' };
                 }
             }
         } else if (player.position === 'S') {
@@ -4407,7 +2334,7 @@ function prePopulateOffensiveLine() {
                 'Deep left'
             ];
             if (sIndex < sPositionNames.length) {
-                position = resolveLocationName(sPositionNames[sIndex], true); // Defensive - prefer Y > 0
+                position = resolveLocationName(sPositionNames[sIndex], true, null, fieldLocations); // Defensive - prefer Y > 0
                 if (position) {
                     position.section = 'Max depth';
                 }
@@ -4415,20 +2342,20 @@ function prePopulateOffensiveLine() {
             } else {
                 // Extra S (big nickel/dime) - assign to slot
                 if (extraDBIndex < nickelDimePositionNames.length) {
-                    position = resolveLocationName(nickelDimePositionNames[extraDBIndex], true, 'Coverage'); // Defensive - prefer Y > 0, Coverage section
+                    position = resolveLocationName(nickelDimePositionNames[extraDBIndex], true, 'Coverage', fieldLocations); // Defensive - prefer Y > 0, Coverage section
                     if (!position) {
                         position = { name: nickelDimePositionNames[extraDBIndex], x: 13, y: 5.0, section: 'Coverage second level' };
                     }
                     extraDBIndex++;
                 } else {
-                    position = resolveLocationName('Slot right', true, 'Coverage') || { name: 'Slot right', x: 13, y: 5.0, section: 'Coverage second level' };
+                    position = resolveLocationName('Slot right', true, 'Coverage', fieldLocations) || { name: 'Slot right', x: 13, y: 5.0, section: 'Coverage second level' };
                 }
             }
         }
         
         // Default fallback
         if (!position) {
-            position = resolveLocationName('Over Center (shallow)', true) || { name: 'Over Center (shallow)', x: 0, y: 6, section: 'Defensive backfield' };
+            position = resolveLocationName('Over Center (shallow)', true, null, fieldLocations) || { name: 'Over Center (shallow)', x: 0, y: 6, section: 'Defensive backfield' };
         }
         
         // Map field coordinates -19.5 to +19.5 to 0 to canvasWidth (Max split at edges) - ZOOM IN
@@ -4450,1048 +2377,11 @@ function prePopulateOffensiveLine() {
     renderPlayerMarkers();
 }
 
-// Formation definitions
-const offensiveFormations = {
-    'Gun Spread': {
-        QB: 'QB (Shotgun)',
-        RB: 'Behind QB (Shotgun)',
-        WR: [
-            'Wide left',
-            'Wide right',
-            'Slot left'
-        ],
-        TE: [],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'Gun Trips': {
-        QB: 'QB (Shotgun)',
-        RB: 'Behind QB (Shotgun)',
-        WR: [
-            'Wide right',
-            'Flanker left',
-            'Wide left',
-            'Slot left'
-        ],
-        TE: [],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'Gun Bunch': {
-        QB: 'QB (Shotgun)',
-        RB: 'Behind QB (Shotgun)',
-        WR: [
-            'Wide right',
-            'Seam left',
-            'Slot left'
-        ],
-        TE: [
-            'Wing left'
-        ],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'Gun Empty': {
-        QB: 'QB (Shotgun)',
-        RB: null,
-        WR: [
-            'Wide left',
-            'Wide left',
-            'Wide right',
-            'Wide right',
-            'Slot left'
-        ],
-        TE: [],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'Pistol': {
-        QB: 'QB (Pistol)',
-        RB: 'Behind QB (Shotgun)',
-        WR: [
-            'Wide left',
-            'Wide right',
-            'Slot left'
-        ],
-        TE: [],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'I-Formation': {
-        QB: 'QB (Under center)',
-        RB: 'Behind QB (I-formation)',
-        WR: [
-            'Wide left',
-            'Wide right'
-        ],
-        TE: [
-            'Tight left'
-        ],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'Pro Set': {
-        QB: 'QB (Under center)',
-        RB: 'T-left (Shotgun)',
-        WR: [
-            'Wide left',
-            'Wide right'
-        ],
-        TE: [
-            'Tight left'
-        ],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'Wing T': {
-        QB: 'QB (Under center)',
-        RB: 'Behind QB (I-formation)',
-        WR: [
-            'Wide left',
-            'Wide right'
-        ],
-        TE: [
-            'Wing left',
-            'Tight right'
-        ],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'Gun (2 TE)': {
-        QB: 'QB (Shotgun)',
-        RB: 'Behind QB (Shotgun)',
-        WR: [
-            'Wide left',
-            'Wide right'
-        ],
-        TE: [
-            'Tight left',
-            'Tight right'
-        ],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'Pistol (2 TE)': {
-        QB: 'QB (Pistol)',
-        RB: 'Behind QB (Shotgun)',
-        WR: [
-            'Wide left',
-            'Wide right'
-        ],
-        TE: [
-            'Tight left',
-            'Tight right'
-        ],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'I-Form (2 TE)': {
-        QB: 'QB (Under center)',
-        RB: 'Behind QB (I-formation)',
-        WR: [
-            'Wide left',
-            'Wide right'
-        ],
-        TE: [
-            'Tight left',
-            'Tight right'
-        ],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'I-Form (2 RB, 2 TE)': {
-        QB: 'QB (Under center)',
-        RB: 'Behind QB (I-formation)',
-        WR: [
-            'Wide left',
-            'Wide right'
-        ],
-        TE: [
-            'Tight left',
-            'Tight right'
-        ],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'Gun 3x1 (2 TE)': {
-        QB: 'QB (Shotgun)',
-        RB: 'Behind QB (Shotgun)',
-        WR: [
-            'Wide left',
-            'Wide right',
-            'Slot right'
-        ],
-        TE: [
-            'Tight right',
-            'Wing right'
-        ],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'Gun 3x1 (2 TE) Flip': {
-        QB: 'QB (Shotgun)',
-        RB: 'Behind QB (Shotgun)',
-        WR: [
-            'Wide right',
-            'Wide left',
-            'Slot left'
-        ],
-        TE: [
-            'Tight left',
-            'Wing left'
-        ],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'Ace': {
-        QB: 'QB (Under center)',
-        RB: 'T-right (Shotgun)',
-        WR: [
-            'Wide left',
-            'Wide right',
-            'Slot left'
-        ],
-        TE: [
-            'Tight right'
-        ],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    },
-    'Wildcat': {
-        QB: null,
-        RB: 'QB (Shotgun)',
-        WR: [
-            'Wide left',
-            'Wide right',
-            'Slot left'
-        ],
-        TE: [
-            'Tight right'
-        ],
-        OL: [
-            'Left Tackle',
-            'Left Guard',
-            'Center',
-            'Right Guard',
-            'Right Tackle'
-        ]
-    }
-};
+// Formation definitions loaded from js/formations/formations-data.js
 
-const defensiveFormations = {
-    '4-3 Even (2-high)': {
-        DL: [
-            'Left 5 technique',
-            'Left 2i technique',
-            'Right 2i technique',
-            'Right 5 technique'
-        ],
-        LB: [
-            'Left B gap (shallow)',
-            'Over Center (shallow)',
-            'Right B gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep left',
-            'Deep right'
-        ]
-    },
-    '4-3 Even (1-high)': {
-        DL: [
-            'Left 5 technique',
-            'Left 2i technique',
-            'Right 2i technique',
-            'Right 5 technique'
-        ],
-        LB: [
-            'Left B gap (shallow)',
-            'Over Center (shallow)',
-            'Right B gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep middle 1/3',
-            'Right B gap (deep)'
-        ]
-    },
-    '4-3 Bear (2-high)': {
-        DL: [
-            'Left 5 technique',
-            'Left 1 technique',
-            'Right 3 technique',
-            'Right 5 technique'
-        ],
-        LB: [
-            'Left B gap (shallow)',
-            'Over Center (shallow)',
-            'Right B gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep left',
-            'Deep right'
-        ]
-    },
-    '4-3 Bear (1-high)': {
-        DL: [
-            'Left 5 technique',
-            'Left 1 technique',
-            'Right 3 technique',
-            'Right 5 technique'
-        ],
-        LB: [
-            'Left B gap (shallow)',
-            'Over Center (shallow)',
-            'Right B gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep middle 1/3',
-            'Right B gap (deep)'
-        ]
-    },
-    '4-3 Over (2-high)': {
-        DL: [
-            'Left 5 technique',
-            'Left 3 technique',
-            'Right 1 technique',
-            'Right 5 technique'
-        ],
-        LB: [
-            'Left B gap (shallow)',
-            'Over Center (shallow)',
-            'Right B gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep left',
-            'Deep right'
-        ]
-    },
-    '4-3 Over (1-high)': {
-        DL: [
-            'Left 5 technique',
-            'Left 3 technique',
-            'Right 1 technique',
-            'Right 5 technique'
-        ],
-        LB: [
-            'Left B gap (shallow)',
-            'Over Center (shallow)',
-            'Right B gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep middle 1/3',
-            'Right B gap (deep)'
-        ]
-    },
-    '4-3 Under (2-high)': {
-        DL: [
-            'Left 4i technique',
-            '0 technique',
-            'Right 3 technique',
-            'Right 5 technique'
-        ],
-        LB: [
-            'Left B gap (shallow)',
-            'Over Center (shallow)',
-            'Right B gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep left',
-            'Deep right'
-        ]
-    },
-    '4-3 Under (1-high)': {
-        DL: [
-            'Left 4i technique',
-            '0 technique',
-            'Right 3 technique',
-            'Right 5 technique'
-        ],
-        LB: [
-            'Left B gap (shallow)',
-            'Over Center (shallow)',
-            'Right B gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep middle 1/3',
-            'Right B gap (deep)'
-        ]
-    },
-    '3-4 Under (2-high)': {
-        DL: [
-            'Left 4i technique',
-            '0 technique',
-            'Right 5 technique'
-        ],
-        LB: [
-            'Left C gap (shallow)',
-            'Left B gap (shallow)',
-            'Right B gap (shallow)',
-            'Right C gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep left',
-            'Deep right'
-        ]
-    },
-    '3-4 Under (1-high)': {
-        DL: [
-            'Left 4i technique',
-            '0 technique',
-            'Right 5 technique'
-        ],
-        LB: [
-            'Left C gap (shallow)',
-            'Left B gap (shallow)',
-            'Right B gap (shallow)',
-            'Right C gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep middle 1/3',
-            'Right B gap (deep)'
-        ]
-    },
-    '3-4 Okie (2-high)': {
-        DL: [
-            'Left 7 technique',
-            '0 technique',
-            'Right 7 technique'
-        ],
-        LB: [
-            'Left C gap (shallow)',
-            'Left B gap (shallow)',
-            'Right B gap (shallow)',
-            'Right C gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep left',
-            'Deep right'
-        ]
-    },
-    '3-4 Okie (1-high)': {
-        DL: [
-            'Left 7 technique',
-            '0 technique',
-            'Right 7 technique'
-        ],
-        LB: [
-            'Left C gap (shallow)',
-            'Left B gap (shallow)',
-            'Right B gap (shallow)',
-            'Right C gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep middle 1/3',
-            'Right B gap (deep)'
-        ]
-    },
-    '3-4 Bear (2-high)': {
-        DL: [
-            'Left 3 technique',
-            '0 technique',
-            { name: 'Right 3 technique', x: 5, y: 2.5 }
-        ],
-        LB: [
-            'Left C gap (shallow)',
-            'Left B gap (shallow)',
-            'Right B gap (shallow)',
-            'Right C gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep left',
-            'Deep right'
-        ]
-    },
-    '3-4 Bear (1-high)': {
-        DL: [
-            'Left 3 technique',
-            '0 technique',
-            { name: 'Right 3 technique', x: 5, y: 2.5 }
-        ],
-        LB: [
-            'Left C gap (shallow)',
-            'Left B gap (shallow)',
-            'Right B gap (shallow)',
-            'Right C gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep middle 1/3',
-            'Right B gap (deep)'
-        ]
-    },
-    '3-4 Tite (2-high)': {
-        DL: [
-            'Left 4i technique',
-            '0 technique',
-            'Right 4i technique'
-        ],
-        LB: [
-            'Left C gap (shallow)',
-            'Left B gap (shallow)',
-            'Right B gap (shallow)',
-            'Right C gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep left',
-            'Deep right'
-        ]
-    },
-    '3-4 Tite (1-high)': {
-        DL: [
-            'Left 4i technique',
-            '0 technique',
-            'Right 4i technique'
-        ],
-        LB: [
-            'Left C gap (shallow)',
-            'Left B gap (shallow)',
-            'Right B gap (shallow)',
-            'Right C gap (shallow)'
-        ],
-        CB: [
-            'Seam left',
-            'Seam right'
-        ],
-        S: [
-            'Deep middle 1/3',
-            'Right B gap (deep)'
-        ]
-    }
-};
-
-function applyOffensiveFormation(formationName) {
-    const formation = offensiveFormations[formationName];
-    if (!formation) return;
-    
-    const container = document.getElementById('fieldContainer');
-    if (!container) return;
-    const canvasWidth = container.offsetWidth;
-    const canvasHeight = container.offsetHeight;
-    const effectiveHeight = canvasHeight * 0.97;
-    
-    // Clear existing offensive positions ONLY - never touch defensive players
-    // Explicitly verify each playerId is in selectedPlayers before deleting
-    selectedPlayers.forEach(playerId => {
-        // Double-check: only delete if this is actually an offensive player
-        if (selectedPlayers.includes(playerId)) {
-            delete playerPositions[playerId];
-        }
-    });
-    
-    // Separate players by position for assignment
-    const qbs = selectedPlayers.filter(id => {
-        const p = getPlayerById(id);
-        return p && p.position === 'QB';
-    });
-    const rbs = selectedPlayers.filter(id => {
-        const p = getPlayerById(id);
-        return p && p.position === 'RB';
-    });
-    const oline = selectedPlayers.filter(id => {
-        const p = getPlayerById(id);
-        return p && ['OT', 'OG', 'C'].includes(p.position);
-    });
-    const tes = selectedPlayers.filter(id => {
-        const p = getPlayerById(id);
-        return p && p.position === 'TE';
-    });
-    const wrs = selectedPlayers.filter(id => {
-        const p = getPlayerById(id);
-        return p && p.position === 'WR';
-    });
-    
-    // Track assigned positions to prevent stacking
-    const usedPositions = new Set(); // Track by position name
-    const usedCoordinates = new Set(); // Track by x,y coordinates
-    
-    // Priority list for WR/receiver positions (excluding Max split) - using location names
-    const receiverPriorityList = [
-        'Wide left',
-        'Wide right',
-        'Slot left',
-        'Slot right',
-        'Flanker left',
-        'Flanker right',
-        'Seam left',
-        'Seam right',
-        'Tight right',
-        'Tight left',
-        'Wing left',
-        'Wing right'
-    ];
-    
-    // Helper function to find next available receiver position
-    function getNextAvailableReceiverPosition(excludeMaxSplit = true) {
-        // First try formation positions (excluding Max split if requested)
-        const formationWR = formation.WR || [];
-        const formationTE = formation.TE || [];
-        const allFormationSpots = [...formationWR, ...formationTE];
-        const filteredFormation = excludeMaxSplit 
-            ? allFormationSpots.filter(pos => {
-                // Handle both string and object formats
-                const posName = typeof pos === 'string' ? pos : (pos?.name || '');
-                return posName && !posName.toLowerCase().includes('max split');
-            })
-            : allFormationSpots;
-        
-        for (const posEntry of filteredFormation) {
-            const pos = resolveFormationPosition(posEntry, false); // Offensive - prefer Y < 0
-            if (pos && pos.name && !usedPositions.has(pos.name) && !usedCoordinates.has(`${pos.x},${pos.y}`)) {
-                return pos;
-            }
-        }
-        
-        // Then try priority list
-        for (const locName of receiverPriorityList) {
-            const pos = resolveLocationName(locName, false); // Offensive - prefer Y < 0
-            if (pos && pos.name && !usedPositions.has(pos.name) && !usedCoordinates.has(`${pos.x},${pos.y}`)) {
-                return pos;
-            }
-        }
-        
-        // Last resort: find any unused position from field locations
-        // This should rarely happen, but prevents infinite loops
-        return null;
-    }
-    
-    // Track indices for positions that can have multiple players
-    let olIndex = 0;
-    let teIndex = 0;
-    let rbIndex = 0;
-    
-    // Apply formation - assign ALL 11 players
-    selectedPlayers.forEach((playerId) => {
-        const player = getPlayerById(playerId);
-        if (!player) return;
-        
-        let position = null;
-        
-        // QB always gets QB position if available
-        if (player.position === 'QB' && formation.QB) {
-            position = resolveFormationPosition(formation.QB, false); // Offensive - prefer Y < 0
-        }
-        // RB gets RB position if available, otherwise can go to receiver spot
-        else if (player.position === 'RB') {
-            if (formation.RB && rbIndex === 0) {
-                position = resolveFormationPosition(formation.RB, false); // Offensive - prefer Y < 0
-                rbIndex++;
-            } else {
-                // RB in empty formation - assign to a receiver spot
-                position = getNextAvailableReceiverPosition();
-            }
-        }
-        // OL gets OL positions
-        else if (['OT', 'OG', 'C'].includes(player.position) && formation.OL) {
-            if (olIndex < formation.OL.length) {
-                position = resolveFormationPosition(formation.OL[olIndex], false); // Offensive - prefer Y < 0
-                olIndex++;
-            }
-        }
-        // TE gets TE positions, or receiver spot if no TE spots
-        else if (player.position === 'TE') {
-            if (formation.TE && teIndex < formation.TE.length) {
-                position = resolveFormationPosition(formation.TE[teIndex], false); // Offensive - prefer Y < 0
-                teIndex++;
-            } else {
-                // TE can go to receiver spot
-                position = getNextAvailableReceiverPosition();
-            }
-        }
-        // WR gets WR positions (filter out Max split)
-        else if (player.position === 'WR') {
-            position = getNextAvailableReceiverPosition(true); // Exclude Max split
-        }
-        
-        // If still no position assigned, use a default based on position type
-        if (!position) {
-            if (player.position === 'QB') {
-                position = resolveLocationName('QB (Shotgun)', false) || { name: 'QB (Shotgun)', x: 0, y: -10, section: 'Offensive backfield' };
-            } else if (player.position === 'RB') {
-                position = getNextAvailableReceiverPosition() || resolveLocationName('Wide left', false) || { name: 'Wide left', x: -16.75, y: -3, section: 'Offensive line of scrimmage' };
-            } else if (['OT', 'OG', 'C'].includes(player.position)) {
-                position = resolveLocationName('Center', false) || { name: 'Center', x: 0, y: -3, section: 'Offensive line of scrimmage' };
-            } else {
-                position = getNextAvailableReceiverPosition() || resolveLocationName('Slot left', false) || { name: 'Slot left', x: -13, y: -3, section: 'Offensive line of scrimmage' };
-            }
-        }
-        
-        // Mark position as used to prevent stacking
-        if (position) {
-            usedPositions.add(position.name);
-            const coordKey = `${position.x},${position.y}`;
-            usedCoordinates.add(coordKey);
-        }
-        
-        const x = ((position.x + 19.5) / 39) * canvasWidth;
-        const y = (effectiveHeight / 2) - (position.y * 15);
-        
-        // CRITICAL: Only set position if this playerId is actually in selectedPlayers
-        // AND verify the player is actually an offensive player (not defensive)
-        // This prevents accidentally overwriting defensive player positions
-        if (selectedPlayers.includes(playerId) && player) {
-            // Double-check: verify this is actually an offensive position type
-            const isOffensivePosition = ['QB', 'RB', 'WR', 'TE', 'OT', 'OG', 'C'].includes(player.position);
-            if (isOffensivePosition) {
-                playerPositions[playerId] = {
-                    x: x,
-                    y: y,
-                    location: position.name,
-                    section: position.section || 'Offensive line of scrimmage',
-                    isOffsides: false
-                };
-            }
-        }
-    });
-    
-    renderField();
-    renderPlayerMarkers();
-}
-
-function applyDefensiveFormation(formationName) {
-    const formation = defensiveFormations[formationName];
-    if (!formation) return;
-    
-    const container = document.getElementById('fieldContainer');
-    if (!container) return;
-    const canvasWidth = container.offsetWidth;
-    const canvasHeight = container.offsetHeight;
-    const effectiveHeight = canvasHeight * 0.97;
-    
-    // Clear existing defensive positions ONLY - never touch offensive players
-    // Explicitly verify each playerId is in selectedDefense AND is a defensive player before deleting
-    selectedDefense.forEach(playerId => {
-        const player = getPlayerById(playerId);
-        // Double-check: only delete if this is actually a defensive player
-        if (selectedDefense.includes(playerId) && player) {
-            const isDefensivePosition = ['DE', 'DT', 'LB', 'MLB', 'CB', 'S'].includes(player.position);
-            if (isDefensivePosition) {
-                delete playerPositions[playerId];
-            }
-        }
-    });
-    
-    // Build DL alignment pattern: DE -> DT(s) -> DE
-    // First, separate players by position
-    const des = selectedDefense.filter(id => {
-        const p = getPlayerById(id);
-        return p && p.position === 'DE';
-    });
-    const dts = selectedDefense.filter(id => {
-        const p = getPlayerById(id);
-        return p && p.position === 'DT';
-    });
-    const otherLinePlayers = selectedDefense.filter(id => {
-        const p = getPlayerById(id);
-        return p && !['DE', 'DT', 'LB', 'MLB', 'CB', 'S'].includes(p.position);
-    });
-    
-    // Build alignment order: DE -> DT(s) -> DE, fill with other positions if needed
-    const dlAlignment = [];
-    if (des.length >= 2 && dts.length >= 1) {
-        // Standard: DE, DT(s), DE
-        dlAlignment.push(des[0]); // Left DE
-        dts.forEach(dt => dlAlignment.push(dt)); // All DTs in middle
-        dlAlignment.push(des[1]); // Right DE
-        // Add extra DEs if any
-        for (let i = 2; i < des.length; i++) {
-            dlAlignment.push(des[i]);
-        }
-    } else if (des.length >= 1 && dts.length >= 1) {
-        // One DE: DE, DT(s), then fill
-        dlAlignment.push(des[0]);
-        dts.forEach(dt => dlAlignment.push(dt));
-        // Fill remaining with other positions
-        otherLinePlayers.slice(0, formation.DL.length - dlAlignment.length).forEach(id => dlAlignment.push(id));
-    } else if (des.length >= 2) {
-        // Two DEs but no DTs: DE, fill, DE
-        dlAlignment.push(des[0]);
-        otherLinePlayers.slice(0, formation.DL.length - 2).forEach(id => dlAlignment.push(id));
-        dlAlignment.push(des[1]);
-    } else {
-        // No standard pattern, just fill in order
-        [...des, ...dts, ...otherLinePlayers].slice(0, formation.DL.length).forEach(id => dlAlignment.push(id));
-    }
-    
-    // Separate players by position for assignment
-    const lbs = selectedDefense.filter(id => {
-        const p = getPlayerById(id);
-        return p && ['LB', 'MLB'].includes(p.position);
-    });
-    const cbs = selectedDefense.filter(id => {
-        const p = getPlayerById(id);
-        return p && p.position === 'CB';
-    });
-    const safeties = selectedDefense.filter(id => {
-        const p = getPlayerById(id);
-        return p && p.position === 'S';
-    });
-    const allDBs = [...cbs, ...safeties];
-    
-    // Track assigned positions
-    let lbIndex = 0;
-    let cbIndex = 0;
-    let sIndex = 0;
-    let dbIndex = 0; // For extra DBs (nickel/dime)
-    
-    // Nickel/Dime positions for extra CBs: Wide left, Wide right, Slot left, Slot right (in that order)
-    // These will be resolved from fieldlocations.json
-    
-    // Apply formation - assign ALL 11 players
-    selectedDefense.forEach((playerId) => {
-        const player = getPlayerById(playerId);
-        if (!player) return;
-        
-        let position = null;
-        
-        // Check if this player is in the DL alignment
-        const dlIndex = dlAlignment.indexOf(playerId);
-        if (dlIndex >= 0 && dlIndex < formation.DL.length && formation.DL) {
-            position = resolveFormationPosition(formation.DL[dlIndex], true); // Defensive - prefer Y > 0
-        }
-        // LBs get LB positions
-        else if (['LB', 'MLB'].includes(player.position)) {
-            if (formation.LB && lbIndex < formation.LB.length) {
-                position = resolveFormationPosition(formation.LB[lbIndex], true); // Defensive - prefer Y > 0
-                lbIndex++;
-            } else {
-                // Extra LB - put in a gap or shallow zone
-                const extraLBPositions = [
-                    'Left A gap (shallow)',
-                    'Right A gap (shallow)',
-                    'Left C gap (shallow)',
-                    'Right C gap (shallow)'
-                ];
-                const extraIndex = lbIndex - (formation.LB ? formation.LB.length : 0);
-                if (extraIndex < extraLBPositions.length) {
-                    position = resolveLocationName(extraLBPositions[extraIndex], true); // Defensive - prefer Y > 0
-                }
-            }
-        }
-        // CBs get CB positions, then extra go to nickel spots
-        else if (player.position === 'CB') {
-            if (formation.CB && cbIndex < formation.CB.length) {
-                position = resolveFormationPosition(formation.CB[cbIndex], true); // Defensive - prefer Y > 0
-                cbIndex++;
-            } else {
-                // Extra CB (nickel/dime) - assign to slot positions
-                const nickelDimeLocationNames = [
-                    'Wide left',
-                    'Wide right',
-                    'Slot left',
-                    'Slot right'
-                ];
-                if (dbIndex < nickelDimeLocationNames.length) {
-                    position = resolveLocationName(nickelDimeLocationNames[dbIndex], true, 'Coverage'); // Defensive - prefer Y > 0, Coverage section
-                    if (!position) {
-                        // Fallback to second level if not found
-                        position = resolveLocationName('Slot left', true, 'Coverage') || { name: 'Slot left', x: -13, y: 5.0, section: 'Coverage second level' };
-                    }
-                    dbIndex++;
-                } else {
-                    // Fallback
-                    position = resolveLocationName('Slot left', true, 'Coverage') || { name: 'Slot left', x: -13, y: 5.0, section: 'Coverage second level' };
-                }
-            }
-        }
-        // Safeties get S positions, then extra go to nickel spots
-        else if (player.position === 'S') {
-            if (formation.S && sIndex < formation.S.length) {
-                position = resolveFormationPosition(formation.S[sIndex], true); // Defensive - prefer Y > 0
-                sIndex++;
-            } else {
-                // Extra S (big nickel/dime) - assign to slot positions
-                const nickelDimeLocationNames = [
-                    'Wide left',
-                    'Wide right',
-                    'Slot left',
-                    'Slot right'
-                ];
-                if (dbIndex < nickelDimeLocationNames.length) {
-                    position = resolveLocationName(nickelDimeLocationNames[dbIndex], true, 'Coverage'); // Defensive - prefer Y > 0, Coverage section
-                    if (!position) {
-                        // Fallback to second level if not found
-                        position = resolveLocationName('Slot right', true, 'Coverage') || { name: 'Slot right', x: 13, y: 5.0, section: 'Coverage second level' };
-                    }
-                    dbIndex++;
-                } else {
-                    // Fallback
-                    position = resolveLocationName('Slot right', true, 'Coverage') || { name: 'Slot right', x: 13, y: 5.0, section: 'Coverage second level' };
-                }
-            }
-        }
-        
-        // If still no position assigned, use a default based on position type
-        if (!position) {
-            if (['DE', 'DT'].includes(player.position)) {
-                position = resolveLocationName('0 technique', true) || { name: '0 technique', x: 0, y: 2.5, section: 'Defensive line of scrimmage' };
-            } else if (['LB', 'MLB'].includes(player.position)) {
-                position = resolveLocationName('Over Center (shallow)', true) || { name: 'Over Center (shallow)', x: 0, y: 6, section: 'Defensive backfield' };
-            } else if (player.position === 'CB') {
-                position = resolveLocationName('Slot left', true, 'Coverage') || { name: 'Slot left', x: -13, y: 5.0, section: 'Coverage second level' };
-            } else if (player.position === 'S') {
-                position = resolveLocationName('Slot right', true, 'Coverage') || { name: 'Slot right', x: 13, y: 5.0, section: 'Coverage second level' };
-            } else {
-                position = resolveLocationName('Over Center (shallow)', true) || { name: 'Over Center (shallow)', x: 0, y: 6, section: 'Defensive backfield' };
-            }
-        }
-        
-        const x = ((position.x + 19.5) / 39) * canvasWidth;
-        const y = (effectiveHeight / 2) - (position.y * 15);
-        
-        // CRITICAL: Only set position if this playerId is actually in selectedDefense
-        // AND verify the player is actually a defensive player (not offensive)
-        // This prevents accidentally overwriting offensive player positions
-        if (selectedDefense.includes(playerId) && player) {
-            // Double-check: verify this is actually a defensive position type
-            const isDefensivePosition = ['DE', 'DT', 'LB', 'MLB', 'CB', 'S'].includes(player.position);
-            if (isDefensivePosition) {
-                playerPositions[playerId] = {
-                    x: x,
-                    y: y,
-                    location: position.name,
-                    section: position.section || 'Defensive line of scrimmage',
-                    isOffsides: false
-                };
-            }
-        }
-    });
-    
-    renderField();
-    renderPlayerMarkers();
-}
+// Formation functions loaded from js/formations/formations-apply.js
+// Formation functions loaded from js/formations/formations-apply.js
+// Use functions directly - they require parameters
 
 function nextStep() {
     if (currentStep < 5) {
@@ -7496,7 +4386,7 @@ function updateGameState(result) {
             gameState["opp-yardline"] = result.newYardline;
             gameState.down = 1;
             gameState.distance = 10;
-            updateRostersForPossession();
+            updateRostersForPossession(gameState, rosters);
         } else if (result.specialTeams === 'field-goal-success') {
             // Field goal made: add 3 points, change possession
             const possession = gameState.possession || 'home';
@@ -7505,14 +4395,14 @@ function updateGameState(result) {
             gameState["opp-yardline"] = 65; // Opponent gets ball at 65 after score
             gameState.down = 1;
             gameState.distance = 10;
-            updateRostersForPossession();
+            updateRostersForPossession(gameState, rosters);
         } else if (result.specialTeams === 'field-goal-miss') {
             // Field goal missed: change possession
             changePossession();
             gameState["opp-yardline"] = result.newYardline;
             gameState.down = 1;
             gameState.distance = 10;
-            updateRostersForPossession();
+            updateRostersForPossession(gameState, rosters);
         }
         updateGameStateDisplay();
         saveGameState();
@@ -7527,7 +4417,7 @@ function updateGameState(result) {
         gameState["opp-yardline"] = 65; // Opponent gets ball at 65 after score
         gameState.down = 1;
         gameState.distance = 10;
-        updateRostersForPossession();
+        updateRostersForPossession(gameState, rosters);
         updateGameStateDisplay();
         saveGameState();
         return;
@@ -7545,7 +4435,7 @@ function updateGameState(result) {
         gameState["opp-yardline"] = 65; // Opponent gets ball at 65 after score
         gameState.down = 1;
         gameState.distance = 10;
-        updateRostersForPossession();
+        updateRostersForPossession(gameState, rosters);
         updateGameStateDisplay();
         saveGameState();
         return;
@@ -7568,7 +4458,7 @@ function updateGameState(result) {
             gameState.distance = 10;
             // Opponent gets ball at current yardline (100 - current yardline)
             gameState["opp-yardline"] = 100 - gameState["opp-yardline"];
-            updateRostersForPossession();
+            updateRostersForPossession(gameState, rosters);
         }
     }
     
@@ -7579,100 +4469,26 @@ function updateGameState(result) {
         gameState.distance = 10;
         // Opponent gets ball at current yardline
         gameState["opp-yardline"] = 100 - gameState["opp-yardline"];
-        updateRostersForPossession();
+        updateRostersForPossession(gameState, rosters);
     }
     
     updateGameStateDisplay();
     saveGameState();
 }
 
-function changePossession() {
-    gameState.possession = gameState.possession === 'home' ? 'away' : 'home';
-    // All players recover stamina on change of possession
-    recoverAllPlayersStamina();
-}
-
+// Game state functions loaded from js/game-state/game-state-updater.js
+function changePossession() { changePossession(gameState, rosters, updateRostersForPossession); recoverAllPlayersStamina(); }
 function recoverAllPlayersStamina() {
     const amount = fatigueConfig?.["stoppage-recovery"] || 6;
-    // Recover stamina for all players in all rosters
     ['home-offense', 'home-defense', 'away-offense', 'away-defense'].forEach(rosterKey => {
-        if (rosters[rosterKey]) {
-            rosters[rosterKey].forEach(player => {
-                player.stamina = Math.min(100, (player.stamina || 100) + amount);
-            });
-        }
+        if (rosters[rosterKey]) rosters[rosterKey].forEach(player => { player.stamina = Math.min(100, (player.stamina || 100) + amount); });
     });
     console.log(`All players recovered +${amount} stamina`);
 }
 
-async function executePunt() {
-    // Roll for punt distance (40-65 yards)
-    const distance = Math.floor(Math.random() * 26) + 40; // 40 to 65
-    
-    // Calculate new yardline
-    let newYardline;
-    if (gameState["opp-yardline"] - distance < 0) {
-        // Touchback
-        newYardline = 80;
-    } else {
-        // 100 - (current yardline - distance)
-        newYardline = 100 - (gameState["opp-yardline"] - distance);
-    }
-    
-    const result = {
-        specialTeams: 'punt',
-        yards: distance,
-        newYardline: newYardline,
-        description: `Punt traveled ${distance} yards. ${newYardline === 80 ? 'Touchback.' : `Opponent starts at ${newYardline} yard line.`}`
-    };
-    
-    // Show result
-    showSpecialTeamsResult(result);
-    updateGameState(result);
-    resetPlay();
-}
-
-async function executeFieldGoal() {
-    const currentYardline = gameState["opp-yardline"];
-    // 95% success minus 1.81% per yardline
-    const successChance = 95 - (currentYardline * 1.81);
-    const roll = Math.random() * 100;
-    
-    let result;
-    if (roll <= successChance) {
-        // Field goal made
-        result = {
-            specialTeams: 'field-goal-success',
-            points: 3,
-            description: `Field goal is GOOD! 3 points awarded.`
-        };
-    } else {
-        // Field goal missed
-        const newYardline = 100 - currentYardline;
-        result = {
-            specialTeams: 'field-goal-miss',
-            newYardline: newYardline,
-            description: `Field goal is NO GOOD. Turnover on downs. Opponent starts at ${newYardline} yard line.`
-        };
-    }
-    
-    // Show result
-    showSpecialTeamsResult(result);
-    updateGameState(result);
-    resetPlay();
-}
-
-function showSpecialTeamsResult(result) {
-    // Show results in the results section
-    document.getElementById('results').classList.remove('hidden');
-    document.getElementById('llmOutput').textContent = '';
-    document.getElementById('playRationale').value = '';
-    document.getElementById('outcomeType').textContent = result.specialTeams === 'punt' ? 'Punt' : 
-        (result.specialTeams === 'field-goal-success' ? 'Field Goal - GOOD' : 'Field Goal - NO GOOD');
-    document.getElementById('outcomeText').textContent = result.description;
-    document.getElementById('yardsGained').textContent = result.yards ? `Distance: ${result.yards} yards` : '';
-    document.getElementById('rateComparison').style.display = 'none';
-}
+// Special teams functions loaded from js/special-teams/special-teams.js
+async function executePunt() { return executePunt(gameState, showSpecialTeamsResult, updateGameState, resetPlay); }
+async function executeFieldGoal() { return executeFieldGoal(gameState, showSpecialTeamsResult, updateGameState, resetPlay); }
 
 function updateFatigue(playData, playType = 'run') {
     // Track who was on the field
@@ -7738,95 +4554,9 @@ function updateFatigue(playData, playType = 'run') {
     saveRosters();
 }
 
-function calculateEffectivePercentile(player, assignment = null, playContext = null) {
-    if (player.stamina === undefined || !player.percentile) {
-        return { effectivePercentile: player.percentile || 50, traitAdjustment: null };
-    }
-    
-    // Use config values with fallbacks
-    const config = fatigueConfig || {
-        "effectiveness-curve": {
-            "high-stamina-threshold": 85,
-            "high-stamina-multiplier": 0.99,
-            "medium-stamina-threshold": 60,
-            "medium-stamina-multiplier": 0.80,
-            "min-multiplier": 0.20
-        }
-    };
-    
-    const curve = config["effectiveness-curve"] || {};
-    const highThreshold = curve["high-stamina-threshold"] || 85;
-    const highMultiplier = curve["high-stamina-multiplier"] || 0.99;
-    const mediumThreshold = curve["medium-stamina-threshold"] || 60;
-    const mediumMultiplier = curve["medium-stamina-multiplier"] || 0.80;
-    const minMultiplier = curve["min-multiplier"] || 0.20;
-    
-    // Ensure stamina is between 0 and 100
-    const stamina = Math.max(0, Math.min(100, player.stamina));
-    let basePercentile = player.percentile;
-    
-    // Detect and apply trait adjustment BEFORE fatigue
-    let traitAdjustment = null;
-    if (assignment && typeof detectPlayerTrait === 'function') {
-        // Get player location for context
-        const playerId = Object.keys(playerPositions || {}).find(id => {
-            const p = getPlayerById(id);
-            return p && p.name === player.name;
-        });
-        const location = playerId ? (playerPositions[playerId]?.location || '') : '';
-        const context = { ...playContext, location };
-        
-        traitAdjustment = detectPlayerTrait(player, assignment, context);
-        if (traitAdjustment && traitAdjustment.value !== 0) {
-            // Apply trait adjustment to base percentile (0-12 range)
-            basePercentile = Math.max(0, Math.min(100, basePercentile + traitAdjustment.value));
-        }
-    }
-    
-    // Logarithmic fatigue curve using config values
-    let multiplier = 1.0;
-    
-    if (stamina >= highThreshold) {
-        multiplier = highMultiplier;
-    } else if (stamina >= mediumThreshold) {
-        // Linear interpolation between high threshold and medium threshold
-        const range = highThreshold - mediumThreshold;
-        const diff = highThreshold - stamina;
-        multiplier = highMultiplier - (diff / range) * (highMultiplier - mediumMultiplier);
-    } else {
-        // Logarithmic drop-off below medium threshold
-        // Using log base 10: multiplier = a * log(stamina) + b
-        // At mediumThreshold: mediumMultiplier, at 0: 0.00
-        const a = mediumMultiplier / Math.log10(mediumThreshold);
-        multiplier = a * Math.log10(Math.max(stamina, 1));
-    }
-    
-    // Calculate effective percentile
-    let effectivePercentile = basePercentile * multiplier;
-    
-    // CRITICAL: Preserve player rankings - ensure a 30th percentile player can never
-    // exceed a 70th percentile player, even with extreme fatigue differences.
-    // Cap effective percentile to never exceed base percentile, and ensure minimum
-    // effectiveness maintains relative rankings.
-    const actualMultiplier = Math.max(minMultiplier, multiplier);
-    effectivePercentile = basePercentile * actualMultiplier;
-    
-    // Additional safeguard: ensure effective never exceeds base (fatigue only reduces, never increases)
-    // BUT: trait adjustments can increase it above original base, so we need to track the adjusted base
-    const adjustedBase = traitAdjustment ? basePercentile : player.percentile;
-    effectivePercentile = Math.min(effectivePercentile, adjustedBase);
-    
-    return { 
-        effectivePercentile, 
-        traitAdjustment: traitAdjustment ? {
-            trait: traitAdjustment.trait,
-            description: traitAdjustment.description,
-            value: traitAdjustment.value,
-            playerName: player.name,
-            position: player.position
-        } : null
-    };
-}
+// Trait calculation function loaded from js/traits/trait-calculator.js
+// Note: The extracted function signature requires additional parameters, but call sites in app.js
+// use the 3-parameter version. The extracted function handles missing parameters gracefully.
 
 function updateGameStateDisplay() {
     const downNames = ['', '1st', '2nd', '3rd', '4th'];
