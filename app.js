@@ -4454,8 +4454,8 @@ const offensiveFormations = {
         QB: 'QB (Shotgun)',
         RB: 'Behind QB (Shotgun)',
         WR: [
-            'Max split left',
-            'Max split right',
+            'Wide left',
+            'Wide right',
             'Slot left'
         ],
         TE: [],
@@ -4471,7 +4471,7 @@ const offensiveFormations = {
         QB: 'QB (Shotgun)',
         RB: 'Behind QB (Shotgun)',
         WR: [
-            'Max split right',
+            'Wide right',
             'Flanker left',
             'Wide left',
             'Slot left'
@@ -4489,7 +4489,7 @@ const offensiveFormations = {
         QB: 'QB (Shotgun)',
         RB: 'Behind QB (Shotgun)',
         WR: [
-            'Max split left',
+            'Wide right',
             'Seam left',
             'Slot left'
         ],
@@ -4508,10 +4508,10 @@ const offensiveFormations = {
         QB: 'QB (Shotgun)',
         RB: null,
         WR: [
-            'Max split left',
+            'Wide left',
             'Wide left',
             'Wide right',
-            'Max split right',
+            'Wide right',
             'Slot left'
         ],
         TE: [],
@@ -4527,8 +4527,8 @@ const offensiveFormations = {
         QB: 'QB (Pistol)',
         RB: 'Behind QB (Shotgun)',
         WR: [
-            'Max split left',
-            'Max split right',
+            'Wide left',
+            'Wide right',
             'Slot left'
         ],
         TE: [],
@@ -4544,8 +4544,8 @@ const offensiveFormations = {
         QB: 'QB (Under center)',
         RB: 'Behind QB (I-formation)',
         WR: [
-            'Max split left',
-            'Max split right'
+            'Wide left',
+            'Wide right'
         ],
         TE: [
             'Tight left'
@@ -4562,8 +4562,8 @@ const offensiveFormations = {
         QB: 'QB (Under center)',
         RB: 'T-left (Shotgun)',
         WR: [
-            'Max split left',
-            'Max split right'
+            'Wide left',
+            'Wide right'
         ],
         TE: [
             'Tight left'
@@ -4580,8 +4580,8 @@ const offensiveFormations = {
         QB: 'QB (Under center)',
         RB: 'Behind QB (I-formation)',
         WR: [
-            'Max split left',
-            'Max split right'
+            'Wide left',
+            'Wide right'
         ],
         TE: [
             'Wing left',
@@ -4599,8 +4599,8 @@ const offensiveFormations = {
         QB: 'QB (Shotgun)',
         RB: 'Behind QB (Shotgun)',
         WR: [
-            'Max split left',
-            'Max split right'
+            'Wide left',
+            'Wide right'
         ],
         TE: [
             'Tight left',
@@ -4618,8 +4618,8 @@ const offensiveFormations = {
         QB: 'QB (Pistol)',
         RB: 'Behind QB (Shotgun)',
         WR: [
-            'Max split left',
-            'Max split right'
+            'Wide left',
+            'Wide right'
         ],
         TE: [
             'Tight left',
@@ -4637,8 +4637,8 @@ const offensiveFormations = {
         QB: 'QB (Under center)',
         RB: 'Behind QB (I-formation)',
         WR: [
-            'Max split left',
-            'Max split right'
+            'Wide left',
+            'Wide right'
         ],
         TE: [
             'Tight left',
@@ -4656,8 +4656,8 @@ const offensiveFormations = {
         QB: 'QB (Under center)',
         RB: 'Behind QB (I-formation)',
         WR: [
-            'Max split left',
-            'Max split right'
+            'Wide left',
+            'Wide right'
         ],
         TE: [
             'Tight left',
@@ -4675,7 +4675,7 @@ const offensiveFormations = {
         QB: 'QB (Shotgun)',
         RB: 'Behind QB (Shotgun)',
         WR: [
-            'Max split left',
+            'Wide left',
             'Wide right',
             'Slot right'
         ],
@@ -4695,7 +4695,7 @@ const offensiveFormations = {
         QB: 'QB (Shotgun)',
         RB: 'Behind QB (Shotgun)',
         WR: [
-            'Max split right',
+            'Wide right',
             'Wide left',
             'Slot left'
         ],
@@ -4715,8 +4715,8 @@ const offensiveFormations = {
         QB: 'QB (Under center)',
         RB: 'T-right (Shotgun)',
         WR: [
-            'Max split left',
-            'Max split right',
+            'Wide left',
+            'Wide right',
             'Slot left'
         ],
         TE: [
@@ -4734,8 +4734,8 @@ const offensiveFormations = {
         QB: null,
         RB: 'QB (Shotgun)',
         WR: [
-            'Max split left',
-            'Max split right',
+            'Wide left',
+            'Wide right',
             'Slot left'
         ],
         TE: [
@@ -4791,7 +4791,7 @@ const defensiveFormations = {
         ],
         S: [
             'Deep middle 1/3',
-            'Left B gap (deep)'
+            'Right B gap (deep)'
         ]
     },
     '4-3 Bear (2-high)': {
@@ -4833,7 +4833,7 @@ const defensiveFormations = {
         ],
         S: [
             'Deep middle 1/3',
-            'Left B gap (deep)'
+            'Right B gap (deep)'
         ]
     },
     '4-3 Over (2-high)': {
@@ -4875,7 +4875,7 @@ const defensiveFormations = {
         ],
         S: [
             'Deep middle 1/3',
-            'Left B gap (deep)'
+            'Right B gap (deep)'
         ]
     },
     '4-3 Under (2-high)': {
@@ -4917,7 +4917,7 @@ const defensiveFormations = {
         ],
         S: [
             'Deep middle 1/3',
-            'Left B gap (deep)'
+            'Right B gap (deep)'
         ]
     },
     '3-4 Under (2-high)': {
@@ -4959,7 +4959,7 @@ const defensiveFormations = {
         ],
         S: [
             'Deep middle 1/3',
-            'Left B gap (deep)'
+            'Right B gap (deep)'
         ]
     },
     '3-4 Okie (2-high)': {
@@ -5001,7 +5001,7 @@ const defensiveFormations = {
         ],
         S: [
             'Deep middle 1/3',
-            'Left B gap (deep)'
+            'Right B gap (deep)'
         ]
     },
     '3-4 Bear (2-high)': {
@@ -5043,7 +5043,7 @@ const defensiveFormations = {
         ],
         S: [
             'Deep middle 1/3',
-            'Left B gap (deep)'
+            'Right B gap (deep)'
         ]
     },
     '3-4 Tite (2-high)': {
@@ -5085,7 +5085,7 @@ const defensiveFormations = {
         ],
         S: [
             'Deep middle 1/3',
-            'Left B gap (deep)'
+            'Right B gap (deep)'
         ]
     }
 };
@@ -5100,9 +5100,13 @@ function applyOffensiveFormation(formationName) {
     const canvasHeight = container.offsetHeight;
     const effectiveHeight = canvasHeight * 0.97;
     
-    // Clear existing offensive positions
+    // Clear existing offensive positions ONLY - never touch defensive players
+    // Explicitly verify each playerId is in selectedPlayers before deleting
     selectedPlayers.forEach(playerId => {
-        delete playerPositions[playerId];
+        // Double-check: only delete if this is actually an offensive player
+        if (selectedPlayers.includes(playerId)) {
+            delete playerPositions[playerId];
+        }
     });
     
     // Separate players by position for assignment
@@ -5154,12 +5158,16 @@ function applyOffensiveFormation(formationName) {
         const formationTE = formation.TE || [];
         const allFormationSpots = [...formationWR, ...formationTE];
         const filteredFormation = excludeMaxSplit 
-            ? allFormationSpots.filter(pos => !pos.name.toLowerCase().includes('max split'))
+            ? allFormationSpots.filter(pos => {
+                // Handle both string and object formats
+                const posName = typeof pos === 'string' ? pos : (pos?.name || '');
+                return posName && !posName.toLowerCase().includes('max split');
+            })
             : allFormationSpots;
         
         for (const posEntry of filteredFormation) {
             const pos = resolveFormationPosition(posEntry, false); // Offensive - prefer Y < 0
-            if (pos && !usedPositions.has(pos.name) && !usedCoordinates.has(`${pos.x},${pos.y}`)) {
+            if (pos && pos.name && !usedPositions.has(pos.name) && !usedCoordinates.has(`${pos.x},${pos.y}`)) {
                 return pos;
             }
         }
@@ -5167,7 +5175,7 @@ function applyOffensiveFormation(formationName) {
         // Then try priority list
         for (const locName of receiverPriorityList) {
             const pos = resolveLocationName(locName, false); // Offensive - prefer Y < 0
-            if (pos && !usedPositions.has(pos.name) && !usedCoordinates.has(`${pos.x},${pos.y}`)) {
+            if (pos && pos.name && !usedPositions.has(pos.name) && !usedCoordinates.has(`${pos.x},${pos.y}`)) {
                 return pos;
             }
         }
@@ -5248,13 +5256,22 @@ function applyOffensiveFormation(formationName) {
         const x = ((position.x + 19.5) / 39) * canvasWidth;
         const y = (effectiveHeight / 2) - (position.y * 15);
         
-        playerPositions[playerId] = {
-            x: x,
-            y: y,
-            location: position.name,
-            section: position.section || 'Offensive line of scrimmage',
-            isOffsides: false
-        };
+        // CRITICAL: Only set position if this playerId is actually in selectedPlayers
+        // AND verify the player is actually an offensive player (not defensive)
+        // This prevents accidentally overwriting defensive player positions
+        if (selectedPlayers.includes(playerId) && player) {
+            // Double-check: verify this is actually an offensive position type
+            const isOffensivePosition = ['QB', 'RB', 'WR', 'TE', 'OT', 'OG', 'C'].includes(player.position);
+            if (isOffensivePosition) {
+                playerPositions[playerId] = {
+                    x: x,
+                    y: y,
+                    location: position.name,
+                    section: position.section || 'Offensive line of scrimmage',
+                    isOffsides: false
+                };
+            }
+        }
     });
     
     renderField();
@@ -5271,9 +5288,17 @@ function applyDefensiveFormation(formationName) {
     const canvasHeight = container.offsetHeight;
     const effectiveHeight = canvasHeight * 0.97;
     
-    // Clear existing defensive positions
+    // Clear existing defensive positions ONLY - never touch offensive players
+    // Explicitly verify each playerId is in selectedDefense AND is a defensive player before deleting
     selectedDefense.forEach(playerId => {
-        delete playerPositions[playerId];
+        const player = getPlayerById(playerId);
+        // Double-check: only delete if this is actually a defensive player
+        if (selectedDefense.includes(playerId) && player) {
+            const isDefensivePosition = ['DE', 'DT', 'LB', 'MLB', 'CB', 'S'].includes(player.position);
+            if (isDefensivePosition) {
+                delete playerPositions[playerId];
+            }
+        }
     });
     
     // Build DL alignment pattern: DE -> DT(s) -> DE
@@ -5444,13 +5469,22 @@ function applyDefensiveFormation(formationName) {
         const x = ((position.x + 19.5) / 39) * canvasWidth;
         const y = (effectiveHeight / 2) - (position.y * 15);
         
-        playerPositions[playerId] = {
-            x: x,
-            y: y,
-            location: position.name,
-            section: position.section || 'Defensive line of scrimmage',
-            isOffsides: false
-        };
+        // CRITICAL: Only set position if this playerId is actually in selectedDefense
+        // AND verify the player is actually a defensive player (not offensive)
+        // This prevents accidentally overwriting offensive player positions
+        if (selectedDefense.includes(playerId) && player) {
+            // Double-check: verify this is actually a defensive position type
+            const isDefensivePosition = ['DE', 'DT', 'LB', 'MLB', 'CB', 'S'].includes(player.position);
+            if (isDefensivePosition) {
+                playerPositions[playerId] = {
+                    x: x,
+                    y: y,
+                    location: position.name,
+                    section: position.section || 'Defensive line of scrimmage',
+                    isOffsides: false
+                };
+            }
+        }
     });
     
     renderField();
