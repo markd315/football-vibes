@@ -242,8 +242,7 @@
             // Grade
             if (playData.grade) {
                 const grade = playData.grade;
-                document.getElementById("gradeOutput").textContent = 
-                    `{"play-type":"${grade.playType}","offense-advantage":${grade.offenseAdvantage},"risk-leverage":${grade.riskLeverage}}`;
+                document.getElementById("gradeOutput").textContent = JSON.stringify(grade);
                 document.getElementById("gradeRationale").textContent = playData.gradeRationale;
                 gradeSection.classList.remove("hidden");
             } else {
