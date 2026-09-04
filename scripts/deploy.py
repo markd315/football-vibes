@@ -89,7 +89,7 @@ def get_modified_files():
             # Simple inclusion check
             if any(path.startswith(wp) for wp in WATCH_PATHS):
                 # Ignore tests and local data folders that shouldn't be deployed as views
-                if any(ignore_str in path for ignore_str in ["test-", "/context/", "/outcomes/", "/rosters/"]):
+                if any(ignore_str in path for ignore_str in ["test-", "/context/", "/outcomes/"]):
                     continue
                 files.append(path)
         return files
@@ -143,13 +143,18 @@ def deploy_file(path_str, api_key, skip_schema=False):
         }
         
     elif "public" in path_str:
-        filename = os.path.basename(path_str)
-        page_id = filename # backend handles extension or not
+        import urllib.parse
+        full_path_obj = Path(full_path)
+        public_dir = Path(ROOT_DIR) / "public"
+        try:
+            rel_path = str(full_path_obj.relative_to(public_dir)).replace('\\', '/')
+        except ValueError:
+            rel_path = os.path.basename(path_str)
+        page_id = urllib.parse.quote(rel_path, safe='')
         
         with open(full_path, 'r', encoding='utf-8') as f:
             content = f.read()
             
-        # FIXED URL: Views are mounted at /api/frontend-views
         url = f"{BASE_URL}/api/frontend-views/pages/{page_id}?tenant={TENANT_ID}"
         payload = {
             "html": content,
