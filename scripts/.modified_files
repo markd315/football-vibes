@@ -74,5 +74,12 @@
       "public/play-state-machine.json",
       "public/team-eval.js"
     ]
+  },
+  {
+    "timestamp": "2026-09-03T20:57:45.677742",
+    "files": [
+      "public/app.js",
+      "public/index.html"
+    ]
   }
 ]

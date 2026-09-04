@@ -22,7 +22,7 @@
     },
     "bills": {
         "name": "Bills",
-        "record": "10-4",
+        "record": "0-0",
         "city": "Buffalo",
         "roster": "bills-offense.json",
         "defense": "bills-defense.json"
@@ -64,28 +64,28 @@
     },
     "broncos": {
         "name": "Broncos",
-        "record": "12-2",
+        "record": "0-0",
         "city": "Denver",
         "roster": "broncos-offense.json",
         "defense": "broncos-defense.json"
     },
     "lions": {
         "name": "Lions",
-        "record": "8-6",
+        "record": "0-0",
         "city": "Detroit",
         "roster": "lions-offense.json",
         "defense": "lions-defense.json"
     },
     "packers": {
         "name": "Packers",
-        "record": "9-4",
+        "record": "0-0",
         "city": "Green Bay",
         "roster": "packers-offense.json",
         "defense": "packers-defense.json"
     },
     "texans": {
         "name": "Texans",
-        "record": "9-5",
+        "record": "0-0",
         "city": "Houston",
         "roster": "texans-offense.json",
         "defense": "texans-defense.json"
@@ -99,14 +99,14 @@
     },
     "jaguars": {
         "name": "Jaguars",
-        "record": "10-4",
+        "record": "0-0",
         "city": "Jacksonville",
         "roster": "jaguars-offense.json",
         "defense": "jaguars-defense.json"
     },
     "chiefs": {
         "name": "Chiefs",
-        "record": "6-8",
+        "record": "0-0",
         "city": "Kansas City",
         "roster": "chiefs-offense.json",
         "defense": "chiefs-defense.json"
@@ -127,7 +127,7 @@
     },
     "rams": {
         "name": "Rams",
-        "record": "11-3",
+        "record": "0-0",
         "city": "Los Angeles",
         "roster": "rams-offense.json",
         "defense": "rams-defense.json"
@@ -148,7 +148,7 @@
     },
     "patriots": {
         "name": "Patriots",
-        "record": "11-3",
+        "record": "0-0",
         "city": "New England",
         "roster": "patriots-offense.json",
         "defense": "patriots-defense.json"
@@ -176,14 +176,14 @@
     },
     "eagles": {
         "name": "Eagles",
-        "record": "9-5",
+        "record": "0-0",
         "city": "Philadelphia",
         "roster": "eagles-offense.json",
         "defense": "eagles-defense.json"
     },
     "steelers": {
         "name": "Steelers",
-        "record": "8-6",
+        "record": "0-0",
         "city": "Pittsburgh",
         "roster": "steelers-offense.json",
         "defense": "steelers-defense.json"
@@ -197,7 +197,7 @@
     },
     "seahawks": {
         "name": "Seahawks",
-        "record": "11-3",
+        "record": "0-0",
         "city": "Seattle",
         "roster": "seahawks-offense.json",
         "defense": "seahawks-defense.json"

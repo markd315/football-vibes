@@ -82,6 +82,9 @@ function populateTeamSelectors() {
     const homeSelect = document.getElementById('homeTeamSelect');
     const awaySelect = document.getElementById('awayTeamSelect');
 
+    homeSelect.innerHTML = '<option value="">Select home team...</option>';
+    awaySelect.innerHTML = '<option value="">Select away team...</option>';
+
     availableTeams.forEach(team => {
         const displayName = team.city ? `${team.city} ${team.name}` : team.name;
         const recordStr = team.record ? ` (${team.record})` : '';
