@@ -1,12 +1,12 @@
 [
   {
     "name": "Christian Barmore",
-    "position": "DT",
+    "position": "DE",
     "jersey": 90,
     "height": "6'4",
     "weight": "310",
     "stamina": 100,
-    "percentile": 75,
+    "percentile": 70,
     "traits-from-baseline-percentile": {
       "qb-predator": 3,
       "gap-stuffer": 2
@@ -15,12 +15,12 @@
   },
   {
     "name": "Leonard Taylor III",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 39,
+    "percentile": 37,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -28,12 +28,12 @@
   },
   {
     "name": "Cory Durden",
-    "position": "DE",
+    "position": "DT",
     "jersey": 92,
     "height": "6'5",
     "weight": "305",
     "stamina": 100,
-    "percentile": 40,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -41,12 +41,12 @@
   },
   {
     "name": "Isaiah Iton",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 39,
+    "percentile": 37,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -54,12 +54,12 @@
   },
   {
     "name": "Milton Williams",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 56,
+    "percentile": 53,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -67,23 +67,23 @@
   },
   {
     "name": "Joshua Farmer",
-    "position": "LB",
+    "position": "DE",
     "jersey": 91,
     "height": "6'4",
     "weight": "295",
     "stamina": 100,
-    "percentile": 33,
+    "percentile": 31,
     "traits-from-baseline-percentile": {},
     "health": 100
   },
   {
     "name": "Elijah Ponder",
-    "position": "CB",
+    "position": "LB",
     "jersey": 47,
     "height": "6'3",
     "weight": "245",
     "stamina": 100,
-    "percentile": 25,
+    "percentile": 23,
     "traits-from-baseline-percentile": {
       "gap-stuffer": -1
     },
@@ -91,12 +91,12 @@
   },
   {
     "name": "Quintayvious Hutchins",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 39,
+    "percentile": 37,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -104,12 +104,12 @@
   },
   {
     "name": "Harold Landry III",
-    "position": "CB",
+    "position": "LB",
     "jersey": 55,
     "height": "6'2",
     "weight": "250",
     "stamina": 100,
-    "percentile": 71,
+    "percentile": 67,
     "traits-from-baseline-percentile": {
       "qb-predator": 3,
       "gap-stuffer": 1
@@ -123,7 +123,7 @@
     "height": "6'2",
     "weight": "235",
     "stamina": 100,
-    "percentile": 50,
+    "percentile": 47,
     "traits-from-baseline-percentile": {
       "blitz-threat": -2,
       "gap-stuffer": 1,
@@ -138,7 +138,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 39,
+    "percentile": 37,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -151,7 +151,215 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 27,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Robert Spillane",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Erick Hunter",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Khalil Jacobs",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Dre&#x27;Mont Jones",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Gabe Jacas",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Carlton Davis III",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Craig Woodson",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dell Pettus",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaylen Reed",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kevin Byard",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Brenden Schooler",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Christian Gonzalez",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Karon Prunty",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Channing Canada",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Marcus Jones",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Charles Woods",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },

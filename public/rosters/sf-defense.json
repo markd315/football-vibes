@@ -1,12 +1,12 @@
 [
   {
     "name": "C.J. West",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 61,
+    "percentile": 57,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -14,12 +14,12 @@
   },
   {
     "name": "James Thompson Jr.",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -27,12 +27,12 @@
   },
   {
     "name": "Alfred Collins",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 61,
+    "percentile": 57,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -40,12 +40,12 @@
   },
   {
     "name": "Osa Odighizuwa",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 61,
+    "percentile": 57,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -53,12 +53,12 @@
   },
   {
     "name": "Gracen Halton",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -66,12 +66,12 @@
   },
   {
     "name": "Nick Bosa",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 61,
+    "percentile": 57,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -79,12 +79,12 @@
   },
   {
     "name": "Romello Height",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -92,12 +92,12 @@
   },
   {
     "name": "Andrew Farmer II",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 28,
+    "percentile": 26,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -105,12 +105,12 @@
   },
   {
     "name": "Mikail Kamara",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 28,
+    "percentile": 26,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -123,7 +123,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 61,
+    "percentile": 57,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -136,7 +136,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -149,7 +149,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 28,
+    "percentile": 26,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -162,10 +162,244 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 28,
+    "percentile": 26,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
     "health": 0
+  },
+  {
+    "name": "Fred Warner",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tatum Bethune",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaden Dugger",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Keion White",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Sam Okuayinonu",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Mykel Williams",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Renardo Green",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jack Jones",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Malik Mustapha",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Marques Sigle",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ashtyn Davis",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ji&#x27;Ayir Brown",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Siran Neal",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Darrick Forrest",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Deommodore Lenoir",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ephesians Prysock",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Nate Hobbs",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Upton Stout",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
   }
 ]

@@ -6,7 +6,7 @@
     "height": "6'1",
     "weight": "223",
     "stamina": 100,
-    "percentile": 70,
+    "percentile": 66,
     "traits-from-baseline-percentile": {
       "pocket-passer": 2,
       "escape-artist": 4
@@ -20,7 +20,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 40,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "pocket-passer": 1
     },
@@ -33,7 +33,7 @@
     "height": "6'6",
     "weight": "230",
     "stamina": 100,
-    "percentile": 15,
+    "percentile": 14,
     "traits-from-baseline-percentile": {
       "escape-artist": -1
     },
@@ -46,7 +46,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 27,
+    "percentile": 25,
     "traits-from-baseline-percentile": {
       "pocket-passer": 1
     },
@@ -59,7 +59,7 @@
     "height": "6'0",
     "weight": "232",
     "stamina": 100,
-    "percentile": 78,
+    "percentile": 74,
     "traits-from-baseline-percentile": {
       "speed-back": 5,
       "power-back": 3,
@@ -75,7 +75,7 @@
     "height": "5'11",
     "weight": "210",
     "stamina": 100,
-    "percentile": 46,
+    "percentile": 43,
     "traits-from-baseline-percentile": {
       "speed-back": 2,
       "power-back": 2
@@ -89,7 +89,7 @@
     "height": "5'11",
     "weight": "210",
     "stamina": 100,
-    "percentile": 36,
+    "percentile": 34,
     "traits-from-baseline-percentile": {
       "speed-back": 2,
       "route-runner": 1
@@ -103,7 +103,7 @@
     "height": "6'0",
     "weight": "170",
     "stamina": 100,
-    "percentile": 74,
+    "percentile": 70,
     "traits-from-baseline-percentile": {
       "quick-game": 5,
       "blocker": -1
@@ -117,7 +117,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 40,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "route-runner": 1
     },
@@ -130,7 +130,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 27,
+    "percentile": 25,
     "traits-from-baseline-percentile": {
       "route-runner": 1
     },
@@ -143,7 +143,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 58,
+    "percentile": 55,
     "traits-from-baseline-percentile": {
       "route-runner": 1
     },
@@ -156,7 +156,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 40,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "route-runner": 1
     },
@@ -169,7 +169,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 58,
+    "percentile": 55,
     "traits-from-baseline-percentile": {
       "route-runner": 1
     },
@@ -195,7 +195,7 @@
     "height": "6'5",
     "weight": "256",
     "stamina": 100,
-    "percentile": 63,
+    "percentile": 59,
     "traits-from-baseline-percentile": {
       "pass-catcher": 2,
       "run-blocker": 2,
@@ -210,7 +210,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 40,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "blocker": 1
     },
@@ -223,7 +223,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 27,
+    "percentile": 25,
     "traits-from-baseline-percentile": {
       "blocker": 1
     },
@@ -236,7 +236,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 27,
+    "percentile": 25,
     "traits-from-baseline-percentile": {
       "blocker": 1
     },
@@ -249,7 +249,7 @@
     "height": "6'8",
     "weight": "365",
     "stamina": 100,
-    "percentile": 70,
+    "percentile": 66,
     "traits-from-baseline-percentile": {
       "pass-protection": 4,
       "zone-blocker": 3
@@ -263,7 +263,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 40,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "pass-protection": 1
     },
@@ -276,7 +276,7 @@
     "height": "6'6",
     "weight": "333",
     "stamina": 100,
-    "percentile": 74,
+    "percentile": 70,
     "traits-from-baseline-percentile": {
       "pass-protection": 3,
       "zone-blocker": 4
@@ -303,7 +303,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 27,
+    "percentile": 25,
     "traits-from-baseline-percentile": {
       "zone-blocker": 1
     },
@@ -316,7 +316,7 @@
     "height": "6'3",
     "weight": "303",
     "stamina": 100,
-    "percentile": 63,
+    "percentile": 59,
     "traits-from-baseline-percentile": {
       "pass-protection": 3,
       "zone-blocker": 3
@@ -330,7 +330,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 27,
+    "percentile": 25,
     "traits-from-baseline-percentile": {
       "zone-blocker": 1
     },
@@ -343,7 +343,7 @@
     "height": "6'6",
     "weight": "315",
     "stamina": 100,
-    "percentile": 39,
+    "percentile": 37,
     "traits-from-baseline-percentile": {
       "pass-protection": 1,
       "zone-blocker": 1
@@ -357,7 +357,7 @@
     "height": "6'6",
     "weight": "317",
     "stamina": 100,
-    "percentile": 78,
+    "percentile": 74,
     "traits-from-baseline-percentile": {
       "pass-protection": 5,
       "zone-blocker": 4
@@ -371,7 +371,7 @@
     "height": "6'7",
     "weight": "326",
     "stamina": 100,
-    "percentile": 25,
+    "percentile": 24,
     "traits-from-baseline-percentile": {
       "zone-blocker": 1
     },

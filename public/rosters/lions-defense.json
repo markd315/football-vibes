@@ -1,12 +1,12 @@
 [
   {
     "name": "Aidan Hutchinson",
-    "position": "DT",
+    "position": "DE",
     "jersey": 97,
     "height": "6'6",
     "weight": "260",
     "stamina": 100,
-    "percentile": 74,
+    "percentile": 75,
     "traits-from-baseline-percentile": {
       "qb-predator": 5,
       "gap-stuffer": 3
@@ -15,7 +15,7 @@
   },
   {
     "name": "Tyler Lacy",
-    "position": "DT",
+    "position": "DE",
     "jersey": 94,
     "height": "6'4",
     "weight": "275",
@@ -26,7 +26,7 @@
   },
   {
     "name": "Eric O&#x27;Neill",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
@@ -39,7 +39,7 @@
   },
   {
     "name": "Payton Turner",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
@@ -57,7 +57,7 @@
     "height": "6'2",
     "weight": "320",
     "stamina": 100,
-    "percentile": 58,
+    "percentile": 59,
     "traits-from-baseline-percentile": {
       "qb-predator": 2,
       "gap-stuffer": 3
@@ -92,12 +92,12 @@
   },
   {
     "name": "Levi Onwuzurike",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 51,
+    "percentile": 52,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -105,7 +105,7 @@
   },
   {
     "name": "Skyler Gill-Howard",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
@@ -118,12 +118,12 @@
   },
   {
     "name": "DJ Wonnum",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 51,
+    "percentile": 52,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -131,7 +131,7 @@
   },
   {
     "name": "Derrick Moore",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
@@ -144,7 +144,7 @@
   },
   {
     "name": "Trevor Nowaske",
-    "position": "LB",
+    "position": "DE",
     "jersey": 42,
     "height": "6'2",
     "weight": "235",
@@ -158,7 +158,7 @@
   },
   {
     "name": "Ahmed Hassanein",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
@@ -176,7 +176,7 @@
     "height": "6'0",
     "weight": "245",
     "stamina": 100,
-    "percentile": 46,
+    "percentile": 47,
     "traits-from-baseline-percentile": {
       "blitz-threat": -2,
       "gap-stuffer": 2,
@@ -204,7 +204,7 @@
     "height": "6'5",
     "weight": "245",
     "stamina": 100,
-    "percentile": 51,
+    "percentile": 52,
     "traits-from-baseline-percentile": {
       "blitz-threat": -2,
       "gap-stuffer": 2,
@@ -223,6 +223,188 @@
     "percentile": 36,
     "traits-from-baseline-percentile": {
       "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Malcolm Rodriguez",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 56,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jimmy Rolder",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "D.J. Reed",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 56,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Rock Ya-Sin",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Avonte Maddox",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 56,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Brian Branch",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Chuck Clark",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 56,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Thomas Harper",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kerby Joseph",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Keith Abney II",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 56,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Khalil Dorsey",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Roger McCreary",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 56,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Christian Izien",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ennis Rakestraw Jr.",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
     },
     "health": 100
   }

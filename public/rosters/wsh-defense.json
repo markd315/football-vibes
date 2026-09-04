@@ -1,12 +1,12 @@
 [
   {
     "name": "Tim Settle",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 54,
+    "percentile": 50,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -14,12 +14,12 @@
   },
   {
     "name": "Shy Tuttle",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 36,
+    "percentile": 34,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -27,12 +27,12 @@
   },
   {
     "name": "Jer&#x27;Zhan Newton",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 26,
+    "percentile": 24,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -40,12 +40,12 @@
   },
   {
     "name": "Daron Payne",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 54,
+    "percentile": 50,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -53,12 +53,12 @@
   },
   {
     "name": "Javon Kinlaw",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 54,
+    "percentile": 50,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -66,12 +66,12 @@
   },
   {
     "name": "Charles Omenihu",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 36,
+    "percentile": 34,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -79,12 +79,12 @@
   },
   {
     "name": "Ricky Barber",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 26,
+    "percentile": 24,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -92,12 +92,12 @@
   },
   {
     "name": "Deatrich Wise Jr.",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 26,
+    "percentile": 24,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -105,12 +105,12 @@
   },
   {
     "name": "Odafe Oweh",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 54,
+    "percentile": 50,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -118,12 +118,12 @@
   },
   {
     "name": "Joshua Josephs",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 36,
+    "percentile": 34,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -131,12 +131,12 @@
   },
   {
     "name": "Javontae Jean-Baptiste",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 26,
+    "percentile": 24,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -144,12 +144,12 @@
   },
   {
     "name": "T.J. Maguranyanga",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 26,
+    "percentile": 24,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -162,7 +162,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 54,
+    "percentile": 50,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -175,7 +175,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 36,
+    "percentile": 34,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -188,7 +188,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 26,
+    "percentile": 24,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -201,10 +201,192 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 26,
+    "percentile": 24,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
     "health": 0
+  },
+  {
+    "name": "Sonny Styles",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Leo Chenal",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "K&#x27;Lavon Chaisson",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dorance Armstrong",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Rasul Douglas",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Trey Amos",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Nick Cross",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyler Owens",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jeremy Reaves",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Quan Martin",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Percy Butler",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Mike Sainristil",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Fabian Moreau",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Amik Robertson",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
   }
 ]

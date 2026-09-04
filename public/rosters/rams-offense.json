@@ -6,7 +6,7 @@
     "height": "6'3",
     "weight": "220",
     "stamina": 100,
-    "percentile": 65,
+    "percentile": 62,
     "traits-from-baseline-percentile": {
       "pocket-passer": 2,
       "escape-artist": -2
@@ -20,7 +20,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "pocket-passer": 1
     },
@@ -33,7 +33,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 29,
+    "percentile": 28,
     "traits-from-baseline-percentile": {
       "pocket-passer": 1
     },
@@ -46,7 +46,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 29,
+    "percentile": 28,
     "traits-from-baseline-percentile": {
       "pocket-passer": 1
     },
@@ -59,7 +59,7 @@
     "height": "5'9",
     "weight": "194",
     "stamina": 100,
-    "percentile": 68,
+    "percentile": 65,
     "traits-from-baseline-percentile": {
       "speed-back": 3,
       "power-back": 1,
@@ -74,7 +74,7 @@
     "height": "5'8",
     "weight": "210",
     "stamina": 100,
-    "percentile": 55,
+    "percentile": 53,
     "traits-from-baseline-percentile": {
       "speed-back": 1,
       "power-back": 2,
@@ -89,7 +89,7 @@
     "height": "5'9",
     "weight": "195",
     "stamina": 100,
-    "percentile": 27,
+    "percentile": 26,
     "traits-from-baseline-percentile": {
       "speed-back": 1,
       "power-back": -1,
@@ -104,7 +104,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 77,
+    "percentile": 74,
     "traits-from-baseline-percentile": {
       "quick-game": 4,
       "blocker": 1
@@ -118,7 +118,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "route-runner": 1
     },
@@ -131,7 +131,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 29,
+    "percentile": 28,
     "traits-from-baseline-percentile": {
       "route-runner": 1
     },
@@ -144,7 +144,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 61,
+    "percentile": 59,
     "traits-from-baseline-percentile": {
       "route-runner": 1
     },
@@ -157,7 +157,7 @@
     "height": "5'9",
     "weight": "165",
     "stamina": 100,
-    "percentile": 46,
+    "percentile": 44,
     "traits-from-baseline-percentile": {
       "quick-game": 1,
       "blocker": -2
@@ -171,7 +171,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 61,
+    "percentile": 59,
     "traits-from-baseline-percentile": {
       "route-runner": 1
     },
@@ -184,7 +184,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "route-runner": 1
     },
@@ -197,7 +197,7 @@
     "height": "6'7",
     "weight": "252",
     "stamina": 100,
-    "percentile": 31,
+    "percentile": 30,
     "traits-from-baseline-percentile": {
       "run-blocker": -1,
       "protection": -1
@@ -211,7 +211,7 @@
     "height": "6'6",
     "weight": "255",
     "stamina": 100,
-    "percentile": 55,
+    "percentile": 53,
     "traits-from-baseline-percentile": {
       "pass-catcher": 1,
       "run-blocker": 1
@@ -225,7 +225,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 29,
+    "percentile": 28,
     "traits-from-baseline-percentile": {
       "blocker": 1
     },
@@ -238,7 +238,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 29,
+    "percentile": 28,
     "traits-from-baseline-percentile": {
       "blocker": 1
     },
@@ -251,7 +251,7 @@
     "height": "6'5",
     "weight": "320",
     "stamina": 100,
-    "percentile": 54,
+    "percentile": 52,
     "traits-from-baseline-percentile": {
       "pass-protection": 1
     },
@@ -264,7 +264,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "pass-protection": 1
     },
@@ -277,7 +277,7 @@
     "height": "6'4",
     "weight": "332",
     "stamina": 100,
-    "percentile": 59,
+    "percentile": 57,
     "traits-from-baseline-percentile": {
       "pass-protection": 1,
       "zone-blocker": 2
@@ -291,7 +291,7 @@
     "height": "6'5",
     "weight": "310",
     "stamina": 100,
-    "percentile": 27,
+    "percentile": 26,
     "traits-from-baseline-percentile": {
       "pass-protection": -1,
       "zone-blocker": -1
@@ -305,7 +305,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 29,
+    "percentile": 28,
     "traits-from-baseline-percentile": {
       "zone-blocker": 1
     },
@@ -318,7 +318,7 @@
     "height": "6'4",
     "weight": "299",
     "stamina": 100,
-    "percentile": 50,
+    "percentile": 48,
     "traits-from-baseline-percentile": {
       "pass-protection": 1
     },
@@ -331,7 +331,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "zone-blocker": 1
     },
@@ -344,7 +344,7 @@
     "height": "6'4",
     "weight": "321",
     "stamina": 100,
-    "percentile": 63,
+    "percentile": 60,
     "traits-from-baseline-percentile": {
       "pass-protection": 1,
       "zone-blocker": 2
@@ -358,7 +358,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "zone-blocker": 1
     },
@@ -371,7 +371,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 61,
+    "percentile": 59,
     "traits-from-baseline-percentile": {
       "pass-protection": 1
     },
@@ -384,7 +384,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "pass-protection": 1
     },

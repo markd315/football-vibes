@@ -6,7 +6,7 @@
     "height": "6'4",
     "weight": "222",
     "stamina": 100,
-    "percentile": 64,
+    "percentile": 65,
     "traits-from-baseline-percentile": {
       "pocket-passer": 3,
       "escape-artist": -1
@@ -33,7 +33,7 @@
     "height": "5'9",
     "weight": "200",
     "stamina": 100,
-    "percentile": 70,
+    "percentile": 71,
     "traits-from-baseline-percentile": {
       "speed-back": 5,
       "route-runner": 3
@@ -87,7 +87,7 @@
     "height": "6'0",
     "weight": "197",
     "stamina": 100,
-    "percentile": 74,
+    "percentile": 75,
     "traits-from-baseline-percentile": {
       "quick-game": 5,
       "blocker": 1
@@ -114,7 +114,7 @@
     "height": "6'1",
     "weight": "179",
     "stamina": 100,
-    "percentile": 55,
+    "percentile": 56,
     "traits-from-baseline-percentile": {
       "quick-game": 2,
       "blocker": -1
@@ -152,7 +152,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 51,
+    "percentile": 52,
     "traits-from-baseline-percentile": {
       "blocker": 1
     },
@@ -204,7 +204,7 @@
     "height": "6'5",
     "weight": "331",
     "stamina": 100,
-    "percentile": 77,
+    "percentile": 78,
     "traits-from-baseline-percentile": {
       "pass-protection": 5,
       "zone-blocker": 5
@@ -231,7 +231,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 51,
+    "percentile": 52,
     "traits-from-baseline-percentile": {
       "zone-blocker": 1
     },
@@ -294,7 +294,7 @@
     "height": "6'6",
     "weight": "320",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 43,
     "traits-from-baseline-percentile": {
       "pass-protection": 1,
       "zone-blocker": 2
@@ -321,7 +321,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 51,
+    "percentile": 52,
     "traits-from-baseline-percentile": {
       "pass-protection": 1
     },

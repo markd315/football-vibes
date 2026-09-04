@@ -1,12 +1,12 @@
 [
   {
     "name": "Elijah Roberts",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 55,
+    "percentile": 51,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -14,12 +14,12 @@
   },
   {
     "name": "Calijah Kancey",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 38,
+    "percentile": 36,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -27,12 +27,12 @@
   },
   {
     "name": "Deshawn McKnight",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 25,
+    "percentile": 23,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -40,12 +40,12 @@
   },
   {
     "name": "Vita Vea",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 55,
+    "percentile": 51,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -53,12 +53,12 @@
   },
   {
     "name": "Elijah Simmons",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 38,
+    "percentile": 36,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -66,12 +66,12 @@
   },
   {
     "name": "DeMonte Capehart",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 25,
+    "percentile": 23,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -79,12 +79,12 @@
   },
   {
     "name": "A&#x27;Shawn Robinson",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 55,
+    "percentile": 51,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -92,12 +92,12 @@
   },
   {
     "name": "Rakeem Nunez-Roches",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 38,
+    "percentile": 36,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -105,12 +105,12 @@
   },
   {
     "name": "Rueben Bain Jr.",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 55,
+    "percentile": 51,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -118,12 +118,12 @@
   },
   {
     "name": "Anthony Nelson",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 38,
+    "percentile": 36,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -131,12 +131,12 @@
   },
   {
     "name": "David Walker",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 25,
+    "percentile": 23,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -149,7 +149,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 55,
+    "percentile": 51,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -162,7 +162,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 38,
+    "percentile": 36,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -170,12 +170,12 @@
   },
   {
     "name": "Christian Rozeboom",
-    "position": "LB",
+    "position": "CB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 55,
+    "percentile": 51,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -183,14 +183,196 @@
   },
   {
     "name": "Josiah Trotter",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Yaya Diaby",
     "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 38,
+    "percentile": 51,
     "traits-from-baseline-percentile": {
       "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Al-Quadin Muhammad",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Mohamed Kamara",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Zyon McCollum",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tykee Smith",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Miles Killebrew",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Antoine Winfield Jr.",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Xavier Williams",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Benjamin Morrison",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ayden Garnes",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Josh Hayes",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Jacob Parrish",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Keionte Scott",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kevin Knowles",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
     },
     "health": 100
   }

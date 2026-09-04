@@ -1,12 +1,12 @@
 [
   {
     "name": "Karl Brooks",
-    "position": "DT",
+    "position": "DE",
     "jersey": 93,
     "height": "6'4",
     "weight": "305",
     "stamina": 100,
-    "percentile": 47,
+    "percentile": 45,
     "traits-from-baseline-percentile": {
       "qb-predator": 1,
       "gap-stuffer": 1
@@ -15,12 +15,12 @@
   },
   {
     "name": "Anthony Campbell",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -28,12 +28,12 @@
   },
   {
     "name": "Javon Hargrave",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 59,
+    "percentile": 56,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -41,12 +41,12 @@
   },
   {
     "name": "Jonathan Ford",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -54,12 +54,12 @@
   },
   {
     "name": "Jordon Riley",
-    "position": "DE",
+    "position": "DT",
     "jersey": 91,
     "height": "6'5",
     "weight": "315",
     "stamina": 100,
-    "percentile": 31,
+    "percentile": 30,
     "traits-from-baseline-percentile": {
       "qb-predator": -1,
       "gap-stuffer": 1
@@ -68,12 +68,12 @@
   },
   {
     "name": "Devonte Wyatt",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 59,
+    "percentile": 56,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -81,12 +81,12 @@
   },
   {
     "name": "Warren Brinson",
-    "position": "LB",
+    "position": "DE",
     "jersey": 95,
     "height": "6'3",
     "weight": "295",
     "stamina": 100,
-    "percentile": 21,
+    "percentile": 20,
     "traits-from-baseline-percentile": {
       "qb-predator": -1
     },
@@ -94,12 +94,12 @@
   },
   {
     "name": "Chris McClellan",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 28,
+    "percentile": 27,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -107,12 +107,12 @@
   },
   {
     "name": "Lukas Van Ness",
-    "position": "CB",
+    "position": "LB",
     "jersey": 90,
     "height": "6'5",
     "weight": "272",
     "stamina": 100,
-    "percentile": 60,
+    "percentile": 57,
     "traits-from-baseline-percentile": {
       "qb-predator": 2,
       "gap-stuffer": 1
@@ -121,12 +121,12 @@
   },
   {
     "name": "Brenton Cox Jr.",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -134,12 +134,12 @@
   },
   {
     "name": "Dani Dennis-Sutton",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 28,
+    "percentile": 27,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -152,7 +152,7 @@
     "height": "6'2",
     "weight": "225",
     "stamina": 100,
-    "percentile": 57,
+    "percentile": 54,
     "traits-from-baseline-percentile": {
       "blitz-threat": -2,
       "gap-stuffer": 1,
@@ -168,7 +168,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 42,
+    "percentile": 40,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -176,12 +176,12 @@
   },
   {
     "name": "Zaire Franklin",
-    "position": "LB",
+    "position": "CB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 59,
+    "percentile": 56,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -189,12 +189,12 @@
   },
   {
     "name": "Isaiah McDuffie",
-    "position": "LB",
+    "position": "CB",
     "jersey": 58,
     "height": "6'1",
     "weight": "227",
     "stamina": 100,
-    "percentile": 47,
+    "percentile": 45,
     "traits-from-baseline-percentile": {
       "blitz-threat": -2,
       "gap-stuffer": 1,
@@ -205,14 +205,209 @@
   },
   {
     "name": "Nick Niemann",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Barryn Sorrell",
     "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 28,
+    "percentile": 52,
     "traits-from-baseline-percentile": {
       "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Micah Parsons",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Collin Oliver",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Keisean Nixon",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Brandon Cisse",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Evan Williams",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Trey Dean III",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Xavier McKinney",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kitan Oladapo",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Johnathan Baldwin II",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Carrington Valentine",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Benjamin St-Juste",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Marlon Jones",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Javon Bullard",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kamal Hadden",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
     },
     "health": 100
   }

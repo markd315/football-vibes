@@ -1,12 +1,12 @@
 [
   {
     "name": "Arden Key",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 52,
+    "percentile": 51,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -14,12 +14,12 @@
   },
   {
     "name": "Jaylahn Tuimoloau",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 36,
+    "percentile": 35,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -27,7 +27,7 @@
   },
   {
     "name": "George Gumbs Jr.",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
@@ -45,7 +45,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 52,
+    "percentile": 51,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -58,7 +58,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 36,
+    "percentile": 35,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -79,12 +79,12 @@
   },
   {
     "name": "DeForest Buckner",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 52,
+    "percentile": 51,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -92,12 +92,12 @@
   },
   {
     "name": "Adetomiwa Adebawore",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 36,
+    "percentile": 35,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -105,12 +105,12 @@
   },
   {
     "name": "Laiatu Latu",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 52,
+    "percentile": 51,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -118,12 +118,12 @@
   },
   {
     "name": "Micheal Clemons",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 36,
+    "percentile": 35,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -131,7 +131,7 @@
   },
   {
     "name": "Caden Curry",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
@@ -149,7 +149,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 52,
+    "percentile": 51,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -162,7 +162,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 36,
+    "percentile": 35,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -175,7 +175,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 52,
+    "percentile": 51,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -188,9 +188,191 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 36,
+    "percentile": 35,
     "traits-from-baseline-percentile": {
       "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Bryce Boettcher",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tahj Chambers",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Sauce Gardner",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaylon Jones",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "A.J. Haulcy",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Hunter Wohler",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Cam Bynum",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jonathan Owens",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Charvarius Ward",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Cam Taylor-Britt",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Johnathan Edwards",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Cameron Mitchell",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Justin Walley",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kapena Gushiken",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
     },
     "health": 100
   }

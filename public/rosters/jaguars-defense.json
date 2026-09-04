@@ -1,12 +1,12 @@
 [
   {
     "name": "Travon Walker",
-    "position": "DT",
+    "position": "DE",
     "jersey": 44,
     "height": "6'5",
     "weight": "275",
     "stamina": 100,
-    "percentile": 60,
+    "percentile": 57,
     "traits-from-baseline-percentile": {
       "qb-predator": 2,
       "gap-stuffer": 2
@@ -15,12 +15,12 @@
   },
   {
     "name": "Dennis Gardeck",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 40,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -28,12 +28,12 @@
   },
   {
     "name": "B.J. Green II",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 28,
+    "percentile": 27,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -46,7 +46,7 @@
     "height": "6'7",
     "weight": "290",
     "stamina": 100,
-    "percentile": 63,
+    "percentile": 60,
     "traits-from-baseline-percentile": {
       "qb-predator": 2,
       "gap-stuffer": 3
@@ -60,7 +60,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 40,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -73,7 +73,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 28,
+    "percentile": 27,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -81,12 +81,12 @@
   },
   {
     "name": "DaVon Hamilton",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 58,
+    "percentile": 55,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -94,12 +94,12 @@
   },
   {
     "name": "Albert Regis",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 40,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -107,12 +107,12 @@
   },
   {
     "name": "Keivie Rose",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 28,
+    "percentile": 27,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -120,12 +120,12 @@
   },
   {
     "name": "Josh Hines-Allen",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 58,
+    "percentile": 55,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -133,12 +133,12 @@
   },
   {
     "name": "Wesley Williams",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 40,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -146,12 +146,12 @@
   },
   {
     "name": "Danny Striggow",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 28,
+    "percentile": 27,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -159,12 +159,12 @@
   },
   {
     "name": "Bryan Thomas Jr.",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 28,
+    "percentile": 27,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -177,7 +177,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 58,
+    "percentile": 55,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -190,9 +190,191 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 40,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ventrell Miller",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jahlani Tavai",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Parker Hughes",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Jared Bartlett",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Travis Hunter",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Eric Murray",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Rayuan Lane III",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jalen Huskey",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Antonio Johnson",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Caleb Ransaw",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Montaric Brown",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Christian Braswell",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jourdan Lewis",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jarrian Jones",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
     },
     "health": 100
   }

@@ -230,19 +230,25 @@ def deploy_file(path_str, api_key, skip_schema=False):
         "Content-Type": "application/json"
     }
 
-    try:
-        response = requests.post(url, json=payload, headers=headers)
-        print(f"  [DEBUG] Response Status: {response.status_code}")
-        print(f"  [DEBUG] Response Body: {response.text[:500]}") # Limit output
-        if response.status_code >= 200 and response.status_code < 300:
-            print(f"  [SUCCESS] Deployed {path_str}")
-            return {"path": path_str, "status": "success", "response": response.json() if response.text else {}}
-        else:
-            print(f"  [FAILED] {path_str} - Status: {response.status_code}")
-            return {"path": path_str, "status": "failed", "error": response.text}
-    except Exception as e:
-        print(f"  [ERROR] {path_str}: {e}")
-        return {"path": path_str, "status": "error", "error": str(e)}
+    import time
+    for attempt in range(5):
+        try:
+            response = requests.post(url, json=payload, headers=headers, timeout=10)
+            print(f"  [DEBUG] Response Status: {response.status_code}")
+            print(f"  [DEBUG] Response Body: {response.text[:500]}") # Limit output
+            if response.status_code >= 200 and response.status_code < 300:
+                print(f"  [SUCCESS] Deployed {path_str}")
+                time.sleep(0.4)
+                return {"path": path_str, "status": "success", "response": response.json() if response.text else {}}
+            else:
+                print(f"  [RETRY {attempt+1}/5] {path_str} - Status: {response.status_code}")
+                time.sleep(1.5)
+        except Exception as e:
+            print(f"  [RETRY {attempt+1}/5] {path_str} Exception: {e}")
+            time.sleep(1.5)
+
+    print(f"  [FAILED] {path_str} after retries")
+    return {"path": path_str, "status": "failed", "error": "Max retries exceeded"}
 
 def record_deployment(deployed_files):
     """Appends successful deployments to .modified_files"""

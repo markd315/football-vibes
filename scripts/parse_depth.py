@@ -90,12 +90,12 @@ DEFAULT_TRAITS = {
 }
 
 def parse_depth_chart_content(html):
-    blocks = html.split('<div class="Table__Title">')
+    blocks = html.split('<div class="Table__Title"')
     result = {'offense': [], 'defense': []}
 
     for b in blocks[1:]:
-        title_match = re.search(r'^(.*?)(</div>|<table)', b, re.DOTALL)
-        title = title_match.group(1).strip() if title_match else ''
+        title_m = re.search(r'>([^<]+)</div>', b)
+        title = title_m.group(1).strip() if title_m else ''
 
         cat = 'offense'
         if any(k in title.lower() for k in ['defense', '4-3', '3-4', 'nickel', 'd']):
@@ -103,7 +103,9 @@ def parse_depth_chart_content(html):
         elif 'special' in title.lower():
             continue
 
-        pos_matches = re.findall(r'<td class="Table__TD"><span class="" data-testid="statCell">([A-Z0-9]+)', b)
+        pos_matches = re.findall(r'data-testid="statCell">([A-Z0-9]+)(?:<!-- -->|\s*<span)', b)
+        if not pos_matches:
+            pos_matches = re.findall(r'<td class="Table__TD"><span class="" data-testid="statCell">([A-Z0-9]+)', b)
         
         scroller_m = re.search(r'<div class="Table__Scroller"[^>]*>', b)
         if not scroller_m:
@@ -111,18 +113,18 @@ def parse_depth_chart_content(html):
 
         scroller_html = b[scroller_m.end():]
         tbody_match = re.search(r'<tbody[^>]*>(.*?)</tbody>', scroller_html, re.DOTALL)
-        
-        # If closing tbody was truncated in markdown dump, grab remaining tr rows directly
         tbody_content = tbody_match.group(1) if tbody_match else scroller_html
 
         row_matches = re.findall(r'<tr[^>]*>(.*?)</tr>', tbody_content, re.DOTALL)
 
-        for idx, row_html in enumerate(row_matches):
-            pos_raw = pos_matches[idx] if idx < len(pos_matches) else "UNK"
+        for row_idx, row_html in enumerate(row_matches):
+            if row_idx >= len(pos_matches):
+                continue
+            pos_raw = pos_matches[row_idx]
             norm_pos = POSITION_MAP.get(pos_raw, "WR" if cat == 'offense' else "CB")
 
             td_matches = re.findall(r'<td[^>]*>(.*?)</td>', row_html, re.DOTALL)
-            for d_idx, td_html in enumerate(td_matches):
+            for depth_idx, td_html in enumerate(td_matches):
                 p_match = re.search(r'href="https://www.espn.com/nfl/player/_/id/\d+/[^"]+">([^<]+)</a>', td_html)
                 if p_match:
                     p_name = p_match.group(1).strip()
@@ -133,7 +135,7 @@ def parse_depth_chart_content(html):
                         'name': p_name,
                         'position_raw': pos_raw,
                         'position': norm_pos,
-                        'depth': d_idx + 1,
+                        'depth': depth_idx + 1,
                         'injury': inj
                     })
 

@@ -1,12 +1,12 @@
 [
   {
     "name": "Leonard Williams",
-    "position": "DT",
+    "position": "DE",
     "jersey": 99,
     "height": "6'4",
     "weight": "302",
     "stamina": 100,
-    "percentile": 86,
+    "percentile": 84,
     "traits-from-baseline-percentile": {
       "qb-predator": 3,
       "gap-stuffer": 2
@@ -15,12 +15,12 @@
   },
   {
     "name": "Mike Morris",
-    "position": "DT",
+    "position": "DE",
     "jersey": 91,
     "height": "6'5",
     "weight": "295",
     "stamina": 100,
-    "percentile": 39,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -28,12 +28,12 @@
   },
   {
     "name": "Byron Murphy II",
-    "position": "DE",
+    "position": "DT",
     "jersey": 99,
     "height": "6'1",
     "weight": "300",
     "stamina": 100,
-    "percentile": 78,
+    "percentile": 76,
     "traits-from-baseline-percentile": {
       "qb-predator": 1,
       "gap-stuffer": 3
@@ -42,23 +42,23 @@
   },
   {
     "name": "Brandon Pili",
-    "position": "DE",
+    "position": "DT",
     "jersey": 93,
     "height": "6'3",
     "weight": "315",
     "stamina": 100,
-    "percentile": 35,
+    "percentile": 34,
     "traits-from-baseline-percentile": {},
     "health": 100
   },
   {
     "name": "Jarran Reed",
-    "position": "LB",
+    "position": "DE",
     "jersey": 90,
     "height": "6'3",
     "weight": "303",
     "stamina": 100,
-    "percentile": 65,
+    "percentile": 63,
     "traits-from-baseline-percentile": {
       "qb-predator": 1,
       "gap-stuffer": 2
@@ -67,12 +67,12 @@
   },
   {
     "name": "Rylie Mills",
-    "position": "LB",
+    "position": "DE",
     "jersey": 94,
     "height": "6'5",
     "weight": "290",
     "stamina": 100,
-    "percentile": 49,
+    "percentile": 48,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -80,12 +80,12 @@
   },
   {
     "name": "DeMarcus Lawrence",
-    "position": "CB",
+    "position": "LB",
     "jersey": 93,
     "height": "6'3",
     "weight": "265",
     "stamina": 100,
-    "percentile": 82,
+    "percentile": 80,
     "traits-from-baseline-percentile": {
       "qb-predator": 3,
       "gap-stuffer": 2
@@ -94,12 +94,12 @@
   },
   {
     "name": "Dante Fowler Jr.",
-    "position": "CB",
+    "position": "LB",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 50,
+    "percentile": 49,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },
@@ -112,7 +112,7 @@
     "height": "6'0",
     "weight": "230",
     "stamina": 100,
-    "percentile": 58,
+    "percentile": 56,
     "traits-from-baseline-percentile": {
       "blitz-threat": -2,
       "gap-stuffer": 1,
@@ -128,7 +128,7 @@
     "height": "6'2",
     "weight": "230",
     "stamina": 100,
-    "percentile": 49,
+    "percentile": 48,
     "traits-from-baseline-percentile": {
       "blitz-threat": -2,
       "gap-stuffer": 1,
@@ -143,7 +143,228 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 34,
+    "percentile": 33,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ernest Jones IV",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Patrick O&#x27;Connell",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Power Echols",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Aaron Smith",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Uchenna Nwosu",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Derick Hall",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Connor O&#x27;Toole",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Devon Witherspoon",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Nehemiah Pritchett",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ty Okada",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Bud Clark",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Julian Love",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Josh Jobe",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Julian Neal",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Avery Smith",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Terrion Arnold",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Nick Emmanwori",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
     "traits-from-baseline-percentile": {
       "lockdown-cb": 1
     },

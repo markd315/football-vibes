@@ -1,12 +1,12 @@
 [
   {
     "name": "Will Anderson Jr.",
-    "position": "DT",
+    "position": "DE",
     "jersey": 51,
     "height": "6'4",
     "weight": "253",
     "stamina": 100,
-    "percentile": 79,
+    "percentile": 77,
     "traits-from-baseline-percentile": {
       "qb-predator": 5,
       "gap-stuffer": 2
@@ -15,12 +15,12 @@
   },
   {
     "name": "Sabastian Harsh",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 39,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -28,23 +28,23 @@
   },
   {
     "name": "Dylan Horton",
-    "position": "DT",
+    "position": "DE",
     "jersey": 97,
     "height": "6'4",
     "weight": "255",
     "stamina": 100,
-    "percentile": 24,
+    "percentile": 23,
     "traits-from-baseline-percentile": {},
     "health": 100
   },
   {
     "name": "Solomon Byrd",
-    "position": "DT",
+    "position": "DE",
     "jersey": 92,
     "height": "6'3",
     "weight": "250",
     "stamina": 100,
-    "percentile": 27,
+    "percentile": 26,
     "traits-from-baseline-percentile": {},
     "health": 100
   },
@@ -55,7 +55,7 @@
     "height": "6'2",
     "weight": "300",
     "stamina": 100,
-    "percentile": 37,
+    "percentile": 36,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -68,7 +68,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 39,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -81,7 +81,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 26,
+    "percentile": 25,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -89,12 +89,12 @@
   },
   {
     "name": "Sheldon Rankins",
-    "position": "DE",
+    "position": "DT",
     "jersey": 98,
     "height": "6'1",
     "weight": "305",
     "stamina": 100,
-    "percentile": 47,
+    "percentile": 46,
     "traits-from-baseline-percentile": {
       "qb-predator": 2,
       "gap-stuffer": 1
@@ -103,12 +103,12 @@
   },
   {
     "name": "Kayden McDonald",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 39,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -116,12 +116,12 @@
   },
   {
     "name": "Kyonte Hamilton",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 26,
+    "percentile": 25,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -129,12 +129,12 @@
   },
   {
     "name": "Danielle Hunter",
-    "position": "LB",
+    "position": "DE",
     "jersey": 99,
     "height": "6'5",
     "weight": "263",
     "stamina": 100,
-    "percentile": 73,
+    "percentile": 71,
     "traits-from-baseline-percentile": {
       "qb-predator": 4,
       "gap-stuffer": 2
@@ -143,12 +143,12 @@
   },
   {
     "name": "Jadeveon Clowney",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 39,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -156,12 +156,12 @@
   },
   {
     "name": "Dominique Robinson",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 26,
+    "percentile": 25,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -169,12 +169,12 @@
   },
   {
     "name": "Ali Gaye",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 26,
+    "percentile": 25,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -187,7 +187,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 56,
+    "percentile": 55,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -200,9 +200,230 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 39,
+    "percentile": 38,
     "traits-from-baseline-percentile": {
       "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Azeez Al-Shaair",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Wade Woodaz",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jake Hummel",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "K.C. Ossai",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Jake Hansen",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "E.J. Speed",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Derek Stingley Jr.",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tremon Smith",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Collin Wright",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Reed Blankenship",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "M.J. Stewart",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ja&#x27;Marcus Ingram",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Calen Bullock",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kamari Ramsey",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kamari Lassiter",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaylin Smith",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jalen Pitre",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
     },
     "health": 100
   }

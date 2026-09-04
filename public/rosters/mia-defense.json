@@ -1,12 +1,12 @@
 [
   {
     "name": "Chop Robinson",
-    "position": "DT",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 48,
+    "percentile": 44,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -19,7 +19,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 48,
+    "percentile": 44,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -32,7 +32,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 32,
+    "percentile": 29,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -45,7 +45,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 22,
+    "percentile": 20,
     "traits-from-baseline-percentile": {
       "gap-stuffer": 1
     },
@@ -53,12 +53,12 @@
   },
   {
     "name": "Zach Sieler",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 48,
+    "percentile": 44,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -66,12 +66,12 @@
   },
   {
     "name": "Zeek Biggers",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 32,
+    "percentile": 29,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -79,12 +79,12 @@
   },
   {
     "name": "Keith Cooper Jr.",
-    "position": "DE",
+    "position": "DT",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 22,
+    "percentile": 20,
     "traits-from-baseline-percentile": {
       "qb-predator": 1
     },
@@ -92,12 +92,12 @@
   },
   {
     "name": "Josh Uche",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 48,
+    "percentile": 44,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -105,12 +105,12 @@
   },
   {
     "name": "Robert Beal Jr.",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 32,
+    "percentile": 29,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -118,12 +118,12 @@
   },
   {
     "name": "Malik Herring",
-    "position": "LB",
+    "position": "DE",
     "jersey": 0,
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 22,
+    "percentile": 20,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -136,7 +136,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 48,
+    "percentile": 44,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -149,7 +149,7 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 32,
+    "percentile": 29,
     "traits-from-baseline-percentile": {
       "tackler": 1
     },
@@ -162,9 +162,204 @@
     "height": "6'1",
     "weight": "205",
     "stamina": 100,
-    "percentile": 22,
+    "percentile": 20,
     "traits-from-baseline-percentile": {
       "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jacob Rodriguez",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jackson Woodard",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Willie Gay Jr.",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Trey Moore",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Jason Marshall Jr.",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Darrell Baker Jr.",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dante Trader Jr.",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Zayne Anderson",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Michael Taaffe",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Julius Wood",
+    "position": "S",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "ball-hawk": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "JuJu Brents",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Marcellas Dial Jr.",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Storm Duck",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Chris Johnson",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Reese Taylor",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
     },
     "health": 100
   }
