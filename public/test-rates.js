@@ -2,36 +2,8 @@
 
 // Test the new explosive/havoc rate calculation
 
-function calculateRatesFromAdvantage(playType, offenseAdvantage, riskLeverage) {
-    const baselineSuccess = 40.0;
-    const baselineExplosive = 12.0;
-    const baselineHavoc = 12.0;
-    
-    const goodOutcomesBase = 52.0 + (offenseAdvantage * 4.5);
-    const goodOutcomes = Math.max(5, Math.min(95, goodOutcomesBase));
-    
-    const riskFactor = riskLeverage / 10.0;
-    
-    const passExplosiveBoost = playType === 'pass' ? 3.0 : 0.0;
-    const passHavocBoost = playType === 'pass' ? 1.0 : 0.0;
-    
-    const baseVolatile = baselineExplosive + baselineHavoc;
-    const volatilePool = baseVolatile + (riskFactor * 16.0) + passExplosiveBoost + passHavocBoost;
-    
-    const offenseFactor = (offenseAdvantage + 10) / 20.0;
-    
-    const poolAfterBaseline = volatilePool - 6;
-    const explosiveRate = 3 + (poolAfterBaseline * offenseFactor);
-    const havocRate = 3 + (poolAfterBaseline * (1 - offenseFactor));
-    
-    const successRate = Math.max(3, goodOutcomes - explosiveRate);
-    
-    return {
-        "success-rate": Math.min(90, successRate),
-        "explosive-rate": Math.max(3, Math.min(65, explosiveRate)),
-        "havoc-rate": Math.max(3, Math.min(65, havocRate))
-    };
-}
+const { calculateRatesFromAdvantage } = require('./rate-logic.js');
+
 
 console.log('='.repeat(80));
 console.log('EXPLOSIVE/HAVOC RATE TEST - 100 sample plays');
@@ -60,9 +32,9 @@ for (const s of scenarios) {
     const rates = calculateRatesFromAdvantage('run', s.adv, s.lev);
     const unsucc = 100 - rates['success-rate'] - rates['explosive-rate'] - rates['havoc-rate'];
     console.log(
-        s.name.padEnd(45) + 
-        rates['explosive-rate'].toFixed(1).padEnd(8) + 
-        rates['havoc-rate'].toFixed(1).padEnd(8) + 
+        s.name.padEnd(45) +
+        rates['explosive-rate'].toFixed(1).padEnd(8) +
+        rates['havoc-rate'].toFixed(1).padEnd(8) +
         rates['success-rate'].toFixed(1).padEnd(10) +
         unsucc.toFixed(1)
     );
@@ -80,10 +52,10 @@ for (let i = 0; i < 100; i++) {
     const adv = Math.floor(Math.random() * 21) - 10; // -10 to +10
     const lev = Math.floor(Math.random() * 11); // 0 to 10
     const playType = Math.random() > 0.5 ? 'pass' : 'run';
-    
+
     const rates = calculateRatesFromAdvantage(playType, adv, lev);
     const roll = Math.random() * 100;
-    
+
     let outcome;
     if (roll < rates['havoc-rate']) {
         outcome = 'havoc';
@@ -97,7 +69,7 @@ for (let i = 0; i < 100; i++) {
     } else {
         outcome = 'unsuccessful';
     }
-    
+
     results.push({ adv, lev, playType, outcome, rates });
 }
 
