@@ -114,8 +114,8 @@ async function updateTeamPreview(side) {
 
     // Load roster to show preview
     try {
-        const offenseResp = await fetch(`rosters/${team.offenseFile}`);
-        const defenseResp = await fetch(`rosters/${team.defenseFile}`);
+        const offenseResp = await fetch(`rosters/${team.offenseFile}?_=` + Date.now());
+        const defenseResp = await fetch(`rosters/${team.defenseFile}?_=` + Date.now());
 
         if (offenseResp.ok && defenseResp.ok) {
             const offense = await offenseResp.json();
@@ -350,22 +350,22 @@ function refreshCacheTimer() {
 
 async function loadSelectedRosters(homeTeam, awayTeam) {
     // Load home offense
-    const homeOffenseResp = await fetch(`rosters/${homeTeam.offenseFile}`);
+    const homeOffenseResp = await fetch(`rosters/${homeTeam.offenseFile}?_=` + Date.now());
     rosters['home-offense'] = await homeOffenseResp.json();
     rosters['home-offense'].forEach(p => { if (p.stamina === undefined) p.stamina = 100.0; });
 
     // Load home defense
-    const homeDefenseResp = await fetch(`rosters/${homeTeam.defenseFile}`);
+    const homeDefenseResp = await fetch(`rosters/${homeTeam.defenseFile}?_=` + Date.now());
     rosters['home-defense'] = await homeDefenseResp.json();
     rosters['home-defense'].forEach(p => { if (p.stamina === undefined) p.stamina = 100.0; });
 
     // Load away offense
-    const awayOffenseResp = await fetch(`rosters/${awayTeam.offenseFile}`);
+    const awayOffenseResp = await fetch(`rosters/${awayTeam.offenseFile}?_=` + Date.now());
     rosters['away-offense'] = await awayOffenseResp.json();
     rosters['away-offense'].forEach(p => { if (p.stamina === undefined) p.stamina = 100.0; });
 
     // Load away defense
-    const awayDefenseResp = await fetch(`rosters/${awayTeam.defenseFile}`);
+    const awayDefenseResp = await fetch(`rosters/${awayTeam.defenseFile}?_=` + Date.now());
     rosters['away-defense'] = await awayDefenseResp.json();
     rosters['away-defense'].forEach(p => { if (p.stamina === undefined) p.stamina = 100.0; });
 }
