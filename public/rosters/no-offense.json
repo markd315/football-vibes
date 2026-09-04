@@ -1,0 +1,366 @@
+[
+  {
+    "name": "Tyler Shough",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Spencer Rattler",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Zach Wilson",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Travis Etienne Jr.",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Alvin Kamara",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kendre Miller",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Audric Estime",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Chris Olave",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Barion Brown",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Devaughn Vele",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jordyn Tyson",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Bryce Lance",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Mason Tipton",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Juwan Johnson",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Noah Fant",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Oscar Delp",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Moliki Matavao",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Kelvin Banks Jr.",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Asim Richards",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "David Edwards",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dillon Radunz",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Nick Saldiveri",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Erik McCoy",
+    "position": "C",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Cesar Ruiz",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jeremiah Wright",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "William Sherman",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Taliese Fuaga",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Mason Murphy",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  }
+]

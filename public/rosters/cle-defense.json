@@ -1,0 +1,158 @@
+[
+  {
+    "name": "Isaiah McGuire",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Derek Barnett",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Alex Wright",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Mason Graham",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Adin Huntington",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kalia Davis",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Maliek Collins",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Mike Hall Jr.",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Elijah Chatman",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Travis Bell",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Jared Verse",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Sam Williams",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  }
+]

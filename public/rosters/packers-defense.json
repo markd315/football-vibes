@@ -1,0 +1,219 @@
+[
+  {
+    "name": "Karl Brooks",
+    "position": "DT",
+    "jersey": 93,
+    "height": "6'4",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 47,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1,
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Anthony Campbell",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Javon Hargrave",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 59,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jonathan Ford",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jordon Riley",
+    "position": "DE",
+    "jersey": 91,
+    "height": "6'5",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 31,
+    "traits-from-baseline-percentile": {
+      "qb-predator": -1,
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Devonte Wyatt",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 59,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Warren Brinson",
+    "position": "LB",
+    "jersey": 95,
+    "height": "6'3",
+    "weight": "295",
+    "stamina": 100,
+    "percentile": 21,
+    "traits-from-baseline-percentile": {
+      "qb-predator": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Chris McClellan",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Lukas Van Ness",
+    "position": "CB",
+    "jersey": 90,
+    "height": "6'5",
+    "weight": "272",
+    "stamina": 100,
+    "percentile": 60,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 2,
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Brenton Cox Jr.",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dani Dennis-Sutton",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Edgerrin Cooper",
+    "position": "CB",
+    "jersey": 51,
+    "height": "6'2",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 57,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "gap-stuffer": 1,
+      "zone-coverage": 2,
+      "man-coverage": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ty&#x27;Ron Hopper",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Zaire Franklin",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 59,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Isaiah McDuffie",
+    "position": "LB",
+    "jersey": 58,
+    "height": "6'1",
+    "weight": "227",
+    "stamina": 100,
+    "percentile": 47,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "gap-stuffer": 1,
+      "zone-coverage": 1,
+      "man-coverage": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Nick Niemann",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  }
+]

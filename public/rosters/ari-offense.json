@@ -1,0 +1,366 @@
+[
+  {
+    "name": "Jacoby Brissett",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Gardner Minshew II",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Carson Beck",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jeremiyah Love",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyler Allgeier",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Bam Knight",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "James Conner",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Marvin Harrison Jr.",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jalen Brooks",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Simi Fehoko",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Michael Wilson",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Reggie Virgil",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kendrick Bourne",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Devin Duvernay",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Trey McBride",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Elijah Higgins",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Hunter Long",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tip Reiman",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Paris Johnson Jr.",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Josh Fryar",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Isaac Seumalo",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Hayden Conner",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Hjalte Froholdt",
+    "position": "C",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jon Gaines II",
+    "position": "C",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Isaiah Adams",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Chase Bisontis",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Elijah Wilkinson",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jayden Williams",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  }
+]

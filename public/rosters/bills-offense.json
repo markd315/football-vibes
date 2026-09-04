@@ -1,0 +1,336 @@
+[
+  {
+    "name": "Josh Allen",
+    "position": "QB",
+    "jersey": 17,
+    "height": "6'5",
+    "weight": "237",
+    "stamina": 100,
+    "percentile": 86,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 3,
+      "escape-artist": 4
+    },
+    "health": 100
+  },
+  {
+    "name": "Kyle Allen",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 41,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "James Cook III",
+    "position": "RB",
+    "jersey": 4,
+    "height": "5'11",
+    "weight": "199",
+    "stamina": 100,
+    "percentile": 65,
+    "traits-from-baseline-percentile": {
+      "speed-back": 3,
+      "route-runner": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Ray Davis",
+    "position": "RB",
+    "jersey": 22,
+    "height": "5'9",
+    "weight": "211",
+    "stamina": 100,
+    "percentile": 47,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1,
+      "power-back": 2,
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ty Johnson",
+    "position": "RB",
+    "jersey": 25,
+    "height": "5'10",
+    "weight": "210",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1,
+      "blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "DJ Moore",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 59,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Joshua Palmer",
+    "position": "WR",
+    "jersey": 5,
+    "height": "6'1",
+    "weight": "210",
+    "stamina": 100,
+    "percentile": 44,
+    "traits-from-baseline-percentile": {
+      "quick-game": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Khalil Shakir",
+    "position": "WR",
+    "jersey": 10,
+    "height": "6'0",
+    "weight": "196",
+    "stamina": 100,
+    "percentile": 62,
+    "traits-from-baseline-percentile": {
+      "quick-game": 3
+    },
+    "health": 100
+  },
+  {
+    "name": "Skyler Bell",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 41,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Keon Coleman",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'4",
+    "weight": "213",
+    "stamina": 100,
+    "percentile": 58,
+    "traits-from-baseline-percentile": {
+      "quick-game": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyrell Shavers",
+    "position": "WR",
+    "jersey": 16,
+    "height": "6'6",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dalton Kincaid",
+    "position": "TE",
+    "jersey": 86,
+    "height": "6'4",
+    "weight": "240",
+    "stamina": 100,
+    "percentile": 68,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": 3,
+      "run-blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dawson Knox",
+    "position": "TE",
+    "jersey": 88,
+    "height": "6'4",
+    "weight": "254",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": 1,
+      "run-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jackson Hawes",
+    "position": "TE",
+    "jersey": 89,
+    "height": "6'4",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 15,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Keleki Latu",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dion Dawkins",
+    "position": "OT",
+    "jersey": 73,
+    "height": "6'5",
+    "weight": "320",
+    "stamina": 100,
+    "percentile": 62,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 2,
+      "zone-blocker": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Tylan Grable",
+    "position": "OT",
+    "jersey": 74,
+    "height": "6'5",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 15,
+    "traits-from-baseline-percentile": {
+      "pass-protection": -1,
+      "zone-blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jude Bowry",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Alec Anderson",
+    "position": "OG",
+    "jersey": 68,
+    "height": "6'5",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 22,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Austin Corbett",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 41,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Connor McGovern",
+    "position": "C",
+    "jersey": 60,
+    "height": "6'4",
+    "weight": "306",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 2,
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Lloyd Cushenberry III",
+    "position": "C",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 41,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "O&#x27;Cyrus Torrence",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 59,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ar&#x27;maj Reed-Adams",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Spencer Brown",
+    "position": "OT",
+    "jersey": 79,
+    "height": "6'8",
+    "weight": "311",
+    "stamina": 100,
+    "percentile": 58,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 2,
+      "zone-blocker": 2
+    },
+    "health": 100
+  }
+]

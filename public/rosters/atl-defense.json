@@ -1,0 +1,223 @@
+[
+  {
+    "name": "Brandon Dorlus",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "LaCale London",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Da&#x27;Shawn Hand",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Maason Smith",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Anterio Thompson",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Gervon Dexter Sr.",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Za&#x27;Darius Smith",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Cameron Thomas",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jalon Walker",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Keshawn Banks",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Divine Deablo",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kendal Daniels",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Josh Woods",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Christian Harris",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Harold Perkins Jr.",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Yasir Abdullah",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jared Ivey",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  }
+]

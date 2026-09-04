@@ -1,0 +1,340 @@
+[
+  {
+    "name": "Joe Burrow",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Joe Flacco",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Chase Brown",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Samaje Perine",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tahj Brooks",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ja&#x27;Marr Chase",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Colbie Young",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tee Higgins",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dohnte Meyers",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Andrei Iosivas",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ke&#x27;Shawn Williams",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Mike Gesicki",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Drew Sample",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Erick All Jr.",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jack Endries",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Orlando Brown Jr.",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Javon Foster",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Myles Hinton",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dylan Fairchild",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Brian Parker II",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Ted Karras",
+    "position": "C",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Connor Lew",
+    "position": "C",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jacob Bayer",
+    "position": "C",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dalton Risner",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jalen Rivers",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Amarius Mims",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  }
+]

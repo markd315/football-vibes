@@ -1,0 +1,262 @@
+[
+  {
+    "name": "Montez Sweat",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jamree Kromah",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Grady Jarrett",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Neville Gallimore",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "James Lynch",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jordan van den Berg",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kentavius Street",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jayden Loving",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Shemar Turner",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dayo Odeyingbo",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Austin Booker",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Daniel Hardy",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jonathan Garvin",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Devin Bush",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tony Fields II",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Nephi Sewell",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Ruben Hyppolite II",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "T.J. Edwards",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Keyshaun Elliott",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Noah Sewell",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  }
+]

@@ -1,0 +1,386 @@
+[
+  {
+    "name": "C.J. Stroud",
+    "position": "QB",
+    "jersey": 7,
+    "height": "6'3",
+    "weight": "218",
+    "stamina": 100,
+    "percentile": 79,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 3,
+      "escape-artist": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Davis Mills",
+    "position": "QB",
+    "jersey": 10,
+    "height": "6'4",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {
+      "escape-artist": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Graham Mertz",
+    "position": "QB",
+    "jersey": 5,
+    "height": "6'3",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 14,
+    "traits-from-baseline-percentile": {
+      "escape-artist": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "David Montgomery",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 56,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Woody Marks",
+    "position": "RB",
+    "jersey": 24,
+    "height": "5'10",
+    "weight": "220",
+    "stamina": 100,
+    "percentile": 41,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1,
+      "power-back": 1,
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "British Brooks",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Nico Collins",
+    "position": "WR",
+    "jersey": 12,
+    "height": "6'4",
+    "weight": "215",
+    "stamina": 100,
+    "percentile": 79,
+    "traits-from-baseline-percentile": {
+      "quick-game": 3,
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kayshon Boutte",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jayden Higgins",
+    "position": "WR",
+    "jersey": 14,
+    "height": "6'4",
+    "weight": "215",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "quick-game": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Xavier Hutchinson",
+    "position": "WR",
+    "jersey": 89,
+    "height": "6'2",
+    "weight": "203",
+    "stamina": 100,
+    "percentile": 31,
+    "traits-from-baseline-percentile": {
+      "quick-game": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jared Wayne",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaylin Noel",
+    "position": "WR",
+    "jersey": 16,
+    "height": "5'10",
+    "weight": "185",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {
+      "blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tank Dell",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Dalton Schultz",
+    "position": "TE",
+    "jersey": 86,
+    "height": "6'5",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 58,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": 2,
+      "run-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Foster Moreau",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Cade Stover",
+    "position": "TE",
+    "jersey": 80,
+    "height": "6'4",
+    "weight": "255",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {
+      "run-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Marlin Klein",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Aireontae Ersery",
+    "position": "OT",
+    "jersey": 72,
+    "height": "6'6",
+    "weight": "330",
+    "stamina": 100,
+    "percentile": 44,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1,
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Blake Fisher",
+    "position": "OT",
+    "jersey": 74,
+    "height": "6'6",
+    "weight": "312",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Keylan Rutledge",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 56,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Wyatt Teller",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Evan Brown",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jake Andrews",
+    "position": "C",
+    "jersey": 53,
+    "height": "6'4",
+    "weight": "295",
+    "stamina": 100,
+    "percentile": 44,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1,
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ed Ingram",
+    "position": "OG",
+    "jersey": 67,
+    "height": "6'3",
+    "weight": "307",
+    "stamina": 100,
+    "percentile": 41,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1,
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Febechi Nwaiwu",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Trent Brown",
+    "position": "OT",
+    "jersey": 77,
+    "height": "6'8",
+    "weight": "380",
+    "stamina": 100,
+    "percentile": 52,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 2,
+      "zone-blocker": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Nate Thomas",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Braden Smith",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Sam Hagen",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 0
+  }
+]

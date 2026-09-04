@@ -1,0 +1,78 @@
+[
+  {
+    "timestamp": "2026-08-01T21:24:18.817338",
+    "files": [
+      "public/app.js",
+      "public/apply-nerfs.js",
+      "public/blocking-assignments.json",
+      "public/fatigue.json",
+      "public/fieldlocations.json",
+      "public/index.html",
+      "public/play-analysis.html",
+      "public/play-state-machine.json",
+      "public/team-eval.js",
+      "public/test-rates.js",
+      "public/test-state-machine.js"
+    ]
+  },
+  {
+    "timestamp": "2026-08-01T21:25:22.325994",
+    "files": [
+      "lambda/llm_proxy.py",
+      "public/app.js",
+      "public/apply-nerfs.js",
+      "public/blocking-assignments.json",
+      "public/context/context-gameloop",
+      "public/context/context-skills",
+      "public/context/eval-format.json",
+      "public/context/first_ever_response.txt",
+      "public/context/improved-req-response",
+      "public/context/prompt-condensed",
+      "public/context/prompt-pass-schematic-success",
+      "public/context/prompt-runfail",
+      "public/fatigue.json",
+      "public/fieldlocations.json",
+      "public/index.html",
+      "public/js/core.js",
+      "public/js/csv-generator.js",
+      "public/js/prompt-generator.js",
+      "public/js/trait-detector.js",
+      "public/outcomes/explosive-pass.json",
+      "public/outcomes/explosive-run.json",
+      "public/outcomes/field-goal-miss.json",
+      "public/outcomes/field-goal-success.json",
+      "public/outcomes/havoc-interception.json",
+      "public/outcomes/havoc-sack.json",
+      "public/outcomes/havoc-tackle-for-loss.json",
+      "public/outcomes/successful-run.json",
+      "public/outcomes/timing.json",
+      "public/outcomes/unsuccessful-pass.json",
+      "public/rosters/allstar/defense.json",
+      "public/rosters/bills-defense.json",
+      "public/rosters/chiefs-offense.json",
+      "public/rosters/eagles-offense.json",
+      "public/rosters/jaguars-defense.json",
+      "public/rosters/patriots-offense.json",
+      "public/rosters/rams-defense.json"
+    ]
+  },
+  {
+    "timestamp": "2026-09-03T20:54:52.899987",
+    "files": [
+      "lambda/llm_proxy.py",
+      "public/app.js",
+      "public/apply-nerfs.js",
+      "public/blocking-assignments.json",
+      "public/fatigue.json",
+      "public/fieldlocations.json",
+      "public/index.html",
+      "public/js/core.js",
+      "public/js/csv-generator.js",
+      "public/js/prompt-generator.js",
+      "public/js/trait-detector.js",
+      "public/play-analysis.html",
+      "public/play-state-machine.json",
+      "public/team-eval.js"
+    ]
+  }
+]

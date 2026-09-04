@@ -1,0 +1,209 @@
+[
+  {
+    "name": "Will Anderson Jr.",
+    "position": "DT",
+    "jersey": 51,
+    "height": "6'4",
+    "weight": "253",
+    "stamina": 100,
+    "percentile": 79,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 5,
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Sabastian Harsh",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dylan Horton",
+    "position": "DT",
+    "jersey": 97,
+    "height": "6'4",
+    "weight": "255",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Solomon Byrd",
+    "position": "DT",
+    "jersey": 92,
+    "height": "6'3",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Tommy Togiai",
+    "position": "DT",
+    "jersey": 93,
+    "height": "6'2",
+    "weight": "300",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Logan Hall",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Mario Edwards Jr.",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Sheldon Rankins",
+    "position": "DE",
+    "jersey": 98,
+    "height": "6'1",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 47,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 2,
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kayden McDonald",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kyonte Hamilton",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Danielle Hunter",
+    "position": "LB",
+    "jersey": 99,
+    "height": "6'5",
+    "weight": "263",
+    "stamina": 100,
+    "percentile": 73,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 4,
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Jadeveon Clowney",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dominique Robinson",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ali Gaye",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Henry To&#x27;oTo&#x27;o",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 56,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Aiden Fisher",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  }
+]

@@ -1,0 +1,158 @@
+[
+  {
+    "name": "Levi Drake Rodriguez",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Caleb Banks",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Domonique Orange",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Taki Taimani",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Jalen Redmond",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyrion Ingram-Dawkins",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Elijah Williams",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Andrew Van Ginkel",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Bo Richter",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Eric Wilson",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jake Golday",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 38,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kenny Dyson Jr.",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 0
+  }
+]

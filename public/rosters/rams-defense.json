@@ -1,0 +1,195 @@
+[
+  {
+    "name": "Kobie Turner",
+    "position": "DT",
+    "jersey": 91,
+    "height": "6'2",
+    "weight": "288",
+    "stamina": 100,
+    "percentile": 72,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 3,
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyler Davis",
+    "position": "DT",
+    "jersey": 93,
+    "height": "6'2",
+    "weight": "290",
+    "stamina": 100,
+    "percentile": 40,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Poona Ford",
+    "position": "DE",
+    "jersey": 97,
+    "height": "5'11",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Ty Hamilton",
+    "position": "DE",
+    "jersey": 96,
+    "height": "6'3",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "qb-predator": -1,
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Aaron Donald",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 61,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Braden Fiske",
+    "position": "LB",
+    "jersey": 90,
+    "height": "6'4",
+    "weight": "292",
+    "stamina": 100,
+    "percentile": 65,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 2,
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Byron Young",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'3",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 63,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 2,
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Josaiah Stewart",
+    "position": "CB",
+    "jersey": 45,
+    "height": "6'1",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 44,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Wesley Bailey",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 29,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Eddie Walls III",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 29,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Nate Landman",
+    "position": "CB",
+    "jersey": 53,
+    "height": "6'3",
+    "weight": "235",
+    "stamina": 100,
+    "percentile": 65,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "gap-stuffer": 2,
+      "zone-coverage": 2,
+      "man-coverage": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Grant Stuard",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Omar Speights",
+    "position": "LB",
+    "jersey": 54,
+    "height": "6'1",
+    "weight": "230",
+    "stamina": 100,
+    "percentile": 59,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "gap-stuffer": 1,
+      "zone-coverage": 2,
+      "man-coverage": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Shaun Dolac",
+    "position": "LB",
+    "jersey": 52,
+    "height": "6'0",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 34,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "man-coverage": -1
+    },
+    "health": 100
+  }
+]

@@ -1,0 +1,419 @@
+[
+  {
+    "name": "Patrick Mahomes",
+    "position": "QB",
+    "jersey": 15,
+    "height": "6'2",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 77,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 4,
+      "escape-artist": 3
+    },
+    "health": 0
+  },
+  {
+    "name": "Justin Fields",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Garrett Nussmeier",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Chris Oladokun",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Kenneth Walker III",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Emmett Johnson",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Brashard Smith",
+    "position": "RB",
+    "jersey": 26,
+    "height": "5'9",
+    "weight": "200",
+    "stamina": 100,
+    "percentile": 17,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1,
+      "blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "EJ Smith",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Rashee Rice",
+    "position": "WR",
+    "jersey": 4,
+    "height": "6'1",
+    "weight": "204",
+    "stamina": 100,
+    "percentile": 58,
+    "traits-from-baseline-percentile": {
+      "quick-game": 3
+    },
+    "health": 100
+  },
+  {
+    "name": "Jalen Royals",
+    "position": "WR",
+    "jersey": 18,
+    "height": "5'10",
+    "weight": "185",
+    "stamina": 100,
+    "percentile": 14,
+    "traits-from-baseline-percentile": {
+      "blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jeff Caldwell",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Xavier Worthy",
+    "position": "WR",
+    "jersey": 1,
+    "height": "5'11",
+    "weight": "165",
+    "stamina": 100,
+    "percentile": 50,
+    "traits-from-baseline-percentile": {
+      "quick-game": 2,
+      "blocker": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Cyrus Allen",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jimmy Holiday",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Tyquan Thornton",
+    "position": "WR",
+    "jersey": 11,
+    "height": "6'2",
+    "weight": "181",
+    "stamina": 100,
+    "percentile": 19,
+    "traits-from-baseline-percentile": {
+      "blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Nikko Remigio",
+    "position": "WR",
+    "jersey": 14,
+    "height": "5'10",
+    "weight": "180",
+    "stamina": 100,
+    "percentile": 10,
+    "traits-from-baseline-percentile": {
+      "blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Travis Kelce",
+    "position": "TE",
+    "jersey": 87,
+    "height": "6'5",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 71,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": 5,
+      "run-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Noah Gray",
+    "position": "TE",
+    "jersey": 83,
+    "height": "6'4",
+    "weight": "240",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": 1,
+      "run-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jared Wiley",
+    "position": "TE",
+    "jersey": 89,
+    "height": "6'6",
+    "weight": "260",
+    "stamina": 100,
+    "percentile": 10,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jake Briningstool",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Josh Simmons",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaylon Moore",
+    "position": "OT",
+    "jersey": 71,
+    "height": "6'4",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 17,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Kingsley Suamataia",
+    "position": "OG",
+    "jersey": 65,
+    "height": "6'5",
+    "weight": "320",
+    "stamina": 100,
+    "percentile": 29,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Mike Caliendo",
+    "position": "OG",
+    "jersey": 62,
+    "height": "6'4",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 17,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Joshua Ezeudu",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "C.J. Hanson",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Creed Humphrey",
+    "position": "C",
+    "jersey": 52,
+    "height": "6'4",
+    "weight": "302",
+    "stamina": 100,
+    "percentile": 71,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 4,
+      "zone-blocker": 4
+    },
+    "health": 100
+  },
+  {
+    "name": "Hunter Nourzad",
+    "position": "C",
+    "jersey": 63,
+    "height": "6'4",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 14,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Trey Smith",
+    "position": "OG",
+    "jersey": 65,
+    "height": "6'6",
+    "weight": "320",
+    "stamina": 100,
+    "percentile": 62,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 3,
+      "zone-blocker": 4
+    },
+    "health": 100
+  },
+  {
+    "name": "Matt Waletzko",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Kahlil Benson",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Diego Pounds",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  }
+]

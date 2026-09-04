@@ -1,0 +1,217 @@
+[
+  {
+    "name": "T.J. Sanders",
+    "position": "DT",
+    "jersey": 94,
+    "height": "6'3",
+    "weight": "295",
+    "stamina": 100,
+    "percentile": 19,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Phidarian Mathis",
+    "position": "DT",
+    "jersey": 93,
+    "height": "6'4",
+    "weight": "312",
+    "stamina": 100,
+    "percentile": 30,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Deone Walker",
+    "position": "DE",
+    "jersey": 98,
+    "height": "6'6",
+    "weight": "345",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 3
+    },
+    "health": 100
+  },
+  {
+    "name": "DeWayne Carter",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 41,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ed Oliver",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 59,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Greg Gaines",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 41,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Zane Durant",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Greg Rousseau",
+    "position": "CB",
+    "jersey": 50,
+    "height": "6'6",
+    "weight": "266",
+    "stamina": 100,
+    "percentile": 65,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 3,
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Michael Hoecht",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 41,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Javon Solomon",
+    "position": "CB",
+    "jersey": 51,
+    "height": "6'2",
+    "weight": "254",
+    "stamina": 100,
+    "percentile": 40,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1,
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Landon Jackson",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kaleb Elarms-Orr",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 59,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dorian Williams",
+    "position": "CB",
+    "jersey": 42,
+    "height": "6'1",
+    "weight": "228",
+    "stamina": 100,
+    "percentile": 47,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "gap-stuffer": 1,
+      "zone-coverage": 2,
+      "man-coverage": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Terrel Bernard",
+    "position": "LB",
+    "jersey": 43,
+    "height": "6'1",
+    "weight": "224",
+    "stamina": 100,
+    "percentile": 62,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "gap-stuffer": 2,
+      "zone-coverage": 2,
+      "man-coverage": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Joe Andreessen",
+    "position": "LB",
+    "jersey": 45,
+    "height": "6'2",
+    "weight": "235",
+    "stamina": 100,
+    "percentile": 22,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "man-coverage": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Demetrius Flannigan-Fowles",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 0
+  }
+]

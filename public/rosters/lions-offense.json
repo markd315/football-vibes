@@ -1,0 +1,343 @@
+[
+  {
+    "name": "Jared Goff",
+    "position": "QB",
+    "jersey": 16,
+    "height": "6'4",
+    "weight": "222",
+    "stamina": 100,
+    "percentile": 64,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 3,
+      "escape-artist": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Joshua Dobbs",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jahmyr Gibbs",
+    "position": "RB",
+    "jersey": 26,
+    "height": "5'9",
+    "weight": "200",
+    "stamina": 100,
+    "percentile": 70,
+    "traits-from-baseline-percentile": {
+      "speed-back": 5,
+      "route-runner": 3
+    },
+    "health": 100
+  },
+  {
+    "name": "Sione Vaki",
+    "position": "RB",
+    "jersey": 39,
+    "height": "6'0",
+    "weight": "220",
+    "stamina": 100,
+    "percentile": 21,
+    "traits-from-baseline-percentile": {
+      "power-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jacob Saylors",
+    "position": "RB",
+    "jersey": 36,
+    "height": "5'10",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 11,
+    "traits-from-baseline-percentile": {
+      "power-back": -1,
+      "blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Isiah Pacheco",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Amon-Ra St. Brown",
+    "position": "WR",
+    "jersey": 14,
+    "height": "6'0",
+    "weight": "197",
+    "stamina": 100,
+    "percentile": 74,
+    "traits-from-baseline-percentile": {
+      "quick-game": 5,
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tay Martin",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jameson Williams",
+    "position": "WR",
+    "jersey": 9,
+    "height": "6'1",
+    "weight": "179",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "quick-game": 2,
+      "blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kendrick Law",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Isaac TeSlaa",
+    "position": "WR",
+    "jersey": 80,
+    "height": "6'3",
+    "weight": "210",
+    "stamina": 100,
+    "percentile": 24,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Sam LaPorta",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Brock Wright",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyler Conklin",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jackson Meeks",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Penei Sewell",
+    "position": "OT",
+    "jersey": 58,
+    "height": "6'5",
+    "weight": "331",
+    "stamina": 100,
+    "percentile": 77,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 5,
+      "zone-blocker": 5
+    },
+    "health": 100
+  },
+  {
+    "name": "Giovanni Manu",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Christian Mahogany",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Juice Scruggs",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Miles Frazier",
+    "position": "OG",
+    "jersey": 64,
+    "height": "6'4",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 18,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Cade Mays",
+    "position": "C",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Michael Niese",
+    "position": "C",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Tate Ratledge",
+    "position": "OG",
+    "jersey": 75,
+    "height": "6'6",
+    "weight": "320",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1,
+      "zone-blocker": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Ben Bartch",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Blake Miller",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Larry Borom",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 36,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  }
+]

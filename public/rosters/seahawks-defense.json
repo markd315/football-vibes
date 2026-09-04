@@ -1,0 +1,152 @@
+[
+  {
+    "name": "Leonard Williams",
+    "position": "DT",
+    "jersey": 99,
+    "height": "6'4",
+    "weight": "302",
+    "stamina": 100,
+    "percentile": 86,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 3,
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Mike Morris",
+    "position": "DT",
+    "jersey": 91,
+    "height": "6'5",
+    "weight": "295",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Byron Murphy II",
+    "position": "DE",
+    "jersey": 99,
+    "height": "6'1",
+    "weight": "300",
+    "stamina": 100,
+    "percentile": 78,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1,
+      "gap-stuffer": 3
+    },
+    "health": 100
+  },
+  {
+    "name": "Brandon Pili",
+    "position": "DE",
+    "jersey": 93,
+    "height": "6'3",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Jarran Reed",
+    "position": "LB",
+    "jersey": 90,
+    "height": "6'3",
+    "weight": "303",
+    "stamina": 100,
+    "percentile": 65,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1,
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Rylie Mills",
+    "position": "LB",
+    "jersey": 94,
+    "height": "6'5",
+    "weight": "290",
+    "stamina": 100,
+    "percentile": 49,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "DeMarcus Lawrence",
+    "position": "CB",
+    "jersey": 93,
+    "height": "6'3",
+    "weight": "265",
+    "stamina": 100,
+    "percentile": 82,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 3,
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Dante Fowler Jr.",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 50,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Drake Thomas",
+    "position": "CB",
+    "jersey": 44,
+    "height": "6'0",
+    "weight": "230",
+    "stamina": 100,
+    "percentile": 58,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "gap-stuffer": 1,
+      "zone-coverage": 1,
+      "man-coverage": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyrice Knight",
+    "position": "CB",
+    "jersey": 46,
+    "height": "6'2",
+    "weight": "230",
+    "stamina": 100,
+    "percentile": 49,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "gap-stuffer": 1,
+      "zone-coverage": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Chazz Surratt",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 34,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  }
+]

@@ -1,0 +1,358 @@
+[
+  {
+    "name": "Jordan Love",
+    "position": "QB",
+    "jersey": 10,
+    "height": "6'4",
+    "weight": "224",
+    "stamina": 100,
+    "percentile": 74,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 2,
+      "escape-artist": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyrod Taylor",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "MarShawn Lloyd",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 59,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Chris Brooks",
+    "position": "RB",
+    "jersey": 33,
+    "height": "6'0",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "power-back": 1,
+      "route-runner": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kaleb Johnson",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Josh Jacobs",
+    "position": "RB",
+    "jersey": 8,
+    "height": "5'10",
+    "weight": "220",
+    "stamina": 100,
+    "percentile": 74,
+    "traits-from-baseline-percentile": {
+      "speed-back": 2,
+      "power-back": 3,
+      "route-runner": 2,
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Christian Watson",
+    "position": "WR",
+    "jersey": 9,
+    "height": "6'4",
+    "weight": "208",
+    "stamina": 100,
+    "percentile": 63,
+    "traits-from-baseline-percentile": {
+      "quick-game": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Bo Melton",
+    "position": "WR",
+    "jersey": 80,
+    "height": "5'11",
+    "weight": "189",
+    "stamina": 100,
+    "percentile": 31,
+    "traits-from-baseline-percentile": {
+      "blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Savion Williams",
+    "position": "WR",
+    "jersey": 84,
+    "height": "6'5",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Jayden Reed",
+    "position": "WR",
+    "jersey": 11,
+    "height": "5'11",
+    "weight": "187",
+    "stamina": 100,
+    "percentile": 71,
+    "traits-from-baseline-percentile": {
+      "quick-game": 3,
+      "blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Skyy Moore",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Matthew Golden",
+    "position": "WR",
+    "jersey": 18,
+    "height": "5'11",
+    "weight": "195",
+    "stamina": 100,
+    "percentile": 35,
+    "traits-from-baseline-percentile": {
+      "quick-game": 1,
+      "blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "J. Michael Sturdivant",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tucker Kraft",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 59,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jonnu Smith",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Josh Whyle",
+    "position": "TE",
+    "jersey": 81,
+    "height": "6'6",
+    "weight": "248",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Mark Redman",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jordan Morgan",
+    "position": "OT",
+    "jersey": 76,
+    "height": "6'5",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1,
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "John Williams",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Aaron Banks",
+    "position": "OG",
+    "jersey": 65,
+    "height": "6'5",
+    "weight": "325",
+    "stamina": 100,
+    "percentile": 57,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1,
+      "zone-blocker": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Jager Burton",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Sean Rhyan",
+    "position": "C",
+    "jersey": 75,
+    "height": "6'5",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 49,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1,
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jacob Monk",
+    "position": "OG",
+    "jersey": 60,
+    "height": "6'4",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 21,
+    "traits-from-baseline-percentile": {
+      "pass-protection": -1,
+      "zone-blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Donovan Jennings",
+    "position": "OG",
+    "jersey": 68,
+    "height": "6'5",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Anthony Belton",
+    "position": "OG",
+    "jersey": 72,
+    "height": "6'5",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 40,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Zach Bako-Bewele",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 59,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Travis Glover",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 28,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  }
+]

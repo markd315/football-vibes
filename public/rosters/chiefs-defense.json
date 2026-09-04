@@ -1,0 +1,177 @@
+[
+  {
+    "name": "George Karlaftis",
+    "position": "DT",
+    "jersey": 56,
+    "height": "6'4",
+    "weight": "275",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 3,
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Ashton Gillotte",
+    "position": "DT",
+    "jersey": 92,
+    "height": "6'3",
+    "weight": "254",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ethan Downs",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Chris Jones",
+    "position": "DT",
+    "jersey": 95,
+    "height": "6'6",
+    "weight": "298",
+    "stamina": 100,
+    "percentile": 74,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 5,
+      "gap-stuffer": 4
+    },
+    "health": 100
+  },
+  {
+    "name": "Peter Woods",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Bryson Eason",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Khyiris Tonga",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Omarr Norman-Lott",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Felix Anudike-Uzomah",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "R Mason Thomas",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Cooper McDonald",
+    "position": "LB",
+    "jersey": 48,
+    "height": "6'1",
+    "weight": "235",
+    "stamina": 100,
+    "percentile": 10,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "man-coverage": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jack Pyburn",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Drue Tranquill",
+    "position": "LB",
+    "jersey": 23,
+    "height": "6'2",
+    "weight": "234",
+    "stamina": 100,
+    "percentile": 43,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "gap-stuffer": 1,
+      "zone-coverage": 2,
+      "man-coverage": 1
+    },
+    "health": 100
+  }
+]

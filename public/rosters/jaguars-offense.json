@@ -1,0 +1,403 @@
+[
+  {
+    "name": "Trevor Lawrence",
+    "position": "QB",
+    "jersey": 16,
+    "height": "6'6",
+    "weight": "220",
+    "stamina": 100,
+    "percentile": 62,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 2,
+      "escape-artist": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Quinn Ewers",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Carter Bradley",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Bhayshul Tuten",
+    "position": "RB",
+    "jersey": 28,
+    "height": "5'11",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 29,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1,
+      "route-runner": -1,
+      "blocker": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Chris Rodriguez Jr.",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "LeQuint Allen Jr.",
+    "position": "RB",
+    "jersey": 27,
+    "height": "5'11",
+    "weight": "210",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1,
+      "blocker": -2
+    },
+    "health": 100
+  },
+  {
+    "name": "Ameer Abdullah",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Brian Thomas Jr.",
+    "position": "WR",
+    "jersey": 11,
+    "height": "6'3",
+    "weight": "209",
+    "stamina": 100,
+    "percentile": 64,
+    "traits-from-baseline-percentile": {
+      "quick-game": 4
+    },
+    "health": 100
+  },
+  {
+    "name": "Travis Hunter",
+    "position": "WR",
+    "jersey": 11,
+    "height": "6'1",
+    "weight": "209",
+    "stamina": 100,
+    "percentile": 61,
+    "traits-from-baseline-percentile": {
+      "quick-game": 4
+    },
+    "health": 0
+  },
+  {
+    "name": "Parker Washington",
+    "position": "WR",
+    "jersey": 13,
+    "height": "5'10",
+    "weight": "207",
+    "stamina": 100,
+    "percentile": 55,
+    "traits-from-baseline-percentile": {
+      "quick-game": 3,
+      "blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Josh Cameron",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jakobi Meyers",
+    "position": "WR",
+    "jersey": 8,
+    "height": "6'2",
+    "weight": "200",
+    "stamina": 100,
+    "percentile": 50,
+    "traits-from-baseline-percentile": {
+      "quick-game": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "CJ Williams",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Brenton Strange",
+    "position": "TE",
+    "jersey": 85,
+    "height": "6'4",
+    "weight": "248",
+    "stamina": 100,
+    "percentile": 70,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": -1,
+      "run-blocker": 7,
+      "protection": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Nate Boerkircher",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tanner Koziol",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Quintin Morris",
+    "position": "TE",
+    "jersey": 88,
+    "height": "6'2",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": 1,
+      "run-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Anton Harrison",
+    "position": "OT",
+    "jersey": 76,
+    "height": "6'5",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 50,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 2,
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Cole Van Lanen",
+    "position": "OT",
+    "jersey": 77,
+    "height": "6'5",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Emmanuel Pregnon",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ezra Cleveland",
+    "position": "OG",
+    "jersey": 70,
+    "height": "6'4",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 46,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1,
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Garrett DiGiorgio",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Robert Hainsey",
+    "position": "C",
+    "jersey": 67,
+    "height": "6'4",
+    "weight": "303",
+    "stamina": 100,
+    "percentile": 47,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1,
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jonah Monheim",
+    "position": "C",
+    "jersey": 60,
+    "height": "6'4",
+    "weight": "300",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Sam Mustipher",
+    "position": "C",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Daniel Faalele",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Wyatt Milum",
+    "position": "OG",
+    "jersey": 64,
+    "height": "6'6",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 31,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Patrick Mekari",
+    "position": "OG",
+    "jersey": 65,
+    "height": "6'4",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 46,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1,
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Walker Little",
+    "position": "OT",
+    "jersey": 72,
+    "height": "6'7",
+    "weight": "320",
+    "stamina": 100,
+    "percentile": 47,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1,
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jimto Obidegwu",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  }
+]

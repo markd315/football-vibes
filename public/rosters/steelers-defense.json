@@ -1,0 +1,167 @@
+[
+  {
+    "name": "Derrick Harmon",
+    "position": "DT",
+    "jersey": 93,
+    "height": "6'5",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 42,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Gabriel Rubio",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 40,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kevin Jobity Jr.",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Yahya Black",
+    "position": "DE",
+    "jersey": 94,
+    "height": "6'4",
+    "weight": "320",
+    "stamina": 100,
+    "percentile": 32,
+    "traits-from-baseline-percentile": {
+      "qb-predator": -1,
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Sebastian Joseph-Day",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 40,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Cameron Heyward",
+    "position": "LB",
+    "jersey": 97,
+    "height": "6'5",
+    "weight": "295",
+    "stamina": 100,
+    "percentile": 66,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 2,
+      "gap-stuffer": 3
+    },
+    "health": 100
+  },
+  {
+    "name": "Keeanu Benton",
+    "position": "LB",
+    "jersey": 95,
+    "height": "6'4",
+    "weight": "315",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Logan Lee",
+    "position": "LB",
+    "jersey": 92,
+    "height": "6'5",
+    "weight": "285",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "T.J. Watt",
+    "position": "CB",
+    "jersey": 90,
+    "height": "6'4",
+    "weight": "252",
+    "stamina": 100,
+    "percentile": 86,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": 5,
+      "gap-stuffer": 2,
+      "zone-coverage": 1,
+      "man-coverage": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Nick Herbig",
+    "position": "CB",
+    "jersey": 36,
+    "height": "6'2",
+    "weight": "240",
+    "stamina": 100,
+    "percentile": 48,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": 2,
+      "man-coverage": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Payton Wilson",
+    "position": "CB",
+    "jersey": 32,
+    "height": "6'4",
+    "weight": "233",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -1,
+      "gap-stuffer": 1,
+      "zone-coverage": 2,
+      "man-coverage": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Cole Holcomb",
+    "position": "CB",
+    "jersey": 55,
+    "height": "6'1",
+    "weight": "240",
+    "stamina": 100,
+    "percentile": 32,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2
+    },
+    "health": 100
+  }
+]

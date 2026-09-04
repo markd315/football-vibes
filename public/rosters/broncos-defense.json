@@ -1,0 +1,188 @@
+[
+  {
+    "name": "Malcolm Roach",
+    "position": "DT",
+    "jersey": 96,
+    "height": "6'2",
+    "weight": "295",
+    "stamina": 100,
+    "percentile": 40,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1,
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Eyioma Uwazurike",
+    "position": "DT",
+    "jersey": 90,
+    "height": "6'6",
+    "weight": "316",
+    "stamina": 100,
+    "percentile": 37,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Tyler Onyedim",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Matt Henningsen",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "D.J. Jones",
+    "position": "DE",
+    "jersey": 97,
+    "height": "6'0",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 57,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Zach Allen",
+    "position": "LB",
+    "jersey": 99,
+    "height": "6'4",
+    "weight": "285",
+    "stamina": 100,
+    "percentile": 68,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 2,
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Jordan Jackson",
+    "position": "LB",
+    "jersey": 94,
+    "height": "6'4",
+    "weight": "290",
+    "stamina": 100,
+    "percentile": 32,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Sai&#x27;vion Jones",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dondrea Tillman",
+    "position": "CB",
+    "jersey": 52,
+    "height": "6'2",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Jonathon Cooper",
+    "position": "CB",
+    "jersey": 53,
+    "height": "6'3",
+    "weight": "257",
+    "stamina": 100,
+    "percentile": 53,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 2,
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Drew Sanders",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Alex Singleton",
+    "position": "CB",
+    "jersey": 49,
+    "height": "6'2",
+    "weight": "240",
+    "stamina": 100,
+    "percentile": 62,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "gap-stuffer": 2,
+      "zone-coverage": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Karene Reid",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jordan Turner",
+    "position": "CB",
+    "jersey": 44,
+    "height": "6'1",
+    "weight": "230",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "man-coverage": -1
+    },
+    "health": 100
+  }
+]

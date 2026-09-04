@@ -1,0 +1,371 @@
+[
+  {
+    "name": "Aaron Rodgers",
+    "position": "QB",
+    "jersey": 8,
+    "height": "6'2",
+    "weight": "225",
+    "stamina": 100,
+    "percentile": 57,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 3,
+      "escape-artist": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Mason Rudolph",
+    "position": "QB",
+    "jersey": 2,
+    "height": "6'5",
+    "weight": "235",
+    "stamina": 100,
+    "percentile": 32,
+    "traits-from-baseline-percentile": {
+      "escape-artist": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Will Howard",
+    "position": "QB",
+    "jersey": 5,
+    "height": "6'4",
+    "weight": "235",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "escape-artist": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Drew Allar",
+    "position": "QB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {
+      "pocket-passer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jaylen Warren",
+    "position": "RB",
+    "jersey": 30,
+    "height": "5'8",
+    "weight": "215",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "speed-back": 2,
+      "route-runner": 2,
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Rico Dowdle",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 40,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Eli Heidenreich",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "DK Metcalf",
+    "position": "WR",
+    "jersey": 14,
+    "height": "6'4",
+    "weight": "235",
+    "stamina": 100,
+    "percentile": 73,
+    "traits-from-baseline-percentile": {
+      "quick-game": 2,
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Germie Bernard",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 40,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Cole Burgess",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Michael Pittman Jr.",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 57,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Ben Skowronek",
+    "position": "WR",
+    "jersey": 18,
+    "height": "6'3",
+    "weight": "224",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {
+      "quick-game": -1,
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Roman Wilson",
+    "position": "WR",
+    "jersey": 3,
+    "height": "5'11",
+    "weight": "185",
+    "stamina": 100,
+    "percentile": 32,
+    "traits-from-baseline-percentile": {
+      "quick-game": 1,
+      "blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Kaden Wetjen",
+    "position": "WR",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 40,
+    "traits-from-baseline-percentile": {
+      "route-runner": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Pat Freiermuth",
+    "position": "TE",
+    "jersey": 88,
+    "height": "6'5",
+    "weight": "258",
+    "stamina": 100,
+    "percentile": 57,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": 1,
+      "run-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Darnell Washington",
+    "position": "TE",
+    "jersey": 80,
+    "height": "6'7",
+    "weight": "265",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "pass-catcher": -1,
+      "run-blocker": 3,
+      "protection": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Robert Tonyan",
+    "position": "TE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {
+      "blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Riley Nowakowski",
+    "position": "RB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 57,
+    "traits-from-baseline-percentile": {
+      "speed-back": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Troy Fautanu",
+    "position": "OT",
+    "jersey": 72,
+    "height": "6'4",
+    "weight": "317",
+    "stamina": 100,
+    "percentile": 54,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 2,
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Jack Driscoll",
+    "position": "OT",
+    "jersey": 66,
+    "height": "6'5",
+    "weight": "306",
+    "stamina": 100,
+    "percentile": 29,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Mason McCormick",
+    "position": "OG",
+    "jersey": 74,
+    "height": "6'4",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 44,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Gennings Dunker",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 40,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Zach Frazier",
+    "position": "C",
+    "jersey": 54,
+    "height": "6'3",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 51,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1,
+      "zone-blocker": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Ryan McCollum",
+    "position": "C",
+    "jersey": 62,
+    "height": "6'4",
+    "weight": "295",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Spencer Anderson",
+    "position": "OG",
+    "jersey": 63,
+    "height": "6'5",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 32,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Brock Hoffman",
+    "position": "OG",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 40,
+    "traits-from-baseline-percentile": {
+      "zone-blocker": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Dylan Cook",
+    "position": "OT",
+    "jersey": 71,
+    "height": "6'5",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 26,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Max Iheanachor",
+    "position": "OT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 40,
+    "traits-from-baseline-percentile": {
+      "pass-protection": 1
+    },
+    "health": 100
+  }
+]

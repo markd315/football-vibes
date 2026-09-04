@@ -1,0 +1,160 @@
+[
+  {
+    "name": "Christian Barmore",
+    "position": "DT",
+    "jersey": 90,
+    "height": "6'4",
+    "weight": "310",
+    "stamina": 100,
+    "percentile": 75,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 3,
+      "gap-stuffer": 2
+    },
+    "health": 100
+  },
+  {
+    "name": "Leonard Taylor III",
+    "position": "DT",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Cory Durden",
+    "position": "DE",
+    "jersey": 92,
+    "height": "6'5",
+    "weight": "305",
+    "stamina": 100,
+    "percentile": 40,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Isaiah Iton",
+    "position": "DE",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 1
+    },
+    "health": 0
+  },
+  {
+    "name": "Milton Williams",
+    "position": "LB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 56,
+    "traits-from-baseline-percentile": {
+      "tackler": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Joshua Farmer",
+    "position": "LB",
+    "jersey": 91,
+    "height": "6'4",
+    "weight": "295",
+    "stamina": 100,
+    "percentile": 33,
+    "traits-from-baseline-percentile": {},
+    "health": 100
+  },
+  {
+    "name": "Elijah Ponder",
+    "position": "CB",
+    "jersey": 47,
+    "height": "6'3",
+    "weight": "245",
+    "stamina": 100,
+    "percentile": 25,
+    "traits-from-baseline-percentile": {
+      "gap-stuffer": -1
+    },
+    "health": 100
+  },
+  {
+    "name": "Quintayvious Hutchins",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Harold Landry III",
+    "position": "CB",
+    "jersey": 55,
+    "height": "6'2",
+    "weight": "250",
+    "stamina": 100,
+    "percentile": 71,
+    "traits-from-baseline-percentile": {
+      "qb-predator": 3,
+      "gap-stuffer": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Christian Elliss",
+    "position": "CB",
+    "jersey": 45,
+    "height": "6'2",
+    "weight": "235",
+    "stamina": 100,
+    "percentile": 50,
+    "traits-from-baseline-percentile": {
+      "blitz-threat": -2,
+      "gap-stuffer": 1,
+      "zone-coverage": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Darius Muasau",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 39,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  },
+  {
+    "name": "Namdi Obiazor",
+    "position": "CB",
+    "jersey": 0,
+    "height": "6'1",
+    "weight": "205",
+    "stamina": 100,
+    "percentile": 27,
+    "traits-from-baseline-percentile": {
+      "lockdown-cb": 1
+    },
+    "health": 100
+  }
+]
