@@ -3,10 +3,53 @@
 
 const fs = require('fs');
 const path = require('path');
-const jStat = require('jstat');
+
+function standardNormalCDF(x) {
+    const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+    const sign = x < 0 ? -1 : 1;
+    const absX = Math.abs(x) / Math.sqrt(2);
+    const t = 1.0 / (1.0 + p * absX);
+    const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-absX * absX);
+    return 0.5 * (1.0 + sign * y);
+}
+
+function standardNormalInv(p) {
+    if (p <= 0) return -10;
+    if (p >= 1) return 10;
+    const a = [-3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02, 1.383577518672690e+02, -3.066479806614716e+01, 2.506628277459239e+00];
+    const b = [-5.447609879822406e+01, 1.615858368580409e+02, -1.556989798598866e+02, 6.680131188771972e+01, -1.328068155288572e+01];
+    const c = [-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00, -2.549732539343734e+00, 4.374664141464968e+00, 2.938163982698783e+00];
+    const d = [7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e+00, 3.754408661907416e+00];
+    const p_low = 0.02425, p_high = 1 - p_low;
+    let q, r;
+    if (p < p_low) {
+        q = Math.sqrt(-2 * Math.log(p));
+        return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+    }
+    if (p <= p_high) {
+        q = p - 0.5;
+        r = q * q;
+        return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q / (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+    }
+    q = Math.sqrt(-2 * Math.log(1 - p));
+    return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) / ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+}
+
+let jStat;
+try {
+    jStat = require('jstat');
+} catch (e) {
+    jStat = {
+        normal: {
+            cdf: (x, mean = 0, std = 1) => standardNormalCDF((x - mean) / std),
+            inv: (p, mean = 0, std = 1) => mean + std * standardNormalInv(p)
+        }
+    };
+}
 
 // Load state machine and outcome files
-const stateMachine = JSON.parse(fs.readFileSync('play-state-machine.json', 'utf8'));
+const stateMachinePath = fs.existsSync('play-state-machine.json') ? 'play-state-machine.json' : path.join(__dirname, 'play-state-machine.json');
+const stateMachine = JSON.parse(fs.readFileSync(stateMachinePath, 'utf8'));
 const outcomeFiles = {};
 
 function loadOutcomeFile(filePath) {
@@ -14,7 +57,11 @@ function loadOutcomeFile(filePath) {
         return outcomeFiles[filePath];
     }
     try {
-        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        let resolved = filePath;
+        if (!fs.existsSync(resolved)) {
+            resolved = path.join(__dirname, filePath.replace(/^outcomes\//, '').replace(/^context\//, ''));
+        }
+        const data = JSON.parse(fs.readFileSync(resolved, 'utf8'));
         outcomeFiles[filePath] = data;
         return data;
     } catch (error) {
@@ -36,44 +83,40 @@ function calculateYardsFromRoll(roll, outcomeFile) {
     const mean = outcomeFile['average-yards-gained'] || 0;
     const stdDev = outcomeFile['standard-deviation'] || 1;
     const skewness = outcomeFile['skewness'] || 0;
-    
-    // Calculate minimum percentile needed to avoid negative yards
-    // For mean + z*stdDev >= 0, we need z >= -mean/stdDev
-    const minZForNonNegative = -mean / stdDev;
-    let minPercentile = 0.01; // Default to 1st percentile
-    
-    if (minZForNonNegative > -3 && minZForNonNegative < 3) {
-        // Use jstat to find percentile that gives us the minimum z-score
-        // Add small safety margin (0.1 z-score units)
-        const targetZ = minZForNonNegative + 0.1;
-        minPercentile = jStat.normal.cdf(targetZ, 0, 1);
-        // Clamp to reasonable range
-        minPercentile = Math.max(0.01, Math.min(0.05, minPercentile));
-    }
-    
-    // Map roll (1-100) to percentile range [minPercentile, 0.99]
-    // This ensures the worst roll gives z-score that prevents negative yards
-    const percentileRange = 0.99 - minPercentile;
-    const percentile = minPercentile + ((roll - 1) / 99) * percentileRange;
-    
+    const outcomeName = outcomeFile.outcome || '';
+
+    const percentile = 0.01 + ((roll - 1) / 99) * 0.98;
     let z = inverseNormalCDF(percentile);
-    
+
     if (skewness !== 0) {
         const skewAdjustment = skewness * (z * z - 1) / 6;
         z = z + skewAdjustment;
     }
-    
-    let yards = mean + (z * stdDev);
-    return Math.round(yards);
+
+    let yards = Math.round(mean + (z * stdDev));
+
+    // Cap at zero for positive plays (explosive and successful) to prevent negative yards
+    if (mean > 0 || outcomeName.includes('Explosive') || outcomeName.includes('Successful')) {
+        yards = Math.max(0, yards);
+    }
+
+    // Cap havoc plays at their maximum yardage ceiling
+    if (outcomeName.includes('Tackle for Loss') || outcomeName.includes('Sack')) {
+        yards = Math.min(-1, yards);
+    } else if (outcomeName.includes('Havoc Run')) {
+        yards = Math.min(0, yards);
+    }
+
+    return yards;
 }
 
 function simulatePlay(evalData, playType, forceOutcome = null) {
     // playType: 'run' or 'pass'
     // forceOutcome: 'success', 'unsuccessful', 'explosive', 'havoc', or null for random
     
-    const successRate = evalData['success-rate'] || 45.0;
-    const havocRate = evalData['havoc-rate'] || 11.0;
-    const explosiveRate = evalData['explosive-rate'] || 13.0;
+    const successRate = evalData['success-rate'] || 40.0;
+    const havocRate = evalData['havoc-rate'] || 12.0;
+    const explosiveRate = evalData['explosive-rate'] || 12.0;
     const unsuccessfulRate = 100 - successRate - havocRate - explosiveRate;
     
     const ranges = {
@@ -294,7 +337,8 @@ function runGlobalAverageTest(testName, evalData, playType, targetMin, targetMax
 }
 
 // Load baseline rates from eval-format.json
-const baselineRates = JSON.parse(fs.readFileSync('context/eval-format.json', 'utf8'));
+const baselinePath = fs.existsSync('context/eval-format.json') ? 'context/eval-format.json' : (fs.existsSync('eval-format.json') ? 'eval-format.json' : path.join(__dirname, 'eval-format.json'));
+const baselineRates = JSON.parse(fs.readFileSync(baselinePath, 'utf8'));
 
 // Test 5: Global pass average
 const test5 = runGlobalAverageTest(

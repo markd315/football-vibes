@@ -6549,7 +6549,7 @@ async function executePlay() {
         const result = await runStateMachine(evalData, playData);
 
         // Store play type for clock runoff
-        result.playType = playData.playType || 'run';
+        result.playType = result.playType || (evalData && evalData['play-type']) || 'run';
 
         // Update game state
         updateGameState(result);
@@ -7005,20 +7005,26 @@ function parseLLMOutput(output) {
 }
 
 async function runStateMachine(evalData, playData) {
-    // Determine play type (pass vs run) from assignments
-    const qb = playData.offense.find(p => p.position === 'QB');
-    const qbAssignment = qb ? (assignments.offense[qb.name] || '') : '';
-    const isPass = qbAssignment && (
-        qbAssignment.includes('Boot') ||
-        qbAssignment.includes('drop') ||
-        qbAssignment.includes('Play action') ||
-        qbAssignment.includes('Pass')
-    );
-    // Flea flicker is a pass play even though RB has a run assignment
-    const rb = playData.offense.find(p => p.position === 'RB');
-    const rbAssignment = rb ? (assignments.offense[rb.name] || '') : '';
-    const isFleaFlicker = rbAssignment && rbAssignment.includes('Flea flicker');
-    const playType = (isPass || isFleaFlicker) ? 'pass' : 'run';
+    // Determine play type (pass vs run) from evalData (LLM decision) or fallback to assignments
+    let playType = (evalData && (evalData['play-type'] || evalData.playType)) ? (evalData['play-type'] || evalData.playType).toLowerCase() : null;
+
+    if (!playType || playType === 'rpo') {
+        const qb = playData.offense.find(p => p.position && (p.position === 'QB' || p.position.includes('QB')));
+        const qbAssign = qb ? (assignments.offense[qb.name] || {}) : {};
+        const qbAction = typeof qbAssign === 'string' ? qbAssign : `${qbAssign.category || ''} ${qbAssign.action || ''}`;
+        const isPass = qbAction.includes('Boot') ||
+            qbAction.includes('drop') ||
+            qbAction.includes('Play action') ||
+            qbAction.includes('Pass') ||
+            (qbAssign.category === 'Pass');
+
+        const rb = playData.offense.find(p => p.position && (p.position === 'RB' || p.position.includes('RB') || p.position.includes('T-right') || p.position.includes('T-left') || p.position.includes('Behind QB') || p.position.includes('I-formation')));
+        const rbAssign = rb ? (assignments.offense[rb.name] || {}) : {};
+        const rbAction = typeof rbAssign === 'string' ? rbAssign : (rbAssign.action || '');
+        const isFleaFlicker = rbAction.includes('Flea flicker');
+
+        playType = (isPass || isFleaFlicker) ? 'pass' : (playType || 'run');
+    }
 
     // Step 1: Roll 1-100 to determine basic play outcome (using LLM rates)
     const successRate = evalData['success-rate'] || 45.0;
@@ -7119,8 +7125,6 @@ async function runStateMachine(evalData, playData) {
             // Calculate yards from distribution
             const yardsRoll = Math.floor(Math.random() * 100) + 1;
             yards = calculateYardsFromRoll(yardsRoll, outcomeFile);
-            // Successful pass must have at least 1 yard
-            yards = Math.max(1, yards);
         } else {
             // Incomplete pass - 0 yards
             yards = 0;
@@ -7129,7 +7133,6 @@ async function runStateMachine(evalData, playData) {
         // For runs or non-pass outcomes, calculate yards normally
         const yardsRoll = Math.floor(Math.random() * 100) + 1;
         yards = calculateYardsFromRoll(yardsRoll, outcomeFile);
-
     }
 
     // Round yards to 1 decimal place for display
@@ -7139,10 +7142,13 @@ async function runStateMachine(evalData, playData) {
     const turnoverRoll = Math.floor(Math.random() * 100) + 1;
     const turnover = turnoverRoll <= (outcomeFile['turnover-probability'] || 0);
 
-    // Update description for incomplete passes
-    let description = outcomeFile.description.replace('{yards}', yards).replace('{yards-after-catch}', yards);
+    // Update description for incomplete passes and handle yardage formatting
+    let description = outcomeFile.description;
     if (playType === 'pass' && !isComplete) {
         description = 'The pass was incomplete. Yards: 0';
+    } else {
+        const displayYards = description.includes('loss of {yards}') ? Math.abs(yards) : yards;
+        description = description.replace('{yards}', displayYards).replace('{yards-after-catch}', displayYards);
     }
 
     return {
@@ -7181,27 +7187,9 @@ function calculateYardsFromRoll(roll, outcomeFile) {
     const mean = outcomeFile['average-yards-gained'] || 0;
     const stdDev = outcomeFile['standard-deviation'] || 1;
     const skewness = outcomeFile['skewness'] || 0;
+    const outcomeName = outcomeFile.outcome || '';
 
-    // Calculate minimum percentile needed to avoid negative yards
-    // For mean + z*stdDev >= 0, we need z >= -mean/stdDev
-    const minZForNonNegative = -mean / stdDev;
-    let minPercentile = 0.01; // Default to 1st percentile
-
-    if (minZForNonNegative > -3 && minZForNonNegative < 3) {
-        // Use jstat to find percentile that gives us the minimum z-score
-        // Add small safety margin (0.1 z-score units)
-        const targetZ = minZForNonNegative + 0.1;
-        minPercentile = jStat.normal.cdf(targetZ, 0, 1);
-        // Clamp to reasonable range
-        minPercentile = Math.max(0.01, Math.min(0.05, minPercentile));
-    }
-
-    // Map roll (1-100) to percentile range [minPercentile, 0.99]
-    // This ensures the worst roll gives z-score that prevents negative yards
-    const percentileRange = 0.99 - minPercentile;
-    const percentile = minPercentile + ((roll - 1) / 99) * percentileRange;
-
-    // Use inverse normal distribution (adjust for skewness)
+    const percentile = 0.01 + ((roll - 1) / 99) * 0.98;
     let z = inverseNormalCDF(percentile);
 
     if (skewness !== 0) {
@@ -7210,10 +7198,21 @@ function calculateYardsFromRoll(roll, outcomeFile) {
     }
 
     // Convert z-score to yards
-    let yards = mean + (z * stdDev);
+    let yards = Math.round(mean + (z * stdDev));
 
-    // Round to nearest integer
-    return Math.round(yards);
+    // Cap at zero for positive plays (explosive and successful) to prevent negative yards
+    if (mean > 0 || outcomeName.includes('Explosive') || outcomeName.includes('Successful')) {
+        yards = Math.max(0, yards);
+    }
+
+    // Cap havoc plays at their maximum yardage ceiling
+    if (outcomeName.includes('Tackle for Loss') || outcomeName.includes('Sack')) {
+        yards = Math.min(-1, yards);
+    } else if (outcomeName.includes('Havoc Run')) {
+        yards = Math.min(0, yards);
+    }
+
+    return yards;
 }
 
 function inverseNormalCDF(p) {
