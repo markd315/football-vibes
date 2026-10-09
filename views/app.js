@@ -6658,135 +6658,148 @@ async function executePlay() {
         return;
     }
 
-    // Build play data
-    const playData = buildPlayData();
+    const executeBtn = document.getElementById('executePlayBtn');
+    const originalBtnContent = executeBtn ? executeBtn.innerHTML : 'Execute Play';
 
-    // Call LLM (placeholder - you'll need to implement actual API call)
-    const rawLLMOutput = await callLLM(playData);
-
-    // Separately extract the analysis text and the JSON data
-    const { analysis, jsonData } = extractLLMResponse(rawLLMOutput);
-
-    // Parse LLM output to get eval format
-    const evalData = parseLLMOutput(jsonData || rawLLMOutput);
-
-    // Run state machine
-    const result = await runStateMachine(evalData, playData);
-
-    // Store play type for clock runoff
-    result.playType = playData.playType || 'run';
-
-    // Update game state
-    updateGameState(result);
-
-    // Update fatigue
-    updateFatigue(playData, result.playType);
-
-    // Display clean analysis (separated from the JSON payload)
-    const displayAnalysis = analysis || (typeof rawLLMOutput === 'string' ? rawLLMOutput : '');
-    const llmOutputEl = document.getElementById('llmOutput');
-    if (llmOutputEl) {
-        llmOutputEl.textContent = displayAnalysis;
+    if (executeBtn) {
+        executeBtn.disabled = true;
+        executeBtn.innerHTML = '<span class="btn-spinner"></span> Analyzing Play...';
     }
 
-    // Display rationale
-    const rationaleEl = document.getElementById('playRationale');
-    if (rationaleEl) {
-        rationaleEl.value = displayAnalysis || 'No rationale provided.';
-    }
+    try {
+        // Build play data
+        const playData = buildPlayData();
 
-    // Display outcome type
-    const outcomeTypeNames = {
-        'havoc': 'Havoc Play',
-        'explosive': 'Explosive Play',
-        'success': 'Successful Play',
-        'unsuccessful': 'Unsuccessful Play'
-    };
-    let outcomeTypeName = outcomeTypeNames[result.outcomeType] || result.outcomeType;
+        // Call LLM
+        const rawLLMOutput = await callLLM(playData);
 
-    // For incomplete passes, append "(Incomplete)" to the outcome type
-    if (result.playType === 'pass' && result.isComplete === false) {
-        outcomeTypeName += ' (Incomplete)';
-    }
+        // Separately extract the analysis text and the JSON data
+        const { analysis, jsonData } = extractLLMResponse(rawLLMOutput);
 
-    const outcomeTypeEl = document.getElementById('outcomeType');
-    if (outcomeTypeEl) {
-        outcomeTypeEl.textContent = `Outcome Type: ${outcomeTypeName}`;
-    }
+        // Parse LLM output to get eval format
+        const evalData = parseLLMOutput(jsonData || rawLLMOutput);
 
-    let outcomeText = result.description || result.outcome;
-    if (result.turnover) {
-        outcomeText += ` TURNOVER (${result.turnoverType})!`;
-    }
-    document.getElementById('outcomeText').textContent = outcomeText;
-    document.getElementById('yardsGained').textContent = `Yards: ${result.yards > 0 ? '+' : ''}${result.yards}`;
+        // Run state machine
+        const result = await runStateMachine(evalData, playData);
 
-    // Display trait adjustments
-    const traitAdjustmentsEl = document.getElementById('traitAdjustments');
-    const traitAdjustmentsBody = document.getElementById('traitAdjustmentsBody');
-    if (traitAdjustmentsEl && traitAdjustmentsBody && traitAdjustments && traitAdjustments.length > 0) {
-        traitAdjustmentsEl.style.display = 'block';
-        traitAdjustmentsBody.innerHTML = '';
-        traitAdjustments.forEach(adj => {
-            const row = document.createElement('tr');
-            const valueColor = adj.value > 0 ? '#4caf50' : adj.value < 0 ? '#f44336' : '#666';
-            row.innerHTML = `
-                <td style="padding: 8px; border: 1px solid #ddd;">${adj.playerName}</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${adj.position}</td>
-                <td style="padding: 8px; border: 1px solid #ddd;">${adj.description}</td>
-                <td style="padding: 8px; border: 1px solid #ddd; text-align: right; color: ${valueColor}; font-weight: bold;">${adj.value > 0 ? '+' : ''}${adj.value}</td>
-            `;
-            traitAdjustmentsBody.appendChild(row);
-        });
-    } else if (traitAdjustmentsEl) {
-        traitAdjustmentsEl.style.display = 'none';
-    }
+        // Store play type for clock runoff
+        result.playType = playData.playType || 'run';
 
-    // Display rate comparison
-    const rateDetailsEl = document.getElementById('rateDetails');
-    if (rateDetailsEl && result.evalData && baselineRates) {
-        const llmRates = result.evalData;
-        const successDiff = (llmRates['success-rate'] || 0) - (baselineRates['success-rate'] || 0);
-        const havocDiff = (llmRates['havoc-rate'] || 0) - (baselineRates['havoc-rate'] || 0);
-        const explosiveDiff = (llmRates['explosive-rate'] || 0) - (baselineRates['explosive-rate'] || 0);
+        // Update game state
+        updateGameState(result);
 
-        // Calculate unsuccessful rate (100 - success - havoc - explosive)
-        const llmUnsuccessful = 100 - (llmRates['success-rate'] || 0) - (llmRates['havoc-rate'] || 0) - (llmRates['explosive-rate'] || 0);
-        const baselineUnsuccessful = 100 - (baselineRates['success-rate'] || 0) - (baselineRates['havoc-rate'] || 0) - (baselineRates['explosive-rate'] || 0);
-        const unsuccessfulDiff = llmUnsuccessful - baselineUnsuccessful;
+        // Update fatigue
+        updateFatigue(playData, result.playType);
 
-        const formatDiff = (diff) => {
-            if (diff > 0) return `+${diff.toFixed(1)}%`;
-            return `${diff.toFixed(1)}%`;
+        // Display clean analysis (separated from the JSON payload)
+        const displayAnalysis = analysis || (typeof rawLLMOutput === 'string' ? rawLLMOutput : '');
+        const llmOutputEl = document.getElementById('llmOutput');
+        if (llmOutputEl) {
+            llmOutputEl.textContent = displayAnalysis;
+        }
+
+        // Display rationale
+        const rationaleEl = document.getElementById('playRationale');
+        if (rationaleEl) {
+            rationaleEl.value = displayAnalysis || 'No rationale provided.';
+        }
+
+        // Display outcome type
+        const outcomeTypeNames = {
+            'havoc': 'Havoc Play',
+            'explosive': 'Explosive Play',
+            'success': 'Successful Play',
+            'unsuccessful': 'Unsuccessful Play'
         };
+        let outcomeTypeName = outcomeTypeNames[result.outcomeType] || result.outcomeType;
 
-        const formatColor = (diff, isPositiveForOffense = true) => {
-            // For offense: positive diff is good (green), negative is bad (red)
-            // For defense: negative diff is good (green), positive is bad (red)
-            if (isPositiveForOffense) {
-                return diff > 0 ? 'color: #4CAF50;' : diff < 0 ? 'color: #f44336;' : '';
-            } else {
-                return diff < 0 ? 'color: #4CAF50;' : diff > 0 ? 'color: #f44336;' : '';
-            }
-        };
+        // For incomplete passes, append "(Incomplete)" to the outcome type
+        if (result.playType === 'pass' && result.isComplete === false) {
+            outcomeTypeName += ' (Incomplete)';
+        }
 
-        let rateDetails = `Baseline Rates: Success ${baselineRates['success-rate']}%, Havoc ${baselineRates['havoc-rate']}%, Explosive ${baselineRates['explosive-rate']}%, Unsuccessful ${baselineUnsuccessful.toFixed(1)}%<br><br>`;
-        rateDetails += `Your Play's Rates: Success ${(llmRates['success-rate'] || 0).toFixed(1)}%, Havoc ${(llmRates['havoc-rate'] || 0).toFixed(1)}%, Explosive ${(llmRates['explosive-rate'] || 0).toFixed(1)}%, Unsuccessful ${llmUnsuccessful.toFixed(1)}%<br><br>`;
-        rateDetails += `<strong>Changes from Baseline:</strong><br>`;
-        rateDetails += `<span style="${formatColor(successDiff, true)}">Success: ${formatDiff(successDiff)}</span><br>`;
-        rateDetails += `<span style="${formatColor(havocDiff, false)}">Havoc: ${formatDiff(havocDiff)}</span><br>`;
-        rateDetails += `<span style="${formatColor(explosiveDiff, true)}">Explosive: ${formatDiff(explosiveDiff)}</span><br>`;
-        rateDetails += `<span style="${formatColor(unsuccessfulDiff, false)}">Unsuccessful: ${formatDiff(unsuccessfulDiff)}</span><br>`;
-        rateDetails += `<br><em>Rolled: ${outcomeTypeName}</em>`;
+        const outcomeTypeEl = document.getElementById('outcomeType');
+        if (outcomeTypeEl) {
+            outcomeTypeEl.textContent = `Outcome Type: ${outcomeTypeName}`;
+        }
 
-        rateDetailsEl.innerHTML = rateDetails;
-    } else if (rateDetailsEl) {
-        rateDetailsEl.textContent = 'Rate comparison unavailable';
+        let outcomeText = result.description || result.outcome;
+        if (result.turnover) {
+            outcomeText += ` TURNOVER (${result.turnoverType})!`;
+        }
+        document.getElementById('outcomeText').textContent = outcomeText;
+        document.getElementById('yardsGained').textContent = `Yards: ${result.yards > 0 ? '+' : ''}${result.yards}`;
+
+        // Display trait adjustments
+        const traitAdjustmentsEl = document.getElementById('traitAdjustments');
+        const traitAdjustmentsBody = document.getElementById('traitAdjustmentsBody');
+        if (traitAdjustmentsEl && traitAdjustmentsBody && traitAdjustments && traitAdjustments.length > 0) {
+            traitAdjustmentsEl.style.display = 'block';
+            traitAdjustmentsBody.innerHTML = '';
+            traitAdjustments.forEach(adj => {
+                const row = document.createElement('tr');
+                const valueColor = adj.value > 0 ? '#4caf50' : adj.value < 0 ? '#f44336' : '#666';
+                row.innerHTML = `
+                    <td style="padding: 8px; border: 1px solid #ddd;">${adj.playerName}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${adj.position}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${adj.description}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd; text-align: right; color: ${valueColor}; font-weight: bold;">${adj.value > 0 ? '+' : ''}${adj.value}</td>
+                `;
+                traitAdjustmentsBody.appendChild(row);
+            });
+        } else if (traitAdjustmentsEl) {
+            traitAdjustmentsEl.style.display = 'none';
+        }
+
+        // Display rate comparison
+        const rateDetailsEl = document.getElementById('rateDetails');
+        if (rateDetailsEl && result.evalData && baselineRates) {
+            const llmRates = result.evalData;
+            const successDiff = (llmRates['success-rate'] || 0) - (baselineRates['success-rate'] || 0);
+            const havocDiff = (llmRates['havoc-rate'] || 0) - (baselineRates['havoc-rate'] || 0);
+            const explosiveDiff = (llmRates['explosive-rate'] || 0) - (baselineRates['explosive-rate'] || 0);
+
+            // Calculate unsuccessful rate (100 - success - havoc - explosive)
+            const llmUnsuccessful = 100 - (llmRates['success-rate'] || 0) - (llmRates['havoc-rate'] || 0) - (llmRates['explosive-rate'] || 0);
+            const baselineUnsuccessful = 100 - (baselineRates['success-rate'] || 0) - (baselineRates['havoc-rate'] || 0) - (baselineRates['explosive-rate'] || 0);
+            const unsuccessfulDiff = llmUnsuccessful - baselineUnsuccessful;
+
+            const formatDiff = (diff) => {
+                if (diff > 0) return `+${diff.toFixed(1)}%`;
+                return `${diff.toFixed(1)}%`;
+            };
+
+            const formatColor = (diff, isPositiveForOffense = true) => {
+                if (isPositiveForOffense) {
+                    return diff > 0 ? 'color: #4CAF50;' : diff < 0 ? 'color: #f44336;' : '';
+                } else {
+                    return diff < 0 ? 'color: #4CAF50;' : diff > 0 ? 'color: #f44336;' : '';
+                }
+            };
+
+            let rateDetails = `Baseline Rates: Success ${baselineRates['success-rate']}%, Havoc ${baselineRates['havoc-rate']}%, Explosive ${baselineRates['explosive-rate']}%, Unsuccessful ${baselineUnsuccessful.toFixed(1)}%<br><br>`;
+            rateDetails += `Your Play's Rates: Success ${(llmRates['success-rate'] || 0).toFixed(1)}%, Havoc ${(llmRates['havoc-rate'] || 0).toFixed(1)}%, Explosive ${(llmRates['explosive-rate'] || 0).toFixed(1)}%, Unsuccessful ${llmUnsuccessful.toFixed(1)}%<br><br>`;
+            rateDetails += `<strong>Changes from Baseline:</strong><br>`;
+            rateDetails += `<span style="${formatColor(successDiff, true)}">Success: ${formatDiff(successDiff)}</span><br>`;
+            rateDetails += `<span style="${formatColor(havocDiff, false)}">Havoc: ${formatDiff(havocDiff)}</span><br>`;
+            rateDetails += `<span style="${formatColor(explosiveDiff, true)}">Explosive: ${formatDiff(explosiveDiff)}</span><br>`;
+            rateDetails += `<span style="${formatColor(unsuccessfulDiff, false)}">Unsuccessful: ${formatDiff(unsuccessfulDiff)}</span><br>`;
+            rateDetails += `<br><em>Rolled: ${outcomeTypeName}</em>`;
+
+            rateDetailsEl.innerHTML = rateDetails;
+        } else if (rateDetailsEl) {
+            rateDetailsEl.textContent = 'Rate comparison unavailable';
+        }
+
+        // Show results step
+        document.getElementById('results').classList.remove('hidden');
+        document.getElementById('step5').classList.add('hidden');
+    } finally {
+        if (executeBtn) {
+            executeBtn.disabled = false;
+            executeBtn.innerHTML = originalBtnContent;
+        }
     }
-
-    // Show results step
-    document.getElementById('results').classList.remove('hidden');
-    document.getElementById('step5').classList.add('hidden');
 }
 
 async function callLLM(playData) {
@@ -6842,15 +6855,63 @@ async function callLLM(playData) {
 {"play-type": "run", "offense-advantage": 0.0, "risk-leverage": 5.0}`;
 }
 
+function getDeepThinkingConfig() {
+    const slider = document.getElementById('deepThinkingSlider');
+    const rawVal = slider ? parseInt(slider.value, 10) : 0;
+
+    // Anthropic requires minimum budget_tokens >= 1024 if enabled
+    let budget = 0;
+    if (rawVal > 0) {
+        budget = Math.max(1024, rawVal);
+    }
+
+    if (budget === 0) {
+        return {
+            enabled: false,
+            thinking: { type: 'disabled' },
+            budgetTokens: 0,
+            maxTokens: 4000,
+            timeoutMs: 30000,
+            label: 'Off (Fastest, ~2s)',
+            meta: 'Timeout: 30s | Max Tokens: 4000'
+        };
+    } else {
+        const maxTokens = budget + 3000;
+        const timeoutSec = Math.min(120, 30 + Math.ceil(budget / 35));
+        return {
+            enabled: true,
+            thinking: { type: 'enabled', budget_tokens: budget },
+            budgetTokens: budget,
+            maxTokens: maxTokens,
+            timeoutMs: timeoutSec * 1000,
+            label: `${budget} tokens (~${timeoutSec}s timeout)`,
+            meta: `Timeout: ${timeoutSec}s | Max Tokens: ${maxTokens}`
+        };
+    }
+}
+
+function updateDeepThinkingConfig() {
+    const config = getDeepThinkingConfig();
+    const labelEl = document.getElementById('deepThinkingLabel');
+    const metaEl = document.getElementById('deepThinkingMeta');
+    if (labelEl) labelEl.textContent = config.label;
+    if (metaEl) metaEl.textContent = config.meta;
+}
+
 async function invokeLLMLambda(lambdaUrl, systemPrompt, userPrompt, provider) {
     // Start the play clock immediately when request begins (if using Anthropic)
     if (provider === 'anthropic') {
         startCacheTimer();
     }
 
+    const thinkingConfig = getDeepThinkingConfig();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), thinkingConfig.timeoutMs);
+
     try {
         const response = await fetch(lambdaUrl, {
             method: 'POST',
+            signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -6858,7 +6919,9 @@ async function invokeLLMLambda(lambdaUrl, systemPrompt, userPrompt, provider) {
                 systemPrompt: systemPrompt,
                 userPrompt: userPrompt,
                 provider: provider,
-                cacheEnabled: promptCacheEnabled
+                cacheEnabled: promptCacheEnabled,
+                thinking: thinkingConfig.thinking,
+                maxTokens: thinkingConfig.maxTokens
             })
         });
 
@@ -6872,7 +6935,9 @@ async function invokeLLMLambda(lambdaUrl, systemPrompt, userPrompt, provider) {
         // Log cache usage if metadata is returned (for Anthropic)
         if (provider === 'anthropic' && promptCacheEnabled && data.usage) {
             const usage = data.usage;
-            const cacheCreation = usage.cache_creation_input_tokens || 0;
+            const cacheCreation = usage.cache_creation_input_tokens ||
+                usage.cache_creation?.ephemeral_5m_input_tokens ||
+                usage.cache_creation?.ephemeral_1h_input_tokens || 0;
             const cacheRead = usage.cache_read_input_tokens || 0;
 
             if (cacheCreation > 0) {
@@ -6884,16 +6949,29 @@ async function invokeLLMLambda(lambdaUrl, systemPrompt, userPrompt, provider) {
             }
         }
 
+        let content = '';
         if (Array.isArray(data.content)) {
-            return data.content
+            content = data.content
                 .filter(b => b && b.type === 'text')
                 .map(b => b.text || '')
                 .join('');
+        } else if (typeof data.content === 'string') {
+            content = data.content;
         }
-        return data.content || '';
+
+        if (!content || !content.trim()) {
+            throw new Error(`Lambda returned empty content (stop_reason: ${data.stop_reason || 'unknown'})`);
+        }
+
+        return content;
     } catch (error) {
+        if (error.name === 'AbortError') {
+            throw new Error(`LLM call timed out after ${thinkingConfig.timeoutMs / 1000}s. Try reducing thinking budget or retry.`);
+        }
         console.error('Invoke Lambda failed:', error);
         throw error;
+    } finally {
+        clearTimeout(timeoutId);
     }
 }
 

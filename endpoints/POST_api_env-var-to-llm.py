@@ -28,14 +28,12 @@ def lambda_handler(event, context):
         persistence = Persistence(event)
         api_key = None
         try:
-            api_key = persistence.get_secret("ANTHROPIC_API_KEY") or persistence.get_secret("ANTHROPIC_API_KEY")
+            api_key = persistence.get_secret("ANTHROPIC_API_KEY")
         except Exception:
             pass
-        if not api_key:
-            api_key = os.environ.get("CLAUDE_API_KEY") or os.environ.get("ANTHROPIC_API_KEY")
 
         if not api_key:
-            return error_response(500, 'CLAUDE_API_KEY not set in persistence', headers)
+            return error_response(500, 'ANTHROPIC_API_KEY not set in persistence', headers)
 
         body = event.get('body', {})
         if isinstance(body, str):
@@ -49,6 +47,9 @@ def lambda_handler(event, context):
         system_prompt = body.get('systemPrompt')
         user_prompt = body.get('userPrompt')
         cache_enabled = body.get('cacheEnabled', False)
+        thinking = body.get('thinking', {"type": "disabled"})
+        max_tokens = body.get('maxTokens') or body.get('max_tokens') or 4000
+        model = body.get('model', 'claude-haiku-5-5')
 
         if not system_prompt or not user_prompt:
             return error_response(400, 'Missing systemPrompt or userPrompt', headers)
@@ -65,12 +66,12 @@ def lambda_handler(event, context):
         if "STRICT OUTPUT FORMAT RULES" not in system_prompt:
             system_prompt = system_prompt + format_instruction
 
-        return call_anthropic(system_prompt, user_prompt, api_key, cache_enabled, headers)
+        return call_anthropic(system_prompt, user_prompt, api_key, cache_enabled, headers, thinking, max_tokens, model)
 
     except Exception as e:
         return error_response(500, f'Internal Server Error: {str(e)}', headers)
 
-def call_anthropic(system_prompt, user_prompt, api_key, cache_enabled, headers):
+def call_anthropic(system_prompt, user_prompt, api_key, cache_enabled, headers, thinking=None, max_tokens=4000, model="claude-haiku-5-5"):
     url = "https://api.anthropic.com/v1/messages"
     
     if cache_enabled:
@@ -78,9 +79,13 @@ def call_anthropic(system_prompt, user_prompt, api_key, cache_enabled, headers):
     else:
         system_val = system_prompt
 
+    if thinking is None:
+        thinking = {"type": "disabled"}
+
     payload = {
-        "model": "claude-haiku-5-5",
-        "max_tokens": 4000,
+        "model": model,
+        "max_tokens": max_tokens,
+        "thinking": thinking,
         "system": system_val,
         "messages": [{"role": "user", "content": user_prompt}]
     }
@@ -93,6 +98,8 @@ def call_anthropic(system_prompt, user_prompt, api_key, cache_enabled, headers):
     
     return make_request(url, payload, req_headers, headers, lambda d: {
         'content': "".join(b.get("text", "") for b in d.get("content", []) if b.get("type") == "text"),
+        'thinking': "".join(b.get("thinking", "") for b in d.get("content", []) if b.get("type") == "thinking"),
+        'stop_reason': d.get('stop_reason'),
         'usage': d.get('usage', {})
     })
 
@@ -101,13 +108,27 @@ def make_request(url, payload, req_headers, cors_headers, transform_fn):
         data = json.dumps(payload).encode('utf-8')
         req = urllib.request.Request(url, data=data, headers=req_headers, method='POST')
         
-        with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req, timeout=120) as response:
             res_body = response.read().decode('utf-8')
             res_data = json.loads(res_body)
+            transformed = transform_fn(res_data)
+
+            if not transformed.get('content') or not transformed.get('content').strip():
+                stop_reason = res_data.get('stop_reason', 'unknown')
+                error_msg = f"LLM returned empty content (stop_reason: {stop_reason})"
+                thinking_tokens = res_data.get('usage', {}).get('output_tokens_details', {}).get('thinking_tokens')
+                if thinking_tokens:
+                    error_msg += f", thinking consumed {thinking_tokens} tokens"
+                return {
+                    'statusCode': 502,
+                    'headers': cors_headers,
+                    'body': json.dumps({'error': error_msg, 'usage': res_data.get('usage', {})})
+                }
+
             return {
                 'statusCode': 200,
                 'headers': cors_headers,
-                'body': json.dumps(transform_fn(res_data))
+                'body': json.dumps(transformed)
             }
     except urllib.error.HTTPError as e:
         error_content = e.read().decode('utf-8')
