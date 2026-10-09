@@ -110,7 +110,14 @@ function buildPlayersForCSV(playData) {
         const actualPlayer = getPlayerById(playerId);
         const actualPosition = actualPlayer ? actualPlayer.position : (player.position || 'Unknown');
         const isOLInSkillPosition = (actualPosition === 'OT' || actualPosition === 'OG' || actualPosition === 'C') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Flanker') || pos.location.includes('Trips') || pos.location.includes('Max split'));
-        const warning = isOLInSkillPosition ? ' ⚠️ OFFENSIVE LINEMAN IN SKILL POSITION!' : '';
+        let warning = '';
+        if (isOLInSkillPosition) {
+            if (pos.location.includes('Tight') || pos.location.includes('Wing')) {
+                warning = ' [JUMBO EXTRA OL: 6th OL in heavy package, intentional run blocker]';
+            } else {
+                warning = ' ⚠️ OFFENSIVE LINEMAN IN SKILL POSITION!';
+            }
+        }
         
         // Calculate effective percentile with trait detection
         const playContext = { playType, location: pos.location };
@@ -144,7 +151,9 @@ function buildPlayersForCSV(playData) {
         const actualPlayer = getPlayerById(playerId);
         const actualPosition = actualPlayer ? actualPlayer.position : (player.position || 'Unknown');
         const isDLInOffensivePosition = (actualPosition === 'DE' || actualPosition === 'DT') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Flanker') || pos.location.includes('Trips') || pos.location.includes('Max split'));
-        const warning = isDLInOffensivePosition ? ' ⚠️ DEFENSIVE LINEMAN IN OFFENSIVE SKILL POSITION!' : '';
+        const dlWarning = isDLInOffensivePosition ? ' ⚠️ DEFENSIVE LINEMAN IN OFFENSIVE SKILL POSITION!' : '';
+        const stuntTag = detectStuntOrSlant(pos.location, assignmentText);
+        const warning = `${dlWarning}${stuntTag}`;
         
         // Calculate effective percentile with trait detection
         const playContext = { playType, location: pos.location };
@@ -164,5 +173,62 @@ function buildPlayersForCSV(playData) {
     });
     
     return allPlayers;
+}
+
+/**
+ * Detects if a defensive lineman is stunting/slanting based on alignment vs assigned rush gap
+ * @param {string} location - Pre-snap alignment (e.g., 'Left 5 technique', '0 technique', 'Left 4i technique')
+ * @param {string} assignmentText - Assignment text (e.g., 'Rush: Left A gap')
+ * @returns {string} Stunt tag or empty string
+ */
+function detectStuntOrSlant(location, assignmentText) {
+    if (!location || !assignmentText) return '';
+    const loc = location.toLowerCase();
+    const action = assignmentText.toLowerCase();
+    if (!action.includes('rush:')) return '';
+
+    // 0-technique (Center head-up): natural is A-gap
+    if (loc.includes('0 technique')) {
+        if (action.includes('b gap') || action.includes('c gap')) {
+            const gap = action.includes('b gap') ? 'B gap' : 'C gap';
+            const side = action.includes('left') ? 'Left' : (action.includes('right') ? 'Right' : '');
+            return ` [STUNT: Slants outside from 0-tech across to ${side} ${gap}]`;
+        }
+    }
+    // 1-technique (Center shade): natural is play-side A-gap
+    if (loc.includes('1 technique')) {
+        const isLeft = loc.includes('left');
+        if (action.includes('b gap') || action.includes('c gap') || (isLeft && action.includes('right')) || (!isLeft && action.includes('left'))) {
+            return ` [STUNT: Slants across from 1-tech to assigned gap]`;
+        }
+    }
+    // 2i, 2, 3 technique (Guard): natural is B-gap (or A-gap for 2i)
+    if (loc.includes('2i technique') || loc.includes('2 technique') || loc.includes('3 technique')) {
+        const isLeft = loc.includes('left');
+        if (action.includes('c gap') || (isLeft && action.includes('right')) || (!isLeft && action.includes('left'))) {
+            return ` [STUNT: Slants across from ${location.replace(' technique', '')} to assigned gap]`;
+        }
+    }
+    // 4i, 4 technique (Tackle inside shade/head-up): natural is B-gap
+    if (loc.includes('4i technique') || loc.includes('4 technique')) {
+        const isLeft = loc.includes('left');
+        if (action.includes('a gap') || (isLeft && action.includes('right')) || (!isLeft && action.includes('left'))) {
+            return ` [STUNT: Slants inside across Guard from ${location.replace(' technique', '')} to assigned gap]`;
+        }
+    }
+    // 5, 6, 7, 8, 9 technique (Outside Tackle/TE): natural is C or D gap
+    if (loc.includes('5 technique') || loc.includes('6 technique') || loc.includes('7 technique') || loc.includes('8 technique') || loc.includes('9 technique')) {
+        const isLeft = loc.includes('left');
+        if (action.includes('a gap')) {
+            return ` [STUNT: Loops/slants inside across 2 gaps from ${location.replace(' technique', '')} to assigned gap]`;
+        }
+        if (action.includes('b gap')) {
+            return ` [STUNT: Loops/slants inside from ${location.replace(' technique', '')} to assigned gap]`;
+        }
+        if ((isLeft && action.includes('right')) || (!isLeft && action.includes('left'))) {
+            return ` [STUNT: Crosses formation from ${location.replace(' technique', '')} to opposite side]`;
+        }
+    }
+    return '';
 }
 
