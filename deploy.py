@@ -26,7 +26,7 @@ Description:
 TENANT_ID = "football"
 BASE_URL = "https://blockforger.net"
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.dirname(os.path.dirname(SCRIPT_DIR))
+ROOT_DIR = SCRIPT_DIR
 MODIFIED_FILES_RECORD = os.path.join(SCRIPT_DIR, ".modified_files")
 ENV_FILE = os.path.join(SCRIPT_DIR, ".env")
 

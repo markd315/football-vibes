@@ -125,6 +125,7 @@ def make_request(url, payload, req_headers, cors_headers, transform_fn):
     except Exception as e:
         return error_response(500, f'Request failure: {str(e)}', cors_headers)
 
+
 def error_response(status_code, message, headers):
     return {
         'statusCode': status_code,

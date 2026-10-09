@@ -7959,5 +7959,6 @@ function toggleTraitAdjustments() {
     }
 }
 
+
 // Initialize on load
 init();
