@@ -47,8 +47,7 @@ def lambda_handler(event, context):
         system_prompt = body.get('systemPrompt')
         user_prompt = body.get('userPrompt')
         cache_enabled = body.get('cacheEnabled', False)
-        thinking = body.get('thinking', {"type": "disabled"})
-        max_tokens = body.get('maxTokens') or body.get('max_tokens') or 4000
+        max_tokens = int(body.get('maxTokens') or body.get('max_tokens') or 4000)
         model = body.get('model', 'claude-haiku-5-5')
 
         if not system_prompt or not user_prompt:
@@ -66,12 +65,12 @@ def lambda_handler(event, context):
         if "STRICT OUTPUT FORMAT RULES" not in system_prompt:
             system_prompt = system_prompt + format_instruction
 
-        return call_anthropic(system_prompt, user_prompt, api_key, cache_enabled, headers, thinking, max_tokens, model)
+        return call_anthropic(system_prompt, user_prompt, api_key, cache_enabled, headers, max_tokens, model)
 
     except Exception as e:
         return error_response(500, f'Internal Server Error: {str(e)}', headers)
 
-def call_anthropic(system_prompt, user_prompt, api_key, cache_enabled, headers, thinking=None, max_tokens=4000, model="claude-haiku-5-5"):
+def call_anthropic(system_prompt, user_prompt, api_key, cache_enabled, headers, max_tokens=4000, model="claude-haiku-5-5"):
     url = "https://api.anthropic.com/v1/messages"
     
     if cache_enabled:
@@ -79,13 +78,10 @@ def call_anthropic(system_prompt, user_prompt, api_key, cache_enabled, headers, 
     else:
         system_val = system_prompt
 
-    if thinking is None:
-        thinking = {"type": "disabled"}
-
     payload = {
         "model": model,
         "max_tokens": max_tokens,
-        "thinking": thinking,
+        "thinking": {"type": "disabled"},
         "system": system_val,
         "messages": [{"role": "user", "content": user_prompt}]
     }
@@ -108,7 +104,7 @@ def make_request(url, payload, req_headers, cors_headers, transform_fn):
         data = json.dumps(payload).encode('utf-8')
         req = urllib.request.Request(url, data=data, headers=req_headers, method='POST')
         
-        with urllib.request.urlopen(req, timeout=120) as response:
+        with urllib.request.urlopen(req, timeout=60) as response:
             res_body = response.read().decode('utf-8')
             res_data = json.loads(res_body)
             transformed = transform_fn(res_data)

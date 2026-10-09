@@ -829,29 +829,6 @@
                     </div>
                 </div>
 
-                <div
-                    style="margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 8px; border: 2px solid #ddd;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
-                        <label for="deepThinkingSlider" style="font-weight: bold; color: #333; font-size: 1.05em;">
-                            🧠 Deep Thinking: <span id="deepThinkingLabel" style="color: #1976D2;">Off (Fastest, ~2s)</span>
-                        </label>
-                        <span id="deepThinkingMeta" style="font-size: 0.85em; color: #666; font-family: monospace;">Timeout: 30s | Max Tokens: 4000</span>
-                    </div>
-                    <input type="range" id="deepThinkingSlider" min="0" max="3000" step="250" value="0"
-                        oninput="updateDeepThinkingConfig()" style="width: 100%; cursor: pointer;">
-                    <div style="display: flex; justify-content: space-between; font-size: 0.8em; color: #777; margin-top: 4px;">
-                        <span>Off (0)</span>
-                        <span>1024</span>
-                        <span>1500</span>
-                        <span>2000</span>
-                        <span>2500</span>
-                        <span>3000</span>
-                    </div>
-                    <div style="margin-top: 8px; font-size: 0.85em; color: #666;">
-                        Adjusts Claude extended thinking budget. Enabling thinking automatically bumps timeout and max tokens.
-                    </div>
-                </div>
-
                 <div class="button-group">
                     <button class="btn-secondary" onclick="previousStep()">Previous</button>
                     <button class="btn-success" id="executePlayBtn" onclick="executePlay()">Execute Play</button>
@@ -917,9 +894,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jstat@1.9.6/dist/jstat.min.js"></script>
     <script src="config.js"></script>
-    <script src="js/trait-detector.js"></script>
-    <script src="js/csv-generator.js"></script>
-    <script src="js/prompt-generator.js"></script>
+    <script src="trait-detector.js"></script>
+    <script src="csv-generator.js"></script>
+    <script src="prompt-generator.js"></script>
     <script src="app.js"></script>
 </body>
 

@@ -6254,20 +6254,22 @@ function buildPlayData() {
     return {
         offense: selectedPlayers.map(id => {
             const player = getPlayerById(id);
+            if (!player) return null;
             return {
                 ...player,
                 position: playerPositions[id]?.location || 'Unknown',
-                assignment: assignments.offense[player.name] || 'None'
+                assignment: (assignments.offense && assignments.offense[player.name]) || 'None'
             };
-        }),
+        }).filter(Boolean),
         defense: selectedDefense.map(id => {
             const player = getPlayerById(id);
+            if (!player) return null;
             return {
                 ...player,
                 position: playerPositions[id]?.location || 'Unknown',
-                assignment: assignments.defense[player.name] || 'None'
+                assignment: (assignments.defense && assignments.defense[player.name]) || 'None'
             };
-        }),
+        }).filter(Boolean),
         coachingPointOffense: coachingPlayerIdOffense && coachingPointOffense ? {
             player: getPlayerById(coachingPlayerIdOffense),
             point: coachingPointOffense
@@ -6279,200 +6281,64 @@ function buildPlayData() {
     };
 }
 
-// Execute play
+let lastGeneratedPrompt = '';
+
+function fallbackCopyText(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+    textarea.style.top = '0';
+    textarea.setAttribute('readonly', '');
+    document.body.appendChild(textarea);
+    textarea.select();
+    let success = false;
+    try {
+        success = document.execCommand('copy');
+    } catch (e) {
+        success = false;
+    }
+    document.body.removeChild(textarea);
+    return success;
+}
+
+async function copyTextToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return true;
+        } catch (err) {
+            console.warn('navigator.clipboard failed, attempting fallback...', err);
+        }
+    }
+    return fallbackCopyText(text);
+}
+
 async function copyLLMPrompt() {
-    // Build the same prompt that would be sent to the LLM
-    const playData = buildPlayData();
-    if (!playData || !playData.offense || playData.offense.length === 0) {
+    let promptToCopy = lastGeneratedPrompt;
+
+    if (!promptToCopy) {
+        const playData = buildPlayData();
+        if (typeof generateFullPrompt === 'function') {
+            const promptData = generateFullPrompt(playData);
+            promptToCopy = promptData.fullPrompt;
+        } else {
+            const fixedInstructions = typeof FIXED_INSTRUCTIONS !== 'undefined' ? FIXED_INSTRUCTIONS : "Analyze SCHEME: spatial (X/Y), blocking vs assignments, coverage vs routes.";
+            promptToCopy = `=== SYSTEM PROMPT ===\n${fixedInstructions}\n\n=== USER MESSAGE ===\nDown & Distance: ${gameState.down} & ${gameState.distance}\n\n=== END PROMPT ===`;
+        }
+    }
+
+    if (!promptToCopy) {
         alert('Please set up a play first (personnel, formations, assignments)');
         return;
     }
 
-    // Get the prompt content (same logic as callLLM)
-    const fixedInstructions = `Analyze SCHEME: spatial (X/Y), blocking vs assignments, coverage vs routes.
-
-SPATIAL: X left-/right+, Y off-/def+. Count blockers vs defenders at POA.
-
-KEY CHECKS:
-
-Numerical advantages at POA via X values; one player can swing -3 to +2 alone.
-
-Late pursuit does not reduce advantage.
-
-Player ratings don't cap scheme advantage (execution failures chances handled outside LLM) and theoretical assignments can't cure wrong physical position.
-
-Evaluate: 40% alignment, 30% assignment, 20% positional mismatches, 10% player ratings.
-
-Late or missed assignments invalidate coverage.
-
-Identify routes into coverage voids or open windows.
-
-Blitz w/o backfield protection = less success, more leverage.
-
-Blocking mismatches: inferior vs elite = less success, more leverage.
-
-What is the protection scheme? (6-man, 7-man, any slides. Can it handle the blitzers and what is the level of redundancy to handle lost blocks?)  Insufficient protection = high leverage and lower success
-
-This is just the playcall and initial play state at the snap. Don't make assumptions that players will do nothing else when they are in position to make plays.
-Entire OL may receive assignment like "IZR right or slide right". Doesn't mean that they all block the right A/B gaps, just generally determines rules for how they slide+climb against the defense.
-Assume the pro-level offensive line will climb properly after play-side double teams with pro-level execution. Linebackers are not "unblocked" if there are double teams at the first level that can flow.
-
-Bear front: hurts zone runs, helps gap runs.
-
-Deep zones on play side = lower leverage; man coverage = higher leverage.
-
-EXAMPLES:
-
-+8 to +10: defense entirely out of position (e.g., open TD screen).
-
--8 to -10: unblocked rusher, routes into coverage, no quick throw.
-
--2 to 0: neutral/good scheme, even matchups.
--4 to -2: correct commitment that matches offensive playcall.
-
-+2 to +6: wrong coverage/commit exploited.`;
-
-    // Build user message (same as callLLM)
-    const allPlayers = [];
-
-    // Offensive players
-    selectedPlayers.forEach((playerId) => {
-        const player = getPlayerById(playerId);
-        if (!player) return;
-        const pos = playerPositions[playerId];
-        if (!pos || !pos.location) return;
-
-        const locCoords = getLocationCoords(pos.location);
-        const assignment = assignments.offense[player.name] || {};
-        const assignmentText = assignment.action ? `${assignment.category}: ${assignment.action}` : 'No assignment';
-        const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
-        const actualPlayer = getPlayerById(playerId);
-        const actualPosition = actualPlayer ? actualPlayer.position : (player.position || 'Unknown');
-        const isOLInSkillPosition = (actualPosition === 'OT' || actualPosition === 'OG' || actualPosition === 'C') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Flanker') || pos.location.includes('Trips') || pos.location.includes('Max split'));
-        const warning = isOLInSkillPosition ? ' ⚠️ OFFENSIVE LINEMAN IN SKILL POSITION!' : '';
-        allPlayers.push({
-            side: 'OFFENSE',
-            name: player.name,
-            position: actualPosition,
-            location: pos.location,
-            coords: locCoords,
-            assignmentText: assignmentText,
-            effectivePercentile: (() => {
-                const result = calculateEffectivePercentile(player);
-                return typeof result === 'object' ? result.effectivePercentile : result;
-            })(),
-            warning: warning
-        });
-    });
-
-    // Defensive players
-    selectedDefense.forEach((playerId) => {
-        const player = getPlayerById(playerId);
-        if (!player) return;
-        const pos = playerPositions[playerId];
-        if (!pos || !pos.location) return;
-
-        const locCoords = getLocationCoords(pos.location);
-        const assignment = assignments.defense[player.name] || {};
-        const assignmentText = assignment.action ? `${assignment.category}: ${assignment.action}` : 'No assignment';
-        const manTarget = (assignment.category === 'Man Coverage' && assignment.manCoverageTarget) ? ` (Man coverage on: ${assignment.manCoverageTarget})` : '';
-        const coords = locCoords ? ` [X:${locCoords.x.toFixed(1)}, Y:${locCoords.y.toFixed(1)}]` : '';
-        const actualPlayer = getPlayerById(playerId);
-        const actualPosition = actualPlayer ? actualPlayer.position : (player.position || 'Unknown');
-        const isDLInOffensivePosition = (actualPosition === 'DE' || actualPosition === 'DT') && pos.location && (pos.location.includes('Wide') || pos.location.includes('Slot') || pos.location.includes('Seam') || pos.location.includes('Wing') || pos.location.includes('Tight') || pos.location.includes('Split') || pos.location.includes('Flanker') || pos.location.includes('Trips') || pos.location.includes('Max split'));
-        const warning = isDLInOffensivePosition ? ' ⚠️ DEFENSIVE LINEMAN IN OFFENSIVE SKILL POSITION!' : '';
-        allPlayers.push({
-            side: 'DEFENSE',
-            name: player.name,
-            position: actualPosition,
-            location: pos.location,
-            coords: locCoords,
-            assignmentText: assignmentText + manTarget,
-            effectivePercentile: (() => {
-                const result = calculateEffectivePercentile(player);
-                return typeof result === 'object' ? result.effectivePercentile : result;
-            })(),
-            warning: warning
-        });
-    });
-
-    // Sort by X coordinate
-    allPlayers.sort((a, b) => {
-        const aX = a.coords ? a.coords.x : 0;
-        const bX = b.coords ? b.coords.x : 0;
-        return aX - bX;
-    });
-
-    let userMessageContent = `${gameState.down}${getDownSuffix(gameState.down)} & ${gameState.distance} @ ${gameState["opp-yardline"]}yd Q${gameState.quarter} ${gameState.time} ${gameState.score.home}-${gameState.score.away}
-
-This is a professional simulator used in training by world-class coordinators. Evaluate like a coordinator grading a call with film-room brutality, not a scout grading players. Success rate is not guaranteed even with +10 - bungles are handled programmatically. Grade the SCHEME, as execution errors are handled programmatically. Do not hedge, commit to extreme values ruthlessly when warranted.
-
-Pos,Initials,Align,X (yds),Y (yds),Rating,Assignment${allPlayers.map(p => {
-        const coords = p.coords ? { x: p.coords.x, y: p.coords.y } : null;
-        // Compress box X coords (OL, TE inline, DL, LB in gaps) by 0.375x for realistic spacing
-        const isBoxPosition = ['OT', 'OG', 'C', 'DE', 'DT'].includes(p.position) ||
-            (p.location && (p.location.includes('technique') || p.location.includes('gap') ||
-                p.location.includes('Tight') || p.location.includes('Wing')));
-        const xMultiplier = isBoxPosition ? 0.375 : 1.37;
-        const x = coords ? (coords.x * xMultiplier).toFixed(2) : '0.00';
-        // Compress Y based on position/location for realistic depths
-        let y = '0.00';
-        if (coords) {
-            const loc = p.location || '';
-            const pos = p.position;
-            if (['OT', 'OG', 'C'].includes(pos)) {
-                // OL at line of scrimmage
-                y = '0.00';
-            } else if (['DE', 'DT'].includes(pos) || loc.includes('technique')) {
-                // DL 1 yard off LOS
-                y = '1.00';
-            } else if (['QB', 'RB'].includes(pos)) {
-                // Backfield: max 5 yards
-                y = (Math.max(coords.y, -5) * 0.5).toFixed(2);
-            } else if (['LB', 'MLB'].includes(pos) || loc.includes('gap')) {
-                // LB depth: 3-6 yards (shallow=3, deep=6)
-                y = loc.includes('deep') ? '6.00' : '3.00';
-            } else if (['S'].includes(pos) && coords.y > 10) {
-                // Deep safeties: max 18 yards
-                y = Math.min(coords.y * 0.9, 18).toFixed(2);
-            } else if (loc.includes('press')) {
-                y = '1.00';
-            } else if (loc.includes('cushion')) {
-                y = '11.00';
-            } else if (['CB', 'S'].includes(pos) && coords.y > 0 && coords.y <= 10) {
-                // Standard DB alignment: ~6 yards
-                y = '6.00';
-            } else {
-                y = (coords.y * 1.37).toFixed(2);
-            }
-        }
-        const assignment = `${p.assignmentText}${p.warning}`.replace(/[,\n]/g, ' ').trim();
-        const initials = p.name.split(' ').map(n => n[0]).join('').toUpperCase();
-        return `\n${p.position},${initials},${p.location},${x},${y},${p.effectivePercentile.toFixed(0)},${assignment}`;
-    }).join('')}${playData.coachingPointOffense ? `\nOff: ${playData.coachingPointOffense.player.name} - "${playData.coachingPointOffense.point}"` : ''}${playData.coachingPointDefense ? `\nDef: ${playData.coachingPointDefense.player.name} - "${playData.coachingPointDefense.point}"` : ''}
-
-OUTPUT: Brief rationale (POA, 1-3 matchups). JSON only:
-
-{"play-type":"pass"|"run"|"RPO","offense-advantage":[-10 to 10],"risk-leverage":[0 to 10]}
-
-Grade purely on scheme potential; commit fully to numeric advantage, ignoring execution variance. Near-automatic scoring or unblocked advantage = max/min values.`;
-
-    const fullPrompt = `=== SYSTEM PROMPT ===\n${fixedInstructions}\n\n=== USER MESSAGE ===\n${userMessageContent}\n\n=== END PROMPT ===`;
-
-    // Copy to clipboard
-    navigator.clipboard.writeText(fullPrompt).then(() => {
+    const copied = await copyTextToClipboard(promptToCopy);
+    if (copied) {
         alert('LLM prompt copied to clipboard!');
-    }).catch(err => {
-        console.error('Failed to copy:', err);
-        // Fallback: create textarea and copy
-        const textarea = document.createElement('textarea');
-        textarea.value = fullPrompt;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        alert('LLM prompt copied to clipboard!');
-    });
+    } else {
+        window.prompt('Copy play call prompt (Ctrl+C, Enter):', promptToCopy);
+    }
 }
 
 function previewAssignments() {
@@ -6812,6 +6678,7 @@ async function callLLM(playData) {
         const promptData = generateFullPrompt(playData);
         fixedInstructions = promptData.systemPrompt;
         userMessageContent = promptData.userMessage;
+        lastGeneratedPrompt = promptData.fullPrompt;
 
         // Collect trait adjustments from all players
         const allPlayers = buildPlayersForCSV(playData);
@@ -6855,74 +6722,28 @@ async function callLLM(playData) {
 {"play-type": "run", "offense-advantage": 0.0, "risk-leverage": 5.0}`;
 }
 
-function getDeepThinkingConfig() {
-    const slider = document.getElementById('deepThinkingSlider');
-    const rawVal = slider ? parseInt(slider.value, 10) : 0;
-
-    // Anthropic requires minimum budget_tokens >= 1024 if enabled
-    let budget = 0;
-    if (rawVal > 0) {
-        budget = Math.max(1024, rawVal);
-    }
-
-    if (budget === 0) {
-        return {
-            enabled: false,
-            thinking: { type: 'disabled' },
-            budgetTokens: 0,
-            maxTokens: 4000,
-            timeoutMs: 30000,
-            label: 'Off (Fastest, ~2s)',
-            meta: 'Timeout: 30s | Max Tokens: 4000'
-        };
-    } else {
-        const maxTokens = budget + 3000;
-        const timeoutSec = Math.min(120, 30 + Math.ceil(budget / 35));
-        return {
-            enabled: true,
-            thinking: { type: 'enabled', budget_tokens: budget },
-            budgetTokens: budget,
-            maxTokens: maxTokens,
-            timeoutMs: timeoutSec * 1000,
-            label: `${budget} tokens (~${timeoutSec}s timeout)`,
-            meta: `Timeout: ${timeoutSec}s | Max Tokens: ${maxTokens}`
-        };
-    }
-}
-
-function updateDeepThinkingConfig() {
-    const config = getDeepThinkingConfig();
-    const labelEl = document.getElementById('deepThinkingLabel');
-    const metaEl = document.getElementById('deepThinkingMeta');
-    if (labelEl) labelEl.textContent = config.label;
-    if (metaEl) metaEl.textContent = config.meta;
-}
-
 async function invokeLLMLambda(lambdaUrl, systemPrompt, userPrompt, provider) {
     // Start the play clock immediately when request begins (if using Anthropic)
     if (provider === 'anthropic') {
         startCacheTimer();
     }
 
-    const thinkingConfig = getDeepThinkingConfig();
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), thinkingConfig.timeoutMs);
-
     try {
+        const payload = {
+            systemPrompt: systemPrompt,
+            userPrompt: userPrompt,
+            provider: provider,
+            cacheEnabled: promptCacheEnabled,
+            thinking: { type: 'disabled' },
+            maxTokens: 4000
+        };
+
         const response = await fetch(lambdaUrl, {
             method: 'POST',
-            signal: controller.signal,
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                systemPrompt: systemPrompt,
-                userPrompt: userPrompt,
-                provider: provider,
-                cacheEnabled: promptCacheEnabled,
-                thinking: thinkingConfig.thinking,
-                maxTokens: thinkingConfig.maxTokens
-            })
+            body: JSON.stringify(payload)
         });
 
         if (!response.ok) {
@@ -6965,13 +6786,8 @@ async function invokeLLMLambda(lambdaUrl, systemPrompt, userPrompt, provider) {
 
         return content;
     } catch (error) {
-        if (error.name === 'AbortError') {
-            throw new Error(`LLM call timed out after ${thinkingConfig.timeoutMs / 1000}s. Try reducing thinking budget or retry.`);
-        }
         console.error('Invoke Lambda failed:', error);
         throw error;
-    } finally {
-        clearTimeout(timeoutId);
     }
 }
 
