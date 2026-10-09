@@ -1,0 +1,17 @@
+# Auto-detect text files and normalize line endings for Windows environment
+* text=auto eol=crlf
+
+*.js text eol=crlf
+*.json text eol=crlf
+*.py text eol=crlf
+*.html text eol=crlf
+*.css text eol=crlf
+*.md text eol=crlf
+*.txt text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
